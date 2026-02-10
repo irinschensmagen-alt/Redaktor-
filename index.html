@@ -3,46 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Редактор игры "В цветочном огороде"</title>
+    <title>Конструктор игр: Deutsch interaktiv</title>
     <style>
         :root { --primary: #4f46e5; --bg: #f3f4f6; }
         body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); padding: 20px; color: #333; }
         .container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        h1 { text-align: center; color: var(--primary); margin-bottom: 20px; }
+        
+        /* Стили для Логотипа */
+        .header-branding { text-align: center; margin-bottom: 20px; }
+        .logo-img { 
+            width: 150px; 
+            height: 150px; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            border: 4px solid var(--primary);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        .logo-img:hover { transform: scale(1.05); box-shadow: 0 0 15px rgba(79, 70, 229, 0.4); }
+        .brand-link { text-decoration: none; display: inline-block; }
+
+        h1 { text-align: center; color: var(--primary); margin-bottom: 10px; }
+        .subtitle { text-align: center; color: #666; margin-bottom: 30px; font-style: italic; }
+
         .section { margin-bottom: 30px; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px; }
         .section h2 { margin-top: 0; font-size: 1.2rem; color: #1f2937; border-bottom: 2px solid var(--primary); padding-bottom: 10px; display: inline-block; }
         label { display: block; margin-top: 15px; font-weight: 500; font-size: 0.9rem; }
         input[type="text"], select, textarea { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #d1d5db; border-radius: 6px; box-sizing: border-box; }
         input[type="file"] { margin-top: 5px; }
-        .row { display: flex; gap: 20px; }
-        .col { flex: 1; }
-        .preview-box { margin-top: 10px; max-width: 100px; max-height: 100px; border: 1px dashed #ccc; display: none; }
+        .row { display: flex; gap: 20px; flex-wrap: wrap; }
+        .col { flex: 1; min-width: 250px; }
         
-        /* Стили для колонок категорий */
+        /* Цвета леек */
         .category-block { padding: 15px; border-radius: 8px; margin-top: 10px; }
         .cat-red { background: #fee2e2; border: 1px solid #fca5a5; }
         .cat-blue { background: #dbeafe; border: 1px solid #93c5fd; }
         .cat-green { background: #dcfce7; border: 1px solid #86efac; }
 
-        button.generate-btn { background: var(--primary); color: white; border: none; padding: 15px 30px; font-size: 1.1rem; border-radius: 8px; cursor: pointer; width: 100%; transition: 0.2s; }
+        button.generate-btn { background: var(--primary); color: white; border: none; padding: 15px 30px; font-size: 1.1rem; border-radius: 8px; cursor: pointer; width: 100%; transition: 0.2s; font-weight: bold; }
         button.generate-btn:hover { background: #4338ca; }
         
         #outputArea { margin-top: 30px; display: none; }
-        textarea#finalCode { font-family: monospace; height: 200px; background: #1f2937; color: #a5f3fc; }
+        textarea#finalCode { font-family: monospace; height: 200px; background: #1f2937; color: #a5f3fc; width: 100%; }
         .note { font-size: 0.8rem; color: #666; margin-top: 2px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>🎨 Редактор: В цветочном огороде</h1>
-    <p style="text-align: center; margin-bottom: 30px;">Создайте свою версию игры для Genially. Заполните поля и нажмите "Сгенерировать".</p>
+    
+    <div class="header-branding">
+        <a href="https://t.me/DI_von_Irina" target="_blank" class="brand-link" title="Перейти в группу Deutsch interaktiv">
+            <img src="https://via.placeholder.com/150/4f46e5/ffffff?text=LOGO+DI" alt="Deutsch interaktiv Logo" class="logo-img" id="mainLogo">
+        </a>
+    </div>
+
+    <h1>Редактор: "В цветочном огороде"</h1>
+    <p class="subtitle">Создано специально для Deutsch interaktiv</p>
 
     <div class="section">
         <h2>1. Общие настройки</h2>
         <div class="row">
             <div class="col">
-                <label>Название игры (Заголовок)</label>
+                <label>Название игры</label>
                 <input type="text" id="gameTitle" value="Игра «В цветочном огороде»">
             </div>
             <div class="col">
@@ -51,298 +74,215 @@
                     <option value="ru">Русский</option>
                     <option value="de" selected>Deutsch</option>
                     <option value="en">English</option>
-                    <option value="fr">Français</option>
-                    <option value="es">Español</option>
-                    <option value="it">Italiano</option>
-                    <option value="cn">中文</option>
-                    <option value="jp">日本語</option>
                 </select>
             </div>
         </div>
         <div class="row">
-            <div class="col">
-                <label>Текст кнопки "Старт"</label>
-                <input type="text" id="textStart" value="Starten">
-            </div>
-            <div class="col">
-                <label>Текст кнопки "Финиш/Победа"</label>
-                <input type="text" id="textFinish" value="Gut gemacht!">
-            </div>
-            <div class="col">
-                <label>Текст кнопки "Повторить"</label>
-                <input type="text" id="textRepeat" value="Nochmal">
-            </div>
+            <div class="col"><label>Кнопка "Старт"</label><input type="text" id="textStart" value="Starten"></div>
+            <div class="col"><label>Кнопка "Победа"</label><input type="text" id="textFinish" value="Gut gemacht!"></div>
+            <div class="col"><label>Кнопка "Повторить"</label><input type="text" id="textRepeat" value="Nochmal"></div>
         </div>
     </div>
 
     <div class="section">
-        <h2>2. Оформление и Медиа</h2>
-        
-        <label>Фоновая картинка (Сад)</label>
+        <h2>2. Оформление</h2>
+        <label>Фон (Сад)</label>
         <input type="file" id="bgInput" accept="image/*">
-        <input type="text" id="bgUrl" placeholder="Или вставьте прямую ссылку на картинку">
-        <div class="note">Поддерживает загрузку с компьютера (Base64)</div>
+        <div class="note">Поддерживает загрузку с компьютера (автоматически вшивается в код)</div>
 
         <div class="row">
-            <div class="col">
-                <label>Персонаж (Художник)</label>
-                <input type="file" id="heroInput" accept="image/*">
-            </div>
-            <div class="col">
-                <label>Антагонист (Злая пчела)</label>
-                <input type="file" id="enemyInput" accept="image/*">
-            </div>
+            <div class="col"><label>Персонаж (Художник)</label><input type="file" id="heroInput" accept="image/*"></div>
+            <div class="col"><label>Антагонист (Пчела)</label><input type="file" id="enemyInput" accept="image/*"></div>
         </div>
-
-        <label>Фоновая музыка (MP3)</label>
-        <input type="file" id="musicInput" accept="audio/*">
         
-        <label>Звук ошибки (Жужжание)</label>
-        <input type="file" id="failSoundInput" accept="audio/*">
+        <div class="row">
+             <div class="col"><label>Музыка (MP3)</label><input type="file" id="musicInput" accept="audio/*"></div>
+             <div class="col"><label>Звук неудачи</label><input type="file" id="failSoundInput" accept="audio/*"></div>
+        </div>
     </div>
 
     <div class="section">
-        <h2>3. Категории и Слова (Легкий уровень)</h2>
-        <p class="note">Здесь вы определяете "Лейки". Введите слова через запятую.</p>
-
+        <h2>3. Категории и Слова (Лейки)</h2>
         <div class="category-block cat-red">
-            <label>🔴 Красная Лейка (Название категории)</label>
-            <input type="text" id="cat1Name" value="Die (Женский род)">
-            
-            <label>Список слов для Красной лейки (через запятую)</label>
-            <textarea id="cat1Words" rows="3">Katze, Maus, Kuh, Biene, Spinne, Ziege, Gans, Schlange, Fliege, Ameise</textarea>
+            <label>🔴 Красная категория (напр. Die)</label>
+            <input type="text" id="cat1Name" value="Die">
+            <label>Слова (через запятую):</label>
+            <textarea id="cat1Words" rows="2">Katze, Maus, Kuh, Biene, Spinne, Ziege</textarea>
         </div>
-
         <div class="category-block cat-blue">
-            <label>🔵 Синяя Лейка (Название категории)</label>
-            <input type="text" id="cat2Name" value="Der (Мужской род)">
-            
-            <label>Список слов для Синей лейки (через запятую)</label>
-            <textarea id="cat2Words" rows="3">Hund, Fisch, Hamster, Delphin, Vogel, Löwe, Elefant, Affe, Hai, Igel</textarea>
+            <label>🔵 Синяя категория (напр. Der)</label>
+            <input type="text" id="cat2Name" value="Der">
+            <label>Слова (через запятую):</label>
+            <textarea id="cat2Words" rows="2">Hund, Fisch, Hamster, Vogel, Löwe</textarea>
         </div>
-
         <div class="category-block cat-green">
-            <label>🟢 Зеленая Лейка (Название категории)</label>
-            <input type="text" id="cat3Name" value="Das (Средний род)">
-            
-            <label>Список слов для Зеленой лейки (через запятую)</label>
-            <textarea id="cat3Words" rows="3">Pferd, Nashorn, Reh, Schwein, Huhn, Schaf, Krokodil, Kaninchen, Wildschwein, Känguru</textarea>
+            <label>🟢 Зеленая категория (напр. Das)</label>
+            <input type="text" id="cat3Name" value="Das">
+            <label>Слова (через запятую):</label>
+            <textarea id="cat3Words" rows="2">Pferd, Nashorn, Reh, Schwein, Huhn</textarea>
         </div>
     </div>
 
     <div class="section">
         <h2>4. Средний уровень (Предложения)</h2>
-        <p class="note">Формат: "Текст предложения с пропуском | Номер правильной лейки (1, 2 или 3)". Каждое с новой строки.</p>
-        <p class="note">Пример: ___ Hund spielt. | 2</p>
-        <textarea id="mediumContent" rows="6" placeholder="___ Katze trinkt Milch. | 1
-___ Pferd steht. | 3
-___ Hund bellt. | 2"></textarea>
+        <p class="note">Формат: Предложение | Номер лейки (1=Красная, 2=Синяя, 3=Зеленая)</p>
+        <textarea id="mediumContent" rows="5" placeholder="___ Katze trinkt Milch. | 1">___ Katze trinkt Milch. | 1
+___ Hund spielt Ball. | 2
+___ Pferd steht auf der Wiese. | 3</textarea>
     </div>
 
-    <button class="generate-btn" onclick="generateGame()">🚀 Сгенерировать код для Genially</button>
+    <button class="generate-btn" onclick="generateGame()">🚀 Сгенерировать код игры</button>
 
     <div id="outputArea" class="section">
-        <h2>Готовый код</h2>
-        <p>Скопируйте этот код и вставьте в Genially через <b>Insert -> Others -> iframe</b>.</p>
+        <h2>Готовый HTML код</h2>
+        <p>Скопируйте код ниже и вставьте в Genially (Insert > Others).</p>
         <textarea id="finalCode" readonly></textarea>
-        <button onclick="copyCode()" style="margin-top:10px; padding:5px 10px; cursor:pointer;">Копировать в буфер</button>
+        <button onclick="copyCode()" style="margin-top:10px; padding:10px; cursor:pointer; background:#e5e7eb; border:none; border-radius:5px;">Копировать</button>
     </div>
-
 </div>
 
 <script>
-    // Хранилище для файлов в Base64
-    const assets = {
-        bg: '',
-        hero: '',
-        enemy: '',
-        music: '',
-        failSound: ''
-    };
+    const assets = { bg: '', hero: '', enemy: '', music: '', failSound: '' };
 
-    // Функция конвертации файла в Base64
-    function handleFileSelect(event, key) {
-        const file = event.target.files[0];
+    function handleFile(e, key) {
+        const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = function(e) {
-                assets[key] = e.target.result;
-                console.log(`Loaded ${key}`);
-            };
+            reader.onload = (event) => { assets[key] = event.target.result; };
             reader.readAsDataURL(file);
         }
     }
 
-    // Слушатели событий загрузки
-    document.getElementById('bgInput').addEventListener('change', (e) => handleFileSelect(e, 'bg'));
-    document.getElementById('heroInput').addEventListener('change', (e) => handleFileSelect(e, 'hero'));
-    document.getElementById('enemyInput').addEventListener('change', (e) => handleFileSelect(e, 'enemy'));
-    document.getElementById('musicInput').addEventListener('change', (e) => handleFileSelect(e, 'music'));
-    document.getElementById('failSoundInput').addEventListener('change', (e) => handleFileSelect(e, 'failSound'));
+    document.getElementById('bgInput').addEventListener('change', (e) => handleFile(e, 'bg'));
+    document.getElementById('heroInput').addEventListener('change', (e) => handleFile(e, 'hero'));
+    document.getElementById('enemyInput').addEventListener('change', (e) => handleFile(e, 'enemy'));
+    document.getElementById('musicInput').addEventListener('change', (e) => handleFile(e, 'music'));
+    document.getElementById('failSoundInput').addEventListener('change', (e) => handleFile(e, 'failSound'));
 
     function generateGame() {
-        // Сбор данных из полей
         const config = {
             title: document.getElementById('gameTitle').value,
-            lang: document.getElementById('gameLang').value,
             texts: {
                 start: document.getElementById('textStart').value,
                 finish: document.getElementById('textFinish').value,
                 repeat: document.getElementById('textRepeat').value
             },
             categories: [
-                { id: 1, name: document.getElementById('cat1Name').value, color: 'red', words: document.getElementById('cat1Words').value.split(',').map(s => s.trim()) },
-                { id: 2, name: document.getElementById('cat2Name').value, color: 'blue', words: document.getElementById('cat2Words').value.split(',').map(s => s.trim()) },
-                { id: 3, name: document.getElementById('cat3Name').value, color: 'green', words: document.getElementById('cat3Words').value.split(',').map(s => s.trim()) }
+                { id: 1, name: document.getElementById('cat1Name').value, words: document.getElementById('cat1Words').value.split(',').map(s=>s.trim()) },
+                { id: 2, name: document.getElementById('cat2Name').value, words: document.getElementById('cat2Words').value.split(',').map(s=>s.trim()) },
+                { id: 3, name: document.getElementById('cat3Name').value, words: document.getElementById('cat3Words').value.split(',').map(s=>s.trim()) }
             ],
-            mediumLevel: document.getElementById('mediumContent').value.split('\n').filter(line => line.includes('|')).map(line => {
-                const parts = line.split('|');
-                return { text: parts[0].trim(), correctCat: parseInt(parts[1].trim()) };
+            medium: document.getElementById('mediumContent').value.split('\n').filter(l=>l.includes('|')).map(l => {
+                const p = l.split('|'); return { t: p[0].trim(), c: parseInt(p[1].trim()) };
             }),
             assets: {
-                bg: assets.bg || document.getElementById('bgUrl').value || 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=1000&q=80', // Дефолт
-                hero: assets.hero,
-                enemy: assets.enemy,
+                bg: assets.bg || 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=1000&q=80',
+                hero: assets.hero || 'https://cdn-icons-png.flaticon.com/512/2922/2922510.png',
+                enemy: assets.enemy || 'https://cdn-icons-png.flaticon.com/512/3069/3069186.png',
                 music: assets.music,
-                failSound: assets.failSound
+                fail: assets.failSound
             }
         };
 
-        // ГЕНЕРАЦИЯ HTML КОДА ИГРЫ
-        // Здесь мы создаем строку с полным HTML кодом игры, внедряя в неё config
-        
         const gameHTML = `
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="utf-8">
 <style>
-  body { margin:0; overflow:hidden; font-family: sans-serif; background: url('${config.assets.bg}') center/cover no-repeat; }
-  #game-ui { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-  .can-container { display: flex; gap: 20px; position: absolute; bottom: 20px; width: 100%; justify-content: center; }
-  .can { width: 100px; height: 100px; cursor: pointer; transition: transform 0.2s; background: white; border-radius: 10px; display:flex; align-items:center; justify-content:center; font-weight:bold; border: 3px solid #333; }
-  .can:hover { transform: scale(1.1); }
-  .can.red { border-color: #ef4444; color: #ef4444; }
-  .can.blue { border-color: #3b82f6; color: #3b82f6; }
-  .can.green { border-color: #22c55e; color: #22c55e; }
+  body { margin:0; overflow:hidden; font-family: sans-serif; background: url('${config.assets.bg}') center/cover no-repeat; height: 100vh; width: 100vw; }
+  #ui { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .cans { display: flex; gap: 20px; position: absolute; bottom: 20px; width: 100%; justify-content: center; }
+  .can { width: 100px; height: 100px; background: white; border-radius: 10px; display:flex; align-items:center; justify-content:center; font-weight:bold; border: 4px solid #333; cursor: pointer; transition: 0.2s; font-size: 1.2rem; box-shadow: 0 4px 0 rgba(0,0,0,0.2); }
+  .can:active { transform: translateY(4px); box-shadow: none; }
+  .red { border-color: #ef4444; color: #ef4444; }
+  .blue { border-color: #3b82f6; color: #3b82f6; }
+  .green { border-color: #22c55e; color: #22c55e; }
   
-  #word-display { background: rgba(255,255,255,0.9); padding: 20px 40px; border-radius: 15px; font-size: 2rem; font-weight: bold; margin-bottom: 100px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+  #task-box { background: rgba(255,255,255,0.95); padding: 20px 40px; border-radius: 15px; font-size: 2rem; font-weight: bold; margin-bottom: 150px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); border: 2px solid #4f46e5; text-align: center; min-width: 300px; }
   
-  #progress-bar { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; }
-  .drop { width: 20px; height: 20px; background: #ccc; border-radius: 50%; border-top-right-radius: 0; transform: rotate(-45deg); }
-  .drop.filled { background: #3b82f6; box-shadow: 0 0 5px cyan; }
+  #progress { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; }
+  .drop { width: 20px; height: 20px; background: rgba(255,255,255,0.5); border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 1px solid #3b82f6; }
+  .drop.filled { background: #3b82f6; box-shadow: 0 0 10px #3b82f6; }
 
-  /* Анимация пчелы */
-  #bee { position: absolute; width: 80px; height: 80px; top: -100px; right: -100px; transition: 1s; }
-  .bee-attack { top: 50% !important; right: 50% !important; transform: scale(1.5); }
+  #hero { position: absolute; left: 5%; bottom: 140px; height: 200px; transition: 0.3s; }
+  #bee { position: absolute; right: -200px; top: 20px; width: 80px; transition: top 1s, right 1s, transform 0.5s; }
+  .bee-attack { right: 50% !important; top: 50% !important; transform: scale(2) !important; }
 
-  #start-screen, #win-screen { position: absolute; inset: 0; background: rgba(255,255,255,0.95); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; }
-  button.btn { padding: 15px 30px; font-size: 1.5rem; background: #4f46e5; color: white; border: none; border-radius: 10px; cursor: pointer; }
+  .screen { position: absolute; inset: 0; background: rgba(255,255,255,0.95); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; }
+  button.btn { padding: 15px 40px; font-size: 1.5rem; background: #4f46e5; color: white; border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 5px 15px rgba(79, 70, 229, 0.4); transition: 0.3s; }
+  button.btn:hover { transform: scale(1.05); }
 </style>
 </head>
 <body>
-
-<div id="start-screen">
-    <h1>${config.title}</h1>
+<div id="start" class="screen">
+    <h1 style="color:#4f46e5; font-size: 3rem; margin-bottom: 10px;">${config.title}</h1>
     <button class="btn" onclick="startGame()">${config.texts.start}</button>
 </div>
+<div id="win" class="screen" style="display:none;">
+    <h1 style="color:#22c55e;">${config.texts.finish}</h1>
+    <button class="btn" onclick="location.reload()">${config.texts.repeat}</button>
+</div>
 
-<div id="game-ui" style="display:none;">
-    <div id="progress-bar">
-        </div>
-
-    <div id="word-display">Загрузка...</div>
+<div id="ui" style="display:none;">
+    <div id="progress"></div>
+    <div id="task-box">...</div>
+    <img id="hero" src="${config.assets.hero}">
+    <img id="bee" src="${config.assets.enemy}">
     
-    <img src="${config.assets.hero || ''}" style="height: 200px; position: absolute; left: 10%; bottom: 150px;">
-    
-    <img id="bee" src="${config.assets.enemy || 'https://cdn-icons-png.flaticon.com/512/3069/3069186.png'}">
-
-    <div class="can-container">
-        <div class="can red" onclick="checkAnswer(1)">${config.categories[0].name}</div>
-        <div class="can blue" onclick="checkAnswer(2)">${config.categories[1].name}</div>
-        <div class="can green" onclick="checkAnswer(3)">${config.categories[2].name}</div>
+    <div class="cans">
+        <div class="can red" onclick="check(1)">${config.categories[0].name}</div>
+        <div class="can blue" onclick="check(2)">${config.categories[1].name}</div>
+        <div class="can green" onclick="check(3)">${config.categories[2].name}</div>
     </div>
 </div>
 
 <script>
-    // ВСТРОЕННЫЙ КОНФИГ
-    const gameData = ${JSON.stringify(config)};
-    
-    let currentWord = null;
-    let score = 0;
-    const maxScore = 10;
-    
+    const cfg = ${JSON.stringify(config)};
+    let score = 0, max = 10;
+    let current = null;
+    let mode = 'easy'; // Можно расширить логику уровней
+
     function startGame() {
-        document.getElementById('start-screen').style.display = 'none';
-        document.getElementById('game-ui').style.display = 'flex';
-        initDrops();
-        nextWord();
+        document.getElementById('start').style.display = 'none';
+        document.getElementById('ui').style.display = 'flex';
+        renderDrops();
+        nextTask();
+        if(cfg.assets.music) { let a = new Audio(cfg.assets.music); a.volume=0.3; a.loop=true; a.play().catch(()=>{}); }
+    }
+    
+    function renderDrops() {
+        let h = ''; for(let i=0; i<max; i++) h+='<div class="drop" id="d'+i+'"></div>';
+        document.getElementById('progress').innerHTML = h;
     }
 
-    function initDrops() {
-        const bar = document.getElementById('progress-bar');
-        bar.innerHTML = '';
-        for(let i=0; i<maxScore; i++) {
-            const d = document.createElement('div');
-            d.className = 'drop';
-            d.id = 'drop-'+i;
-            bar.appendChild(d);
-        }
+    function nextTask() {
+        // Простая логика: берем случайное слово
+        let catIdx = Math.floor(Math.random()*3);
+        let word = cfg.categories[catIdx].words[Math.floor(Math.random()*cfg.categories[catIdx].words.length)];
+        current = { t: word, c: cfg.categories[catIdx].id };
+        document.getElementById('task-box').innerText = current.t;
+        document.getElementById('bee').classList.remove('bee-attack');
     }
 
-    function getRandomWord() {
-        // Простая логика выбора: берем случайную категорию, потом случайное слово
-        const catIndex = Math.floor(Math.random() * 3);
-        const cat = gameData.categories[catIndex];
-        const word = cat.words[Math.floor(Math.random() * cat.words.length)];
-        return { text: word, catId: cat.id };
-    }
-
-    function nextWord() {
-        currentWord = getRandomWord();
-        document.getElementById('word-display').textContent = currentWord.text;
-        // Сброс пчелы
-        const bee = document.getElementById('bee');
-        bee.classList.remove('bee-attack');
-    }
-
-    function checkAnswer(selectedId) {
-        if (selectedId === currentWord.catId) {
-            // Success
-            document.getElementById('drop-' + score).classList.add('filled');
+    function check(id) {
+        if(id === current.c) {
+            document.getElementById('d'+score).classList.add('filled');
             score++;
-            if (score >= maxScore) {
-                alert(gameData.texts.finish); // Тут можно сделать красивый Win Screen
-                location.reload();
-            } else {
-                nextWord();
-            }
+            if(score >= max) { setTimeout(()=>{document.getElementById('win').style.display='flex'}, 500); }
+            else { nextTask(); }
         } else {
-            // Fail - Bee Attack
-            const bee = document.getElementById('bee');
-            bee.classList.add('bee-attack');
-            // Звук жужжания
-            if(gameData.assets.failSound) {
-                 new Audio(gameData.assets.failSound).play();
-            }
+            document.getElementById('bee').classList.add('bee-attack');
+            if(cfg.assets.fail) new Audio(cfg.assets.fail).play();
         }
     }
 <\/script>
 </body>
-</html>
-        `;
-
-        // Вывод готового iframe кода
+</html>`;
         document.getElementById('outputArea').style.display = 'block';
         document.getElementById('finalCode').value = gameHTML;
     }
-
-    function copyCode() {
-        const copyText = document.getElementById("finalCode");
-        copyText.select();
-        document.execCommand("copy");
-        alert("Код скопирован! Вставьте его в Genially (Insert > Others).");
-    }
+    function copyCode() { document.getElementById('finalCode').select(); document.execCommand('copy'); }
 </script>
-
 </body>
 </html>
