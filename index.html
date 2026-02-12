@@ -2,173 +2,163 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deutsch interaktiv | Final 24.0</title>
+    <title>Deutsch interaktiv | Final Check 27.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --p: #6C5CE7; --a: #FD79A8; }
-        body { font-family: 'Montserrat', sans-serif; background: #f4f7f6; margin: 0; padding: 20px; color: #2d3436; }
-        .wrapper { max-width: 1600px; margin: 0 auto; background: white; border-radius: 40px; border: 6px solid var(--p); padding: 40px; box-shadow: 0 30px 60px rgba(0,0,0,0.15); }
+        :root { --p: #6C5CE7; --a: #FD79A8; --ok: #00B894; }
+        body { font-family: 'Montserrat', sans-serif; background: #f0f2f5; padding: 20px; }
+        .wrapper { max-width: 1400px; margin: 0 auto; background: white; border-radius: 40px; border: 6px solid var(--p); padding: 30px; box-shadow: 0 30px 60px rgba(0,0,0,0.1); }
+        .header { display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid #eee; padding-bottom: 20px; margin-bottom: 25px; }
+        .logo { width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--a); }
         
-        .header { display: flex; align-items: center; justify-content: space-between; border-bottom: 4px solid #f1f2f6; padding-bottom: 30px; margin-bottom: 30px; }
-        .logo-img { width: 140px; height: 140px; border-radius: 50%; border: 4px solid var(--a); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .grid { display: grid; grid-template-columns: 1.2fr 1fr 380px; gap: 20px; }
+        .panel { background: #F8F9FF; border-radius: 25px; padding: 20px; border: 1px solid #E1E2EF; }
+        .panel-h { font-weight: 900; color: var(--p); border-left: 6px solid var(--a); padding-left: 12px; margin-bottom: 15px; text-transform: uppercase; }
 
-        .grid { display: grid; grid-template-columns: 1.1fr 1fr 420px; gap: 30px; }
-        .panel { background: #F9F9FF; border-radius: 35px; padding: 25px; border: 1px solid #E1E2EF; position: relative; }
-        .panel-h { font-weight: 900; color: var(--p); text-transform: uppercase; margin-bottom: 20px; border-left: 8px solid var(--a); padding-left: 15px; font-size: 1.1rem; }
-
-        .cat-card { background: white; padding: 20px; border-radius: 25px; margin-bottom: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        /* Цвета и Эффекты */
+        .hue-slider { -webkit-appearance: none; width: 100%; height: 12px; border-radius: 10px; background: linear-gradient(to right, red, yellow, green, cyan, blue, magenta, red); margin: 10px 0; cursor: pointer; }
+        .hue-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; background: white; border: 3px solid var(--p); border-radius: 50%; }
         
-        /* ГРАДИЕНТНЫЙ ВЫБОР ЦВЕТА */
-        .color-picker { -webkit-appearance: none; width: 100%; height: 15px; border-radius: 10px; background: linear-gradient(to right, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%); outline: none; margin: 15px 0; cursor: pointer; }
-        .color-picker::-webkit-slider-thumb { -webkit-appearance: none; width: 25px; height: 25px; border-radius: 50%; background: white; border: 3px solid var(--p); cursor: pointer; box-shadow: 0 0 10px rgba(0,0,0,0.2); }
+        .eff-bar { display: flex; gap: 5px; margin-top: 10px; }
+        .eff-btn { flex: 1; padding: 8px; background: #eee; border-radius: 10px; cursor: pointer; text-align: center; border: 2px solid transparent; font-size: 1.1rem; }
+        .eff-btn.active { background: white; border-color: var(--a); transform: scale(1.05); }
 
-        /* ЭФФЕКТЫ */
-        .effect-grid { display: flex; gap: 10px; margin-top: 10px; }
-        .eff-btn { flex: 1; height: 50px; display: flex; align-items: center; justify-content: center; background: #eee; border-radius: 12px; cursor: pointer; font-size: 1.3rem; transition: 0.3s; border: 3px solid transparent; }
-        .eff-btn.active { background: #fff0f5; border-color: var(--a); transform: scale(1.05); }
+        /* GIF Блоки */
+        .gif-list { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; }
+        .gif-img { width: 75px; height: 75px; border-radius: 12px; border: 3px solid #ddd; cursor: pointer; object-fit: cover; background: #fff; }
+        .gif-img.active { border-color: var(--a); box-shadow: 0 0 15px rgba(253,121,168,0.5); }
 
-        /* ГИФ ГАЛЕРЕЯ (ИСПРАВЛЕННАЯ) */
-        .gif-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px; }
-        .gif-item { width: 100%; aspect-ratio: 1/1; border-radius: 15px; border: 4px solid #eee; cursor: pointer; transition: 0.3s; object-fit: cover; background: #fff; }
-        .gif-item.active { border-color: var(--a); transform: translateY(-5px); box-shadow: 0 10px 20px rgba(253,121,168,0.4); }
-
-        label { display: block; font-size: 0.75rem; font-weight: 800; color: #636e72; text-transform: uppercase; margin-bottom: 8px; }
-        input, select, textarea { width: 100%; padding: 14px; border: 2px solid #DFE6E9; border-radius: 15px; font-family: inherit; font-size: 0.9rem; }
-
-        .btn-magic { width: 100%; padding: 30px; border: none; border-radius: 25px; font-weight: 900; font-size: 1.8rem; cursor: pointer; background: var(--p); color: white; margin-top: 30px; box-shadow: 0 10px 0 #4834D4; transition: 0.2s; }
-        .btn-magic:active { transform: translateY(5px); box-shadow: 0 5px 0 #4834D4; }
+        input, select, textarea { width: 100%; padding: 10px; border-radius: 10px; border: 2px solid #ddd; margin-bottom: 8px; font-family: inherit; }
+        .btn { width: 100%; padding: 18px; border: none; border-radius: 15px; font-weight: 900; cursor: pointer; transition: 0.2s; color: white; margin-top: 10px; }
+        .btn-save { background: var(--ok); box-shadow: 0 5px 0 #008a6e; }
+        .btn-gen { background: var(--p); box-shadow: 0 5px 0 #4834D4; font-size: 1.3rem; }
+        .btn:active { transform: translateY(3px); box-shadow: none; }
     </style>
 </head>
 <body>
 
 <div class="wrapper">
     <div class="header">
-        <div style="display:flex; align-items:center; gap:25px;">
-            <img src="https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/logo.png" class="logo-img">
-            <div>
-                <h1 style="margin:0; color:var(--p); font-size:2.8rem;">Deutsch interaktiv</h1>
-                <span id="ui-version" style="font-weight:900; color:var(--a); letter-spacing:5px;">FINAL EDITION 24.0</span>
-            </div>
+        <div style="display:flex; align-items:center; gap:15px;">
+            <img src="https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/logo.png" class="logo">
+            <h2 style="margin:0; color:var(--p);">Deutsch interaktiv 27.0</h2>
         </div>
-        <div>
-            <label id="ui-lang-label">ЯЗЫК / SPRACHE</label>
-            <select id="uiLang" onchange="translateUI()">
-                <option value="ru">Русский (RU)</option><option value="de">Deutsch (DE)</option>
-                <option value="en">English (EN)</option><option value="es">Español (ES)</option>
-                <option value="fr">Français (FR)</option><option value="it">Italiano (IT)</option>
-                <option value="zh">中文 (ZH)</option><option value="ja">日本語 (JA)</option>
-            </select>
-        </div>
+        <select id="uiLang" onchange="translateUI()" style="width:150px;">
+            <option value="ru">Русский (RU)</option>
+            <option value="de">Deutsch (DE)</option>
+            <option value="en">English (EN)</option>
+        </select>
     </div>
 
     <div class="grid">
         <div class="panel">
-            <div class="panel-h" id="h1">Настройка Категорий</div>
-            <div id="cat-box"></div>
+            <div class="panel-h" id="h1">Категории</div>
+            <div id="cats-area"></div>
         </div>
 
         <div class="panel">
-            <div class="panel-h" id="h2">Мир и Персонажи</div>
+            <div class="panel-h" id="h2">Герои и Подарки</div>
+            <label id="lt">Тема фона</label>
+            <select id="theme-sel"><option>В огороде 🌻</option><option>Замок 🏰</option><option>Космос 🚀</option></select>
             
-            <label id="l-theme">Локация</label>
-            <select>
-                <option>В огороде 🌻</option><option>Замок 🏰</option><option>Космос 🚀</option>
-            </select>
-
-            <label id="l-hero" style="margin-top:20px;">Кем ты будешь? (Выбери GIF)</label>
-            <div class="gif-list">
-                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueW90Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3/mickey.gif" class="gif-item active" onclick="pickItem(this)">
-                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3A4Mjd6NjF6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3/elsa.gif" class="gif-item" onclick="pickItem(this)">
-                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueW90Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3/bee.gif" class="gif-item" onclick="pickItem(this)">
-                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueW90Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3/snowwhite.gif" class="gif-item" onclick="pickItem(this)">
+            <label style="margin-top:15px;" id="lh">Выбери персонажа</label>
+            <div class="gif-list" id="hero-list">
+                <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3A4Mjd6NjF6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3/mickey.gif" class="gif-img active" onclick="pick(this)">
+                <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3A4Mjd6NjF6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3/elsa.gif" class="gif-img" onclick="pick(this)">
+                <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3A4Mjd6NjF6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3/bee.gif" class="gif-img" onclick="pick(this)">
             </div>
 
-            <label id="l-gift" style="margin-top:20px;">Подарок за победу</label>
-            <div class="gif-list">
-                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueW90Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3/cup.gif" class="gif-item active" onclick="pickItem(this)">
-                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueW90Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3/fireworks.gif" class="gif-item" onclick="pickItem(this)">
-                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueW90Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3/stars.gif" class="gif-item" onclick="pickItem(this)">
-                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueW90Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3/diamond.gif" class="gif-item" onclick="pickItem(this)">
+            <label style="margin-top:15px;" id="lg">Выбери подарок</label>
+            <div class="gif-list" id="gift-list">
+                <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3A4Mjd6NjF6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3/cup.gif" class="gif-img active" onclick="pick(this)">
+                <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3A4Mjd6NjF6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3/stars.gif" class="gif-img" onclick="pick(this)">
             </div>
         </div>
 
         <div class="panel">
-            <div class="panel-h" id="h3">Интерфейс и Кнопки</div>
+            <div class="panel-h" id="h3">Кнопки и Текст</div>
+            <label id="lb1">Начать</label><input type="text" id="btn-s" value="НАЧАТЬ">
+            <label id="lb2">Завершить</label><input type="text" id="btn-f" value="ЗАВЕРШИТЬ">
+            <label id="lb3">Повторить</label><input type="text" id="btn-r" value="ПОВТОРИТЬ">
+            <label id="lb4">Заново</label><input type="text" id="btn-re" value="ЗАНОВО">
+            <label id="lw">Победа</label><input type="text" id="win-t" value="ТЫ ГЕНИЙ!">
             
-            <label id="l-lvl">Уровень сложности</label>
-            <select>
-                <option>🦋 Бабочка (Легко)</option>
-                <option>🏠 Дом (Средне)</option>
-                <option>🌳 Огород (Сложно)</option>
-            </select>
-
-            <label id="lb1">Кнопка "Начать"</label><input type="text" id="btn1" value="НАЧАТЬ">
-            <label id="lb2">Кнопка "Завершить"</label><input type="text" id="btn2" value="ЗАВЕРШИТЬ">
-            <label id="lb3">Кнопка "Повторить задание"</label><input type="text" id="btn3" value="ПОВТОРИТЬ ЗАДАНИЕ">
-            <label id="lb4">Кнопка "Начать заново"</label><input type="text" id="btn4" value="НАЧАТЬ ЗАНОВО">
-            
-            <label id="l-win" style="margin-top:15px;">Финальный текст</label>
-            <input type="text" id="txtWin" value="ТЫ ГЕНИЙ!">
+            <button class="btn btn-save" id="save-btn" onclick="saveData()">💾 СОХРАНИТЬ ПРЕСЕТ</button>
+            <button class="btn btn-gen" id="gen-btn" onclick="generate()">🚀 СОЗДАТЬ ИГРУ</button>
+            <div id="msg" style="text-align:center; color:var(--ok); font-weight:bold; margin-top:10px; display:none;">Готово!</div>
         </div>
     </div>
-
-    <button class="btn-magic" id="btn-gen">🚀 СОЗДАТЬ МАГИЮ GENIALLY</button>
 </div>
 
 <script>
-    const langs = {
-        ru: { h1:"КАТЕГОРИИ", h2:"МИР И ГЕРОИ", h3:"КНОПКИ", b1:"НАЧАТЬ", b2:"ЗАВЕРШИТЬ", b3:"ПОВТОРИТЬ ЗАДАНИЕ", b4:"НАЧАТЬ ЗАНОВО", gen:"🚀 СОЗДАТЬ МАГИЮ", cat:"КАТЕГОРИЯ", col:"ОТТЕНОК", eff:"ЭФФЕКТ" },
-        de: { h1:"KATEGORIEN", h2:"WELT & HELDEN", h3:"INTERFACE", b1:"STARTEN", b2:"BEENDEN", b3:"AUFGABE WIEDERHOLEN", b4:"NEU STARTEN", gen:"🚀 SPIEL ERSTELLEN", cat:"KATEGORIE", col:"FARBTON", eff:"EFFEKT" },
-        en: { h1:"CATEGORIES", h2:"WORLD & HEROES", h3:"BUTTONS", b1:"START", b2:"FINISH", b3:"REPEAT TASK", b4:"RESTART GAME", gen:"🚀 CREATE MAGIC", cat:"CATEGORY", col:"SHADE", eff:"EFFECT" }
-        // ... аналогично для других языков
+    const dictionary = {
+        ru: {h1:"КАТЕГОРИИ", h2:"ГЕРОИ", h3:"КНОПКИ", save:"💾 СОХРАНИТЬ ПРЕСЕТ", gen:"🚀 СОЗДАТЬ ИГРУ", win:"ТЫ ГЕНИЙ!"},
+        de: {h1:"KATEGORIEN", h2:"HELDEN", h3:"BUTTONS", save:"💾 PRESET SPEICHERN", gen:"🚀 SPIEL ERSTELLEN", win:"DU BIST GENIAL!"}
     };
 
-    function translateUI() {
-        const val = document.getElementById('uiLang').value;
-        const d = langs[val] || langs.ru;
-        document.getElementById('h1').innerText = d.h1;
-        document.getElementById('h2').innerText = d.h2;
-        document.getElementById('h3').innerText = d.h3;
-        document.getElementById('btn1').value = d.b1;
-        document.getElementById('btn2').value = d.b2;
-        document.getElementById('btn3').value = d.b3;
-        document.getElementById('btn4').value = d.b4;
-        document.getElementById('btn-gen').innerText = d.gen;
-        
-        for(let i=1; i<=4; i++) {
-            document.getElementById(`cl-${i}`).innerText = `${d.cat} ${i}`;
-            document.getElementById(`col-lbl-${i}`).innerText = d.col;
-            document.getElementById(`eff-lbl-${i}`).innerText = d.eff;
-        }
-    }
-
-    const catBox = document.getElementById('cat-box');
-    for(let i=1; i<=4; i++) {
-        catBox.innerHTML += `
-            <div class="cat-card">
-                <label id="cl-${i}">КАТЕГОРИЯ ${i}</label>
-                <input type="text" value="${['Der','Die','Das','Extra'][i-1]}">
-                
-                <label id="col-lbl-${i}" style="margin-top:10px;">ОТТЕНОК</label>
-                <input type="range" class="color-picker">
-                
-                <label id="eff-lbl-${i}">ЭФФЕКТ</label>
-                <div class="effect-grid">
-                    <div class="eff-btn active" onclick="pickEff(this)">🚫</div>
-                    <div class="eff-btn" onclick="pickEff(this)">🔥</div>
-                    <div class="eff-btn" onclick="pickEff(this)">✨</div>
-                    <div class="eff-btn" onclick="pickEff(this)">🌈</div>
+    const catsArea = document.getElementById('cats-area');
+    for(let i=1; i<=3; i++) {
+        catsArea.innerHTML += `
+            <div style="background:white; padding:15px; border-radius:15px; margin-bottom:12px; border:1px solid #eee;">
+                <label>Категория ${i}</label>
+                <input type="text" id="cat-t-${i}" value="${i==1?'Der':i==2?'Die':'Das'}">
+                <input type="range" id="cat-h-${i}" class="hue-slider">
+                <div class="eff-bar">
+                    <div class="eff-btn active" onclick="eff(this)">🚫</div>
+                    <div class="eff-btn" onclick="eff(this)">🔥</div>
+                    <div class="eff-btn" onclick="eff(this)">✨</div>
                 </div>
-                <textarea rows="1" placeholder="Слова..." style="margin-top:10px;"></textarea>
+                <textarea id="cat-w-${i}" rows="1" placeholder="Слова..."></textarea>
             </div>`;
     }
 
-    function pickEff(el) { el.parentElement.querySelectorAll('.eff-btn').forEach(b=>b.classList.remove('active')); el.classList.add('active'); }
-    function pickItem(el) { el.parentElement.querySelectorAll('.gif-item').forEach(img=>img.classList.remove('active')); el.classList.add('active'); }
+    function pick(el) { el.parentElement.querySelectorAll('img').forEach(i=>i.classList.remove('active')); el.classList.add('active'); }
+    function eff(el) { el.parentElement.querySelectorAll('div').forEach(i=>i.classList.remove('active')); el.classList.add('active'); }
 
-    translateUI();
+    function translateUI() {
+        const l = document.getElementById('uiLang').value;
+        const d = dictionary[l] || dictionary.ru;
+        document.getElementById('h1').innerText = d.h1;
+        document.getElementById('save-btn').innerText = d.save;
+        document.getElementById('gen-btn').innerText = d.gen;
+    }
+
+    function saveData() {
+        const data = {
+            lang: document.getElementById('uiLang').value,
+            start: document.getElementById('btn-s').value,
+            cats: []
+        };
+        for(let i=1; i<=3; i++) {
+            data.cats.push({t: document.getElementById(`cat-t-${i}`).value, w: document.getElementById(`cat-w-${i}`).value});
+        }
+        localStorage.setItem('game_v27', JSON.stringify(data));
+        showMsg();
+    }
+
+    function generate() {
+        const code = "GAME_CONFIG_READY"; // Здесь будет ваша логика генерации
+        alert("Конфигурация создана! Скопируйте её в Genially.");
+    }
+
+    function showMsg() {
+        const m = document.getElementById('msg');
+        m.style.display = 'block';
+        setTimeout(() => m.style.display = 'none', 2000);
+    }
+
+    window.onload = () => {
+        const saved = localStorage.getItem('game_v27');
+        if(saved) {
+            const d = JSON.parse(saved);
+            document.getElementById('uiLang').value = d.lang;
+            d.cats.forEach((c, idx) => {
+                document.getElementById(`cat-t-${idx+1}`).value = c.t;
+                document.getElementById(`cat-w-${idx+1}`).value = c.w;
+            });
+            translateUI();
+        }
+    };
 </script>
-
 </body>
 </html>
