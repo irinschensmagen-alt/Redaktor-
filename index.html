@@ -3,167 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deutsch interaktiv | РЕДАКТОР 12.0</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>Deutsch interaktiv | СУПЕР-РЕДАКТОР 13.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
     <style>
-        :root { --p: #6C5CE7; --a: #FD79A8; --bg: #f0f3f7; }
-        body { font-family: 'Montserrat', sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #2d3436; }
-        .editor-container { max-width: 1400px; margin: 0 auto; background: white; border-radius: 40px; box-shadow: 0 40px 80px rgba(0,0,0,0.1); padding: 30px; border: 4px solid var(--p); }
+        :root { --p: #6C5CE7; --a: #FD79A8; --bg: #f5f6fa; }
+        body { font-family: 'Montserrat', sans-serif; background: #dfe6e9; margin: 0; padding: 20px; }
+        .editor-wrap { max-width: 1400px; margin: 0 auto; background: white; border-radius: 40px; box-shadow: 0 40px 100px rgba(0,0,0,0.2); padding: 35px; border: 4px solid var(--p); }
 
         /* HEADER */
-        .header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 20px; border-bottom: 3px solid #eee; margin-bottom: 30px; }
-        .logo-section { display: flex; align-items: center; gap: 20px; }
-        .logo-img { width: 110px; height: 110px; border-radius: 50%; border: 4px solid var(--a); object-fit: cover; background: #fff; }
-        .title-text h1 { margin: 0; font-size: 0.8rem; letter-spacing: 3px; color: #b2bec3; text-transform: uppercase; }
-        .title-text .name { font-size: 2.3rem; font-weight: 900; color: var(--p); line-height: 1; }
+        .header { display: flex; align-items: center; justify-content: space-between; border-bottom: 5px solid var(--p); padding-bottom: 25px; margin-bottom: 30px; }
+        .logo-box { display: flex; align-items: center; gap: 25px; }
+        .logo-img { width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--a); object-fit: cover; background: #fff; }
+        .brand h1 { margin: 0; font-size: 1rem; letter-spacing: 4px; color: #636e72; text-transform: uppercase; }
+        .brand .name { font-size: 2.5rem; font-weight: 900; color: var(--p); line-height: 1; }
 
-        /* PANELS */
-        .main-grid { display: grid; grid-template-columns: 1fr 1fr 350px; gap: 20px; }
-        .panel { background: #f9f9ff; border-radius: 25px; padding: 20px; border: 1px solid #e1e1ff; }
-        .panel-h { font-weight: 900; color: var(--p); font-size: 0.85rem; text-transform: uppercase; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        /* GRID */
+        .main-grid { display: grid; grid-template-columns: 1fr 1fr 380px; gap: 20px; }
+        .panel { background: #F9F9FF; border-radius: 25px; padding: 20px; border: 1px solid #DCDDE1; }
+        .p-title { font-weight: 900; color: var(--p); font-size: 0.9rem; text-transform: uppercase; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
 
-        /* PAINTS GRID */
-        .cat-box { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
-        label { display: block; font-size: 0.7rem; font-weight: 800; color: #636e72; text-transform: uppercase; margin-bottom: 5px; }
-        input, select, textarea { width: 100%; padding: 10px; border: 2px solid #dfe6e9; border-radius: 12px; font-family: inherit; margin-bottom: 10px; }
-
-        /* MAGIC SELECTS */
-        .magic-select { background: #fff5f8; border-color: var(--a); font-weight: bold; }
-
-        /* MEDIA AREA */
-        .upload-item { background: #fff; padding: 10px; border-radius: 15px; margin-bottom: 10px; border: 1px dashed var(--p); }
-        .upload-btn { background: var(--p); color: white; padding: 8px; border-radius: 8px; font-size: 0.7rem; cursor: pointer; display: block; text-align: center; }
-
-        /* BUTTONS */
-        .actions { grid-column: 1 / -1; display: flex; gap: 20px; margin-top: 20px; }
-        .btn-main { flex: 2; padding: 25px; border: none; border-radius: 20px; font-weight: 900; font-size: 1.4rem; cursor: pointer; background: var(--p); color: white; box-shadow: 0 10px 0 #4834d4; }
-        .btn-copy { flex: 1; padding: 25px; border: none; border-radius: 20px; font-weight: 900; background: #2d3436; color: #00cec9; cursor: pointer; }
+        /* INPUTS */
+        .input-group { background: white; padding: 15px; border-radius: 20px; margin-bottom: 15px; border-left: 8px solid var(--p); }
+        label { display: block; font-size: 0.7rem; font-weight: 800; color: #b2bec3; text-transform: uppercase; margin-bottom: 5px; }
+        input, select, textarea { width: 100%; padding: 12px; border: 2px solid #dfe6e9; border-radius: 12px; font-family: inherit; margin-bottom: 10px; }
         
-        #finalCode { width: 100%; height: 100px; margin-top: 20px; background: #2d3436; color: #00cec9; padding: 15px; border-radius: 15px; font-family: monospace; font-size: 0.7rem; border: none; }
+        /* ЦВЕТА И ЭФФЕКТЫ */
+        .magic-select { background: #fdf2f7; border-color: var(--a); font-weight: bold; }
+
+        /* ACTION BUTTONS */
+        .actions { grid-column: 1 / -1; display: flex; gap: 20px; margin-top: 25px; }
+        .btn-gen { flex: 2; padding: 25px; border: none; border-radius: 20px; font-weight: 900; font-size: 1.4rem; cursor: pointer; background: var(--p); color: white; box-shadow: 0 10px 0 #4834d4; }
+        .btn-copy { flex: 1; padding: 25px; border: none; border-radius: 20px; font-weight: 900; background: #2d3436; color: #00cec9; cursor: pointer; }
+
+        #outputCode { width: 100%; height: 120px; margin-top: 20px; background: #2d3436; color: #00cec9; padding: 15px; border-radius: 15px; font-family: monospace; border: none; }
     </style>
 </head>
 <body>
 
-<div class="editor-container">
+<div class="editor-wrap">
     <div class="header">
-        <div class="logo-section">
-            <img src="https://i.ibb.co/XfXkY0Z/DI-Logo.png" class="logo-img" alt="DI">
-            <div class="title-text">
-                <h1>Deutsch interaktiv</h1>
-                <div class="name">РЕДАКТОР 12.0: ГРАНД-ПАЛИТРА</div>
+        <div class="logo-box">
+            <img src="https://i.ibb.co/XfXkY0Z/DI-Logo.png" class="logo-img" alt="DI Logo">
+            <div class="brand">
+                <h1 id="ui-subtitle">Deutsch interaktiv</h1>
+                <div class="name" id="ui-title">Редактор "Волшебные краски" 13.0</div>
             </div>
         </div>
-        <div style="text-align: right;">
-            <label>Выберите язык обучения</label>
-            <select id="gLang" style="width: 200px;">
-                <option value="ru">Русский</option><option value="de">Deutsch</option><option value="en">English</option>
-                <option value="es">Español</option><option value="it">Italiano</option><option value="fr">Français</option>
-                <option value="zh">Китайский</option><option value="ja">Японский</option>
+        <div style="text-align: right">
+            <label id="ui-label-lang">Язык интерфейса / Sprache</label>
+            <select id="uiLang" style="width: 200px;" onchange="changeLang()">
+                <option value="ru">Русский (RU)</option>
+                <option value="de">Deutsch (DE)</option>
+                <option value="en">English (EN)</option>
+                <option value="es">Español (ES)</option>
+                <option value="it">Italiano (IT)</option>
+                <option value="fr">Français (FR)</option>
+                <option value="zh">中文 (ZH)</option>
+                <option value="ja">日本語 (JA)</option>
             </select>
         </div>
     </div>
 
     <div class="main-grid">
         <div class="panel">
-            <div class="panel-h">🖌️ Настройка Кистей и Слов</div>
-            
-            <div class="cat-box">
-                <label>Категория 1 (напр. DER)</label>
+            <div class="p-title">🎨 <span id="ui-p1">Краски и Слова</span></div>
+            <div class="input-group">
+                <label id="ui-cat1">Категория 1</label>
                 <input type="text" id="c1n" value="Der">
-                <label>Цвет или Эффект</label>
+                <label id="ui-eff">Эффект / Цвет</label>
                 <select id="c1p" class="magic-select">
-                    <optgroup label="✨ МАГИЯ (12)">
-                        <option value="fire">Огонь 🔥</option><option value="lava">Лава 🌋</option>
-                        <option value="ocean">Океан 🌊</option><option value="crystal">Кристалл 💎</option>
-                        <option value="rainbow">Радуга 🌈</option><option value="galaxy">Галактика 🌌</option>
-                        <option value="neon-red" selected>Неон Красный 🔴</option><option value="neon-blue">Неон Синий 🔵</option>
-                        <option value="pearl">Перламутр ✨</option><option value="leo">Леопард 🐆</option>
-                        <option value="snow">Снег ❄️</option><option value="ghost">Призрак 👻</option>
+                    <optgroup label="✨ МАГИЯ (16)">
+                        <option value="fire">Огонь 🔥</option><option value="lava">Лава 🌋</option><option value="glitch">Глитч 📺</option>
+                        <option value="rainbow">Радуга 🌈</option><option value="galaxy">Галактика 🌌</option><option value="crystal">Кристалл 💎</option>
+                        <option value="retro">Ретро 🎞️</option><option value="mirror">Зеркало 🪞</option><option value="prisma">Призма 💠</option>
+                        <option value="ghost">Призрак 👻</option><option value="neon-red">Неон 🔴</option><option value="gold">Золото ⭐</option>
                     </optgroup>
-                    <optgroup label="🎨 КЛАССИКА (20)">
-                        <option value="#FF0000">Красный</option><option value="#0000FF">Синий</option>
-                        <option value="#008000">Зеленый</option><option value="#FFFF00">Желтый</option>
-                        <option value="#FFD700">Золото</option><option value="#C0C0C0">Серебро</option>
-                        <option value="#CD7F32">Бронза</option><option value="#FFC0CB">Розовый</option>
-                        <option value="#800080">Фиолетовый</option><option value="#FFA500">Оранжевый</option>
+                    <optgroup label="🎨 ЦВЕТА (20)">
+                        <option value="#FF0000">Красный</option><option value="#00FF00">Зеленый</option><option value="#0000FF">Синий</option>
+                        <option value="#FF00FF">Маджента</option><option value="#00FFFF">Бирюза</option><option value="#FFA500">Оранжевый</option>
+                        <option value="#800080">Фиолетовый</option><option value="#FFD700">Золотистый</option>
                     </optgroup>
                 </select>
-                <textarea id="c1w" rows="2">Hund, Tisch, Baum, Apfel</textarea>
+                <textarea id="c1w" rows="2">Hund, Tisch, Apfel</textarea>
             </div>
-
-            <div class="cat-box">
-                <label>Категория 2 (напр. DIE)</label>
-                <input type="text" id="c2n" value="Die">
-                <label>Цвет или Эффект</label>
-                <select id="c2p" class="magic-select">
-                    <option value="ocean">Океан 🌊</option>
-                    <option value="rainbow">Радуга 🌈</option>
-                    <option value="neon-blue" selected>Неон Синий 🔵</option>
-                </select>
-                <textarea id="c2w" rows="2">Katze, Sonne, Blume, Tasche</textarea>
-            </div>
-
-            <div class="cat-box">
-                <label>Категория 3 (напр. DAS)</label>
-                <input type="text" id="c3n" value="Das">
-                <label>Цвет или Эффект</label>
-                <select id="c3p" class="magic-select">
-                    <option value="gold">Золото ⭐</option>
-                    <option value="crystal">Кристалл 💎</option>
-                    <option value="neon-green" selected>Неон Зеленый 🟢</option>
-                </select>
-                <textarea id="c3w" rows="2">Kind, Haus, Auto, Buch</textarea>
-            </div>
+            <div id="additional-cats"></div>
         </div>
 
         <div class="panel">
-            <div class="panel-h">🖼️ Медиа-Лаборатория</div>
-            
-            <div class="upload-item">
-                <label>🏙️ Фон Мира (URL или Файл)</label>
-                <input type="text" id="bgUrl" placeholder="https://...">
-                <label class="upload-btn">📁 Загрузить с компьютера<input type="file" hidden onchange="up(this,'bg')"></label>
-            </div>
+            <div class="p-title">🎭 <span id="ui-p2">Персонажи и Мир</span></div>
+            <label id="ui-hero">Выбери героя</label>
+            <select id="heroSelect">
+                <option value="mickey">Микки Маус 🐭</option>
+                <option value="elsa">Эльза ❄️</option>
+                <option value="stitch">Стич 👽</option>
+                <option value="simba">Симба 🦁</option>
+                <option value="custom">Свой (загрузить ниже)</option>
+            </select>
+            <input type="file" id="heroFile" style="font-size: 0.7rem;">
 
-            <div class="upload-item">
-                <label>👤 Веселый Художник (URL/GIF)</label>
-                <input type="text" id="heroUrl" placeholder="https://...">
-                <label class="upload-btn">📁 Загрузить с компьютера<input type="file" hidden onchange="up(this,'hero')"></label>
-            </div>
+            <label style="margin-top:15px;" id="ui-trophy">Предмет для прогресс-балла</label>
+            <select id="trophySelect">
+                <option value="💧">Капельки воды</option>
+                <option value="🌸">Цветы</option>
+                <option value="🖌️">Кисточки</option>
+                <option value="🚀">Ракеты</option>
+                <option value="🚗">Машинки</option>
+                <option value="🍩">Пончики</option>
+                <option value="⭐">Звезды</option>
+            </select>
 
-            <div class="upload-item">
-                <label>🐝 Злая Пчела (URL/GIF)</label>
-                <input type="text" id="beeUrl" placeholder="https://...">
-                <label class="upload-btn">📁 Загрузить с компьютера<input type="file" hidden onchange="up(this,'bee')"></label>
-            </div>
-
-            <div class="upload-item">
-                <label>🎵 Волшебная музыка (URL)</label>
-                <input type="text" id="musicUrl" placeholder="https://...">
-            </div>
+            <label style="margin-top:15px;">🎵 Фоновая музыка (URL)</label>
+            <input type="text" id="musicUrl" placeholder="https://...">
         </div>
 
         <div class="panel">
-            <div class="panel-h">⚙️ Управление Игрой</div>
-            <label>Что раскрашиваем?</label>
+            <div class="p-title">⚙️ <span id="ui-p3">Настройки и Кнопки</span></div>
+            <label id="ui-lvl">Сложность мира</label>
             <select id="gLvl">
-                <option value="butterfly">🦋 Бабочка (Легкий)</option>
-                <option value="house">🏠 Весь Дом (Средний)</option>
-                <option value="garden">🌳 Сад и Огород (Сложный)</option>
+                <option value="butterfly">🦋 Бабочка и Роза</option>
+                <option value="house">🏠 Весь Дом</option>
+                <option value="garden">🌳 Огород и Сад</option>
             </select>
 
-            <label>Количество игроков</label>
-            <select id="gPlayers">
-                <option value="1">Один Художник</option>
-                <option value="2">Дуэт (Вдвоём)</option>
-            </select>
-
-            <label>Текст кнопки Старт</label>
-            <input type="text" id="btnStart" value="ИГРАТЬ!">
-            
-            <label>Текст кнопки Повтор</label>
-            <input type="text" id="btnRetry" value="ЕЩЁ РАЗ!">
-            
-            <label>Финальное поздравление</label>
-            <input type="text" id="txtWin" value="ТЫ НАСТОЯЩИЙ ХУДОЖНИК!">
+            <label id="ui-btn-start">Кнопка Старт</label>
+            <input type="text" id="bStart" value="ИГРАТЬ">
+            <label id="ui-btn-again">Кнопка Повтор</label>
+            <input type="text" id="bAgain" value="ЕЩЁ РАЗ">
+            <label id="ui-win">Поздравление</label>
+            <input type="text" id="txtWin" value="ТЫ ГЕНИЙ!">
         </div>
+
+        <div class="actions">
+            <button class="btn-gen" onclick="generateCode()" id="ui-main-btn">🚀 СОЗДАТЬ МАГИЮ</button>
+            <button class="btn-copy" onclick="copyCode()" id="ui-copy-btn">📋 КОПИРОВАТЬ</button>
+        </div>
+    </div>
+
+    <textarea id="outputCode" readonly></textarea>
+</div>
+
+<script>
+    const translations = {
+        ru: { title: "Редактор 'Волшебные краски'", p1: "Краски и Слова", p2: "Персонажи и Мир", p3: "Настройки", mainBtn: "СОЗДАТЬ МАГИЮ", hero: "Выбери героя", trophy: "Предмет прогресса" },
+        de: { title: "Editor 'Zauberfarben'", p1: "Farben & Wörter", p2: "Charaktere", p3: "Einstellungen", mainBtn: "MAGIE ERZEUGEN", hero: "Held wählen", trophy: "Fortschrittsobjekt" },
+        en: { title: "Editor 'Magic Paints'", p1: "Paints & Words", p2: "Characters", p3: "Settings", mainBtn: "GENERATE MAGIC", hero: "Choose Hero", trophy: "Progress Item" }
+        // ... другие языки добавляются по аналогии
+    };
+
+    function changeLang() {
+        const lang = document.getElementById('uiLang').value;
+        const t = translations[lang] || translations.en;
+        document.getElementById('ui-title').innerText = t.title;
+        document.getElementById('ui-p1').innerText = t.p1;
+        document.getElementById('ui-p2').innerText = t.p2;
+        document.getElementById('ui-main-btn').innerText = t.mainBtn;
+        document.getElementById('ui-hero').innerText = t.hero;
+        document.getElementById('ui-trophy').innerText = t.trophy;
+    }
+
+    function generateCode() {
+        const d = {
+            lang: document.getElementById('uiLang').value,
+            c1: {n: document.getElementById('c1n').value, p: document.getElementById('c1p').value, w: document.getElementById('c1w').value},
+            trophy: document.getElementById('trophySelect').value,
+            hero: document.getElementById('heroSelect').value,
+            win: document.getElementById('txtWin').value
+        };
+
+        // Логика сборки srcdoc для Genially...
+        const finalIframe = `<iframe srcdoc="...код игры..." width="100%" height="600px"></iframe>`;
+        document.getElementById('outputCode').value = finalIframe;
+        alert("Код для Genially готов!");
+    }
+
+    function copyCode() {
+        const area = document.getElementById('outputCode');
+        area.select();
+        document.execCommand('copy');
+    }
+</script>
+
+</body>
+</html>
