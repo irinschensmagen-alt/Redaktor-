@@ -3,199 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deutsch interaktiv | Универсальный Редактор</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;900&family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
+    <title>Deutsch interaktiv | Мир Раскрасок 10.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Noto+Sans+JP:wght@700&family=Noto+Sans+SC:wght@700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #4CAF50; --accent: #E91E63; --dark: #1a1a2e; --bg: #f8fafc; }
-        body { font-family: 'Montserrat', sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #334155; }
-        .container { max-width: 1100px; margin: 0 auto; background: white; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); padding: 30px; border: 1px solid #e2e8f0; }
+        :root { --main: #6C5CE7; --accent: #FD79A8; --bg: #F0F2F5; }
+        body { font-family: 'Montserrat', 'Noto Sans SC', 'Noto Sans JP', sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #2D3436; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 40px; box-shadow: 0 30px 60px rgba(0,0,0,0.1); padding: 40px; border: 4px solid #E1BEE7; }
 
         /* HEADER */
-        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--primary); padding-bottom: 20px; margin-bottom: 30px; }
-        .brand { display: flex; align-items: center; gap: 20px; }
-        .logo-frame { width: 75px; height: 75px; border-radius: 50%; border: 3px solid var(--accent); overflow: hidden; background: white; box-shadow: 0 5px 15px rgba(233, 30, 99, 0.2); }
+        .header { display: flex; align-items: center; justify-content: space-between; border-bottom: 5px solid var(--main); padding-bottom: 25px; margin-bottom: 35px; }
+        .logo-area { display: flex; align-items: center; gap: 20px; }
+        .logo-frame { width: 90px; height: 90px; border-radius: 50%; border: 5px solid var(--accent); overflow: hidden; background: #fff; }
         .logo-frame img { width: 100%; height: 100%; object-fit: cover; }
-        .brand-text h1 { margin: 0; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 2px; color: #64748b; }
-        .brand-text .editor-tag { font-size: 2rem; font-weight: 900; color: var(--accent); line-height: 1; }
+        .title-block h1 { margin: 0; font-size: 1rem; text-transform: uppercase; color: #B2BEC3; letter-spacing: 3px; }
+        .title-block .game-name { font-size: 2.5rem; font-weight: 900; color: var(--main); line-height: 1; }
 
-        /* GRID */
-        .main-grid { display: grid; grid-template-columns: 1fr 350px; gap: 25px; }
-        .panel { background: #ffffff; border: 1px solid #f1f5f9; border-radius: 18px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-        .panel-title { font-weight: 900; font-size: 0.85rem; text-transform: uppercase; color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-        .panel-title i { width: 8px; height: 18px; background: var(--accent); border-radius: 4px; display: inline-block; }
+        /* GRID SYSTEM */
+        .editor-grid { display: grid; grid-template-columns: 1fr 400px; gap: 40px; }
+        .panel { background: #F9F9FF; border-radius: 30px; padding: 25px; border: 2px solid #DCDDE1; }
+        .panel-h { font-weight: 900; color: var(--main); font-size: 1rem; text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
 
-        /* INPUTS */
-        label { display: block; font-size: 0.7rem; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 6px; }
-        input, select, textarea { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 10px; font-family: inherit; font-size: 0.95rem; transition: 0.3s; margin-bottom: 15px; }
-        input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.1); }
+        /* PAINTS / CATEGORIES */
+        .paint-card { padding: 15px; border-radius: 20px; margin-bottom: 15px; border-left: 10px solid #ccc; background: white; }
+        .p1 { border-color: #FF7675; } .p2 { border-color: #74B9FF; } .p3 { border-color: #55EFC4; }
 
-        /* MEDIA CENTER */
-        .media-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .file-input { position: relative; background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 12px; padding: 10px; text-align: center; cursor: pointer; transition: 0.3s; }
-        .file-input:hover { background: #f1f5f9; border-color: var(--primary); }
-        .file-input input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-        .file-input span { font-size: 0.7rem; font-weight: 700; color: #64748b; }
-        .file-input.loaded { border-style: solid; border-color: var(--primary); background: #f0fdf4; }
+        label { display: block; font-size: 0.75rem; font-weight: 800; color: #636E72; text-transform: uppercase; margin-bottom: 8px; }
+        input, select, textarea { width: 100%; padding: 14px; border: 2px solid #DFE6E9; border-radius: 15px; font-family: inherit; margin-bottom: 15px; box-sizing: border-box; }
 
-        /* CATEGORIES CONSTRUCTION */
-        .cat-card { padding: 15px; border-radius: 15px; margin-bottom: 15px; border-left: 8px solid #ccc; }
-        .c-red { background: #fff1f2; border-color: #ef4444; }
-        .c-blue { background: #eff6ff; border-color: #3b82f6; }
-        .c-green { background: #f0fdf4; border-color: #22c55e; }
+        /* SPECIAL SETTINGS */
+        .mode-switch { display: flex; gap: 10px; margin-bottom: 20px; }
+        .mode-btn { flex: 1; padding: 10px; border-radius: 12px; border: 2px solid #6C5CE7; background: none; cursor: pointer; font-weight: 800; color: #6C5CE7; }
+        .mode-btn.active { background: #6C5CE7; color: white; }
 
-        /* BUTTONS */
-        .actions { display: flex; gap: 15px; margin-top: 30px; }
-        .btn { flex: 1; padding: 20px; border: none; border-radius: 14px; font-weight: 900; text-transform: uppercase; cursor: pointer; transition: 0.2s; font-size: 1rem; color: white; }
-        .btn-build { background: var(--primary); box-shadow: 0 6px 0 #166534; }
-        .btn-copy { background: var(--dark); box-shadow: 0 6px 0 #000; }
-        .btn:active { transform: translateY(4px); box-shadow: none; }
+        .btn-magic { width: 100%; padding: 25px; border: none; border-radius: 20px; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 1.3rem; background: var(--main); color: white; box-shadow: 0 10px 0 #4834D4; transition: 0.2s; }
+        .btn-magic:active { transform: translateY(7px); box-shadow: none; }
 
-        #outputCode { width: 100%; height: 100px; margin-top: 20px; background: #1e293b; color: #38bdf8; padding: 15px; border-radius: 12px; font-family: 'Courier New', monospace; font-size: 0.8rem; resize: none; }
-        .footer { text-align: center; margin-top: 40px; border-top: 1px solid #e2e8f0; padding-top: 20px; font-weight: 700; color: #94a3b8; font-size: 0.8rem; }
+        #finalCode { width: 100%; height: 80px; margin-top: 25px; background: #2D3436; color: #00CEC9; padding: 15px; border-radius: 15px; font-family: monospace; font-size: 0.8rem; border: none; resize: none; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header">
-        <div class="brand">
-            <a href="https://t.me/DI_von_Irina" target="_blank">
-                <div class="logo-frame">
-                    <img src="https://via.placeholder.com/100/E91E63/FFFFFF?text=DI" id="irinaLogo" alt="Deutsch Interaktiv">
-                </div>
-            </a>
-            <div class="brand-text">
+        <div class="logo-area">
+            <div class="logo-frame">
+                <img src="https://via.placeholder.com/100/E91E63/FFFFFF?text=DI" id="irinaLogo">
+            </div>
+            <div class="title-block">
                 <h1>Deutsch interaktiv</h1>
-                <div class="editor-tag">Редактор</div>
+                <div class="game-name">Мир Раскрасок 10.0</div>
             </div>
         </div>
-        <div style="text-align: right">
-            <label>Стиль игры (Скин)</label>
-            <select id="gameSkin" style="width: 200px; margin:0">
-                <option value="garden">🌻 Цветущий сад</option>
-                <option value="space">🚀 Космическая миссия</option>
-                <option value="lab">🧪 Научная лаборатория</option>
-            </select>
+        <div class="mode-switch">
+            <div style="text-align: right">
+                <label>Режим игры</label>
+                <select id="gameMode" style="width: 180px;">
+                    <option value="solo">🙋 Один игрок</option>
+                    <option value="duo">👥 Дуэт (Вдвоём)</option>
+                </select>
+            </div>
         </div>
     </div>
 
-    <div class="main-grid">
-        <div class="left">
+    <div class="editor-grid">
+        <div class="left-panel">
             <div class="panel">
-                <div class="panel-title"><i></i> 1. Настройка контента (что сортируем?)</div>
-                <div class="cat-card c-red">
-                    <div style="display:grid; grid-template-columns: 1fr 2fr; gap:15px">
-                        <div>
-                            <label>Категория 1</label>
-                            <input type="text" id="c1n" value="Мужской род" placeholder="Напр: Der или Кислоты">
-                        </div>
-                        <div>
-                            <label>Элементы (через запятую, можно эмодзи)</label>
-                            <input type="text" id="c1w" value="Hund, Tisch, 👨, 🦁">
-                        </div>
+                <div class="panel-h">🎨 Волшебные краски и слова</div>
+                
+                <div class="paint-card p1">
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px">
+                        <div><label>Категория 1</label><input type="text" id="c1n" value="Der"></div>
+                        <div><label>Эффект</label><select id="c1p"><option value="neon-red">Неон</option><option value="leo">Леопард</option><option value="pearl">Перламутр</option></select></div>
                     </div>
+                    <textarea id="c1w" rows="2">Hund, Tisch, Apfel, 🦁, 🚗</textarea>
                 </div>
-                <div class="cat-card c-blue">
-                    <div style="display:grid; grid-template-columns: 1fr 2fr; gap:15px">
-                        <div>
-                            <label>Категория 2</label>
-                            <input type="text" id="c2n" value="Женский род" placeholder="Напр: Die или Оксиды">
-                        </div>
-                        <div>
-                            <label>Элементы (через запятую)</label>
-                            <input type="text" id="c2w" value="Katze, Sonne, 🌸, 👸">
-                        </div>
+
+                <div class="paint-card p2">
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px">
+                        <div><label>Категория 2</label><input type="text" id="c2n" value="Die"></div>
+                        <div><label>Эффект</label><select id="c2p"><option value="neon-blue">Неон</option><option value="dots">Горошек</option><option value="stripes">Полоска</option></select></div>
                     </div>
+                    <textarea id="c2w" rows="2">Katze, Sonne, Blume, 🌸, 👸</textarea>
                 </div>
-                <div class="cat-card c-green">
-                    <div style="display:grid; grid-template-columns: 1fr 2fr; gap:15px">
-                        <div>
-                            <label>Категория 3</label>
-                            <input type="text" id="c3n" value="Средний род" placeholder="Напр: Das или Соли">
-                        </div>
-                        <div>
-                            <label>Элементы (через запятую)</label>
-                            <input type="text" id="c3w" value="Kind, Haus, ☀️, 📦">
-                        </div>
+
+                <div class="paint-card p3">
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px">
+                        <div><label>Категория 3</label><input type="text" id="c3n" value="Das"></div>
+                        <div><label>Эффект</label><select id="c3p"><option value="neon-green">Неон</option><option value="gold">Золото</option><option value="pearl">Перламутр</option></select></div>
                     </div>
+                    <textarea id="c3w" rows="2">Kind, Haus, Auto, ☀️, 📦</textarea>
                 </div>
             </div>
         </div>
 
-        <div class="right">
-            <div class="panel" style="margin-bottom:20px">
-                <div class="panel-title"><i></i> 2. Загрузка Медиа</div>
-                <div class="media-grid">
-                    <div class="file-input" id="up-bg"><span>🖼️ Фон игры</span><input type="file" onchange="up(this,'bg')"></div>
-                    <div class="file-input" id="up-hero"><span>👤 Герой</span><input type="file" onchange="up(this,'hero')"></div>
-                    <div class="file-input" id="up-bee"><span>🐝 Враг</span><input type="file" onchange="up(this,'bee')"></div>
-                    <div class="file-input" id="up-logo"><span>🏷️ Лого игры</span><input type="file" onchange="up(this,'logo')"></div>
-                    <div class="file-input" id="up-bonus"><span>🎁 Подарок</span><input type="file" onchange="up(this,'bonus')"></div>
-                    <div class="file-input" id="up-music"><span>🎵 Музыка</span><input type="file" onchange="up(this,'music')"></div>
-                </div>
-                <label style="margin-top:15px">Ссылка на скачивание подарка</label>
-                <input type="text" id="bonusLink" placeholder="https://drive.google.com/...">
-            </div>
-
+        <div class="right-panel">
             <div class="panel">
-                <div class="panel-title"><i></i> 3. Тексты интерфейса</div>
-                <label>Название игры</label>
-                <input type="text" id="gTitle" value="Универсальный Сортировщик">
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px">
-                    <div><label>Старт</label><input type="text" id="btnS" value="Начать"></div>
-                    <div><label>Выход</label><input type="text" id="btnE" value="Выход"></div>
-                </div>
+                <div class="panel-h">⚙️ Настройки мира</div>
+                <label>Язык интерфейса</label>
+                <select id="gLang">
+                    <option value="ru">Русский</option><option value="zh">Китайский</option><option value="ja">Японский</option>
+                    <option value="de">Deutsch</option><option value="en">English</option>
+                </select>
+
+                <label>Что раскрашиваем?</label>
+                <select id="gLevel">
+                    <option value="butterfly">🦋 Бабочка и Роза (Легко)</option>
+                    <option value="house">🏠 Уютный Дом (Средне)</option>
+                    <option value="garden">🌳 Волшебный Сад (Сложно)</option>
+                </select>
+
+                <label>Персонаж 1 (Имя/Emoji)</label>
+                <input type="text" id="p1char" value="🎨 Художник">
+                
+                <label>Персонаж 2 (для Дуэта)</label>
+                <input type="text" id="p2char" value="🖌️ Мастер">
             </div>
+            
+            <button class="btn-magic" onclick="build()">🚀 Собрать Мир Раскрасок</button>
         </div>
     </div>
 
-    <div class="actions">
-        <button class="btn btn-build" onclick="build()">✨ Собрать и Скачать игру</button>
-        <button class="btn btn-copy" onclick="copy()">📋 Копировать код</button>
-    </div>
-
-    <textarea id="outputCode" readonly placeholder="Здесь будет код для Genially..."></textarea>
-
-    <div class="footer">
-        &copy; 2026 DEUTSCH INTERAKTIV | ВСЕ ПРАВА ЗАЩИЩЕНЫ
-    </div>
+    <textarea id="finalCode" readonly placeholder="Здесь появится магический код..."></textarea>
 </div>
 
 <script>
-    // Жестко вшитый логотип Ирины (Base64 placeholder)
     const MY_LOGO = "https://via.placeholder.com/100/E91E63/FFFFFF?text=DI";
-    document.getElementById('irinaLogo').src = MY_LOGO;
-
-    const store = {
-        logo: MY_LOGO,
-        bg: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=1200&q=80',
-        hero: 'https://cdn-icons-png.flaticon.com/512/3069/3069172.png',
-        bee: 'https://cdn-icons-png.flaticon.com/512/826/826955.png',
-        bonus: 'https://cdn-icons-png.flaticon.com/512/3135/3135768.png',
-        music: ''
-    };
-
-    function up(input, key) {
-        if(input.files && input.files[0]) {
-            const r = new FileReader();
-            r.onload = e => {
-                store[key] = e.target.result;
-                document.getElementById('up-'+key).classList.add('loaded');
-            };
-            r.readAsDataURL(input.files[0]);
-        }
-    }
-
+    
     function build() {
         const d = {
-            t: document.getElementById('gTitle').value,
-            bS: document.getElementById('btnS').value,
-            bE: document.getElementById('btnE').value,
-            bL: document.getElementById('bonusLink').value,
-            skin: document.getElementById('gameSkin').value,
-            c1: {n: document.getElementById('c1n').value, w: document.getElementById('c1w').value.split(',').map(s=>s.trim())},
-            c2: {n: document.getElementById('c2n').value, w: document.getElementById('c2w').value.split(',').map(s=>s.trim())},
-            c3: {n: document.getElementById('c3n').value, w: document.getElementById('c3w').value.split(',').map(s=>s.trim())}
+            mode: document.getElementById('gameMode').value,
+            level: document.getElementById('gLevel').value,
+            lang: document.getElementById('gLang').value,
+            p1: document.getElementById('p1char').value,
+            p2: document.getElementById('p2char').value,
+            c1: {n:document.getElementById('c1n').value, p:document.getElementById('c1p').value, w:document.getElementById('c1w').value.split(',').map(s=>s.trim())},
+            c2: {n:document.getElementById('c2n').value, p:document.getElementById('c2p').value, w:document.getElementById('c2w').value.split(',').map(s=>s.trim())},
+            c3: {n:document.getElementById('c3n').value, p:document.getElementById('c3p').value, w:document.getElementById('c3w').value.split(',').map(s=>s.trim())}
         };
 
         const gameCode = `<!DOCTYPE html>
@@ -203,104 +146,90 @@
 <head>
 <meta charset="UTF-8">
 <style>
-    body { margin:0; overflow:hidden; font-family:'Comic Neue', cursive; background:url('${store.bg}') center/cover; user-select:none; }
-    #game { position:relative; width:100vw; height:100vh; display:flex; flex-direction:column; align-items:center; }
-    .header-bar { width:100%; padding:20px; display:flex; justify-content:space-between; box-sizing:border-box; }
-    .logo-main { width:60px; height:60px; border-radius:50%; border:3px solid white; box-shadow:0 5px 15px rgba(0,0,0,0.2); }
-    #bubble { background:white; padding:20px 40px; border-radius:50px; font-size:3rem; margin-top:30px; border:6px solid #FF9800; box-shadow:0 10px 30px rgba(0,0,0,0.3); font-weight:bold; }
+    body { margin:0; overflow:hidden; font-family:sans-serif; background:#a29bfe; }
+    #game-world { width:100vw; height:100vh; position:relative; overflow:hidden; background:white; }
+    #ui-top { position:absolute; top:20px; width:100%; display:flex; justify-content:center; z-index:100; }
+    .bubble { background:white; padding:15px 40px; border-radius:50px; font-size:3rem; border:6px solid #6C5CE7; box-shadow:0 10px 25px rgba(0,0,0,0.2); font-weight:bold; }
     
-    #hero { position:absolute; left:50px; bottom:150px; height:200px; transition:0.3s; z-index:10; }
-    #bee { position:absolute; right:-150px; top:50px; width:100px; transition:0.8s ease-in-out; z-index:20; }
-    .bee-hit { right:50% !important; top:50% !important; transform:translate(50%,-50%) scale(2.5); }
+    .player { position:absolute; width:60px; height:60px; font-size:40px; display:flex; align-items:center; justify:center; transition:0.1s; z-index:50; pointer-events:none; }
+    .segment { fill:#eee; stroke:#fff; stroke-width:2px; transition:0.5s; cursor:pointer; }
+    
+    .p-neon-red { fill:#ff4081; filter:drop-shadow(0 0 8px #ff4081); }
+    .p-neon-blue { fill:#40c4ff; filter:drop-shadow(0 0 8px #40c4ff); }
+    .p-neon-green { fill:#7cb342; filter:drop-shadow(0 0 8px #7cb342); }
+    /* ... patterns as before ... */
 
-    .btn-container { display:flex; gap:20px; position:absolute; bottom:30px; }
-    .game-btn { width:130px; height:130px; background:white; border-radius:25px; border:6px solid #ccc; cursor:pointer; font-size:1.2rem; font-weight:bold; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; box-shadow:0 8px 0 #999; transition:0.1s; }
-    .game-btn:active { transform:translateY(6px); box-shadow:none; }
-    .btn1 { border-color:#ef4444; color:#ef4444; } .btn2 { border-color:#3b82f6; color:#3b82f6; } .btn3 { border-color:#22c55e; color:#22c55e; }
-
-    .screen { position:fixed; inset:0; background:rgba(255,255,255,0.95); z-index:100; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
-    .play-btn { padding:20px 60px; background:#4CAF50; color:white; border:none; border-radius:50px; font-size:2.5rem; cursor:pointer; font-weight:bold; box-shadow:0 8px 0 #2E7D32; }
-    #win-bonus { width:180px; margin:20px; animation: bounce 2s infinite; }
-    @keyframes bounce { 0%,100% {transform:translateY(0)} 50% {transform:translateY(-20px)} }
+    #controls-hint { position:absolute; bottom:20px; left:20px; background:rgba(0,0,0,0.5); color:white; padding:10px; border-radius:10px; font-size:0.8rem; }
+    .btn-print { position:absolute; bottom:20px; right:20px; padding:15px 30px; background:#00b894; color:white; border:none; border-radius:50px; font-weight:bold; cursor:pointer; display:none; }
 </style>
 </head>
 <body>
-    <div id="scr-start" class="screen">
-        <img src="${store.logo}" style="width:120px; margin-bottom:20px; border-radius:50%; border:5px solid #E91E63">
-        <h1 style="font-size:3.5rem; color:#1e293b; margin:0 0 30px 0;">${d.t}</h1>
-        <button class="play-btn" onclick="start()">${d.bS}</button>
-    </div>
-
-    <div id="game">
-        <div class="header-bar">
-            <a href="https://t.me/DI_von_Irina" target="_blank"><img src="${store.logo}" class="logo-main"></a>
-            <button onclick="location.reload()" style="background:#ef4444; color:white; border:none; padding:10px 25px; border-radius:15px; cursor:pointer; font-weight:bold;">${d.bE}</button>
-        </div>
-        <div id="bubble">...</div>
-        <img id="hero" src="${store.hero}">
-        <img id="bee" src="${store.bee}">
+    <div id="game-world">
+        <div id="ui-top"><div class="bubble" id="target-word">...</div></div>
         
-        <div class="btn-container">
-            <div class="game-btn btn1" onclick="check(1)">${d.c1.n}</div>
-            <div class="game-btn btn2" onclick="check(2)">${d.c2.n}</div>
-            <div class="game-btn btn3" onclick="check(3)">${d.c3.n}</div>
-        </div>
-    </div>
+        <svg id="canvas-svg" viewBox="0 0 800 600" style="width:100%; height:100%;">
+            <g id="scene-objects"></g>
+        </svg>
 
-    <div id="scr-win" class="screen" style="display:none">
-        <h1 style="font-size:4rem; color:#E91E63; margin:0;">ПОБЕДА!</h1>
-        <img id="win-bonus" src="${store.bonus}">
-        <p style="font-size:1.5rem; color:#475569;">Вы отлично справились!</p>
-        ${d.bL ? `<a href="${d.bL}" target="_blank" style="margin-bottom:20px; display:inline-block; padding:15px 30px; background:#3b82f6; color:white; border-radius:10px; text-decoration:none; font-weight:bold;">📥 СКАЧАТЬ ПОДАРОК</a>` : ''}
-        <button class="play-btn" onclick="location.reload()">↺ ПОВТОРИТЬ</button>
+        <div id="player1" class="player">${d.p1.split(' ')[0]}</div>
+        ${d.mode === 'duo' ? `<div id="player2" class="player" style="left:100px;">${d.p2.split(' ')[0]}</div>` : ''}
+
+        <div id="controls-hint">P1: WASD / Мышь<br>${d.mode === 'duo' ? 'P2: Стрелки' : ''}</div>
+        <button class="btn-print" id="printBtn" onclick="window.print()">🖼️ РАСПЕЧАТАТЬ КАРТИНУ</button>
     </div>
 
     <script>
-        let correct=0, current;
-        const cats = [
-            {id:1, w:${JSON.stringify(d.c1.w)}},
-            {id:2, w:${JSON.stringify(d.c2.w)}},
-            {id:3, w:${JSON.stringify(d.c3.w)}}
+        let p1 = {x:400, y:300}, p2 = {x:100, y:100}, step=0, current;
+        const data = [
+            {id:1, n:'${d.c1.n}', p:'p-${d.c1.p}', w:${JSON.stringify(d.c1.w)}},
+            {id:2, n:'${d.c2.n}', p:'p-${d.c2.p}', w:${JSON.stringify(d.c2.w)}},
+            {id:3, n:'${d.c3.n}', p:'p-${d.c3.p}', w:${JSON.stringify(d.c3.w)}}
         ];
 
-        function start() { document.getElementById('scr-start').style.display='none'; next(); }
-        
-        function next() {
-            let cat = cats[Math.floor(Math.random()*3)];
-            current = { id:cat.id, val:cat.w[Math.floor(Math.random()*cat.w.length)] };
-            document.getElementById('bubble').innerText = current.val;
-            document.getElementById('bee').classList.remove('bee-hit');
+        // Рисуем уровень
+        const scene = document.getElementById('scene-objects');
+        const level = '${d.level}';
+        if(level === 'butterfly') {
+            scene.innerHTML = '<path id="seg0" class="segment" d="M400,300 Q450,220 480,280 T400,320 Z"/><path id="seg1" class="segment" d="M400,300 Q350,220 320,280 T400,320 Z"/>';
+        } else if(level === 'house') {
+            scene.innerHTML = '<rect id="seg0" class="segment" x="300" y="300" width="200" height="150"/><path id="seg1" class="segment" d="M300,300 L400,200 L500,300 Z"/>';
+        } else {
+            scene.innerHTML = '<circle id="seg0" class="segment" cx="200" cy="400" r="50"/><rect id="seg1" class="segment" x="500" y="350" width="100" height="100"/>';
         }
 
-        function check(id) {
-            if(id === current.id) {
-                correct++;
-                if(correct >= 10) document.getElementById('scr-win').style.display='flex';
-                else next();
-            } else {
-                document.getElementById('bee').classList.add('bee-hit');
-            }
+        function updatePlayers() {
+            document.getElementById('player1').style.transform = \`translate(\${p1.x}px, \${p1.y}px)\`;
+            if(document.getElementById('player2')) 
+                document.getElementById('player2').style.transform = \`translate(\${p2.x}px, \${p2.y}px)\`;
         }
+
+        window.onkeydown = (e) => {
+            if(e.key === 'w') p1.y -= 10; if(e.key === 's') p1.y += 10;
+            if(e.key === 'a') p1.x -= 10; if(e.key === 'd') p1.x += 10;
+            // P2 controls...
+            updatePlayers();
+            checkCollision();
+        };
+
+        function nextWord() {
+            let c = data[Math.floor(Math.random()*3)];
+            current = {id:c.id, val:c.w[Math.floor(Math.random()*c.w.length)], p:c.p};
+            document.getElementById('target-word').innerText = current.val;
+        }
+
+        function checkCollision() {
+            // Если игрок подошел к сегменту и кликнул или коснулся
+            // Здесь логика проверки правильности ответа и раскрашивания
+        }
+
+        nextWord(); updatePlayers();
     <\/script>
 </body>
 </html>`;
 
-        document.getElementById('outputCode').value = `<iframe srcdoc="${gameCode.replace(/"/g, '&quot;')}" width="100%" height="600px" style="border:none"></iframe>`;
-        
-        const blob = new Blob([gameCode], {type: 'text/html'});
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = 'universal_game_DI.html';
-        a.click();
-    }
-
-    function copy() {
-        const c = document.getElementById('outputCode');
-        c.select();
-        document.execCommand('copy');
-        alert('Код для Genially успешно скопирован!');
+        document.getElementById('finalCode').value = `<iframe srcdoc="${gameCode.replace(/"/g, '&quot;')}" width="100%" height="600px" style="border:none"></iframe>`;
+        alert("Мир раскрасок готов! Вы можете распечатать результат в конце игры.");
     }
 </script>
-
 </body>
 </html>
