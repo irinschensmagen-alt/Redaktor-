@@ -3,54 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deutsch interaktiv | Ultimate Editor 20.0</title>
+    <title>Deutsch interaktiv | Grand Masterpiece 21.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Noto+Sans+JP&family=Noto+Sans+SC&display=swap" rel="stylesheet">
     <style>
         :root { --p: #6C5CE7; --a: #FD79A8; --dark: #2D3436; }
-        body { font-family: 'Montserrat', sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
-        .wrapper { max-width: 1600px; margin: 0 auto; background: white; border-radius: 40px; border: 5px solid var(--p); padding: 35px; box-shadow: 0 40px 80px rgba(0,0,0,0.1); }
+        body { font-family: 'Montserrat', sans-serif; background: #dfe6e9; margin: 0; padding: 20px; }
+        .wrapper { max-width: 1650px; margin: 0 auto; background: white; border-radius: 50px; border: 6px solid var(--p); padding: 40px; box-shadow: 0 50px 100px rgba(0,0,0,0.2); }
         
         /* HEADER */
-        .header { display: flex; align-items: center; justify-content: space-between; border-bottom: 4px solid #eee; padding-bottom: 25px; margin-bottom: 30px; }
-        .logo-img { width: 140px; height: 140px; border-radius: 50%; border: 4px solid var(--a); object-fit: cover; }
+        .header { display: flex; align-items: center; justify-content: space-between; border-bottom: 5px solid #f0f0f0; padding-bottom: 30px; margin-bottom: 30px; }
+        .logo-img { width: 140px; height: 140px; border-radius: 50%; border: 5px solid var(--a); object-fit: cover; background: white; }
 
         /* GRID */
-        .grid { display: grid; grid-template-columns: 1.2fr 1fr 400px; gap: 25px; }
-        .panel { background: #F8F9FF; border-radius: 30px; padding: 25px; border: 1px solid #E1E2EF; }
-        .panel-h { font-weight: 900; color: var(--p); text-transform: uppercase; margin-bottom: 20px; border-left: 6px solid var(--a); padding-left: 15px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr 400px; gap: 30px; }
+        .panel { background: #F9F9FF; border-radius: 35px; padding: 25px; border: 2px solid #E1E2EF; }
+        .panel-h { font-weight: 900; color: var(--p); text-transform: uppercase; margin-bottom: 20px; border-left: 8px solid var(--a); padding-left: 15px; font-size: 1.1rem; }
 
-        /* КАТЕГОРИИ */
-        .cat-card { background: white; padding: 20px; border-radius: 20px; margin-bottom: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
-        .double-select { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0; }
+        /* КАТЕГОРИИ И КЛИКАБЕЛЬНЫЕ ЭФФЕКТЫ */
+        .cat-card { background: white; padding: 20px; border-radius: 25px; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .visual-selector { display: flex; gap: 10px; overflow-x: auto; padding: 10px 5px; margin: 10px 0; border: 1px solid #eee; border-radius: 15px; }
+        .v-item { min-width: 50px; height: 50px; border-radius: 10px; cursor: pointer; border: 3px solid #eee; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: 0.3s; background: white; }
+        .v-item.active { border-color: var(--a); transform: scale(1.1); background: #fff0f5; }
         
-        label { display: block; font-size: 0.7rem; font-weight: 800; color: #636e72; text-transform: uppercase; margin-bottom: 5px; }
-        input, select, textarea { width: 100%; padding: 12px; border: 2px solid #DFE6E9; border-radius: 12px; font-family: inherit; }
+        label { display: block; font-size: 0.75rem; font-weight: 800; color: #636e72; text-transform: uppercase; margin-bottom: 8px; }
+        input, select, textarea { width: 100%; padding: 12px; border: 2px solid #DFE6E9; border-radius: 15px; font-family: inherit; }
 
-        /* GIF ПРЕВЬЮ */
-        .gif-selector { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; }
-        .gif-option { width: 60px; height: 60px; border: 3px solid #eee; border-radius: 12px; cursor: pointer; transition: 0.2s; object-fit: cover; }
-        .gif-option.active { border-color: var(--a); transform: scale(1.1); }
+        /* ПЕРСОНАЖИ И ПОДАРКИ (GIF) */
+        .gif-strip { display: flex; gap: 15px; overflow-x: auto; padding: 10px 0; }
+        .gif-btn { width: 80px; height: 80px; border-radius: 20px; border: 4px solid #eee; cursor: pointer; transition: 0.3s; object-fit: cover; }
+        .gif-btn.active { border-color: var(--a); transform: translateY(-5px); box-shadow: 0 10px 20px rgba(253, 121, 168, 0.3); }
 
-        .btn-main { width: 100%; padding: 25px; border: none; border-radius: 20px; font-weight: 900; font-size: 1.6rem; cursor: pointer; background: var(--p); color: white; margin-top: 25px; }
+        .btn-build { width: 100%; padding: 30px; border: none; border-radius: 30px; font-weight: 900; font-size: 1.8rem; cursor: pointer; background: var(--p); color: white; box-shadow: 0 12px 0 #4834D4; margin-top: 30px; }
     </style>
 </head>
 <body>
 
 <div class="wrapper">
     <div class="header">
-        <div style="display:flex; align-items:center; gap:25px;">
+        <div style="display:flex; align-items:center; gap:30px;">
             <img src="https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/logo.png" class="logo-img">
             <div>
-                <h1 style="margin:0; color:var(--p); font-size:2.5rem;">Deutsch interaktiv</h1>
-                <span id="ui-sub" style="font-weight:700; color:#b2bec3; letter-spacing:3px;">PREMIUM EDITOR 20.0</span>
+                <h1 style="margin:0; color:var(--p); font-size:2.8rem;">Deutsch interaktiv</h1>
+                <span id="ui-ver" style="font-weight:900; color:var(--a); letter-spacing:5px;">MASTERPIECE 21.0</span>
             </div>
         </div>
-        <select id="uiLang" onchange="translateAll()" style="width:200px;">
-            <option value="ru">Русский (RU)</option>
-            <option value="de">Deutsch (DE)</option>
-            <option value="zh">中文 (ZH)</option>
-            <option value="ja">日本語 (JA)</option>
-        </select>
+        <div class="lang-box">
+            <label id="ui-lang-l">Язык Редактора / Sprache</label>
+            <select id="uiLang" onchange="translate()" style="width:250px;">
+                <option value="ru">Русский (RU)</option><option value="de">Deutsch (DE)</option>
+                <option value="en">English (EN)</option><option value="es">Español (ES)</option>
+                <option value="it">Italiano (IT)</option><option value="fr">Français (FR)</option>
+                <option value="zh">中文 (ZH)</option><option value="ja">日本語 (JA)</option>
+            </select>
+        </div>
     </div>
 
     <div class="grid">
@@ -60,104 +65,116 @@
         </div>
 
         <div class="panel">
-            <div class="panel-h" id="h2">Герои и Подарки (GIF)</div>
+            <div class="panel-h" id="h2">Мир и Персонажи</div>
             
-            <label id="l-hero">Выберите Персонажа</label>
-            <div class="gif-selector">
-                <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueW90Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3/mickey.gif" class="gif-option active" onclick="selGif('h', this)">
-                <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueW90Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3/snowwhite.gif" class="gif-option" onclick="selGif('h', this)">
-                <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueW90Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3/stitch.gif" class="gif-option" onclick="selGif('h', this)">
-            </div>
-            <input type="text" id="heroUrl" placeholder="Или своя ссылка на GIF...">
+            <label id="l-theme">Тематика Игры (Фон)</label>
+            <select id="themeSelect">
+                <option value="garden">В огороде 🌻</option>
+                <option value="space">В космосе 🚀</option>
+                <option value="disney">Замок Дисней 🏰</option>
+                <option value="ocean">Подводный мир 🌊</option>
+                <option value="custom">Свой фон (URL)...</option>
+            </select>
 
-            <label id="l-gift" style="margin-top:20px;">Выберите Подарок</label>
-            <div class="gif-selector">
-                <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueW90Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3/cup.gif" class="gif-option active" onclick="selGif('g', this)">
-                <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueW90Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3/fireworks.gif" class="gif-option" onclick="selGif('g', this)">
-                <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueW90Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3/diamond.gif" class="gif-option" onclick="selGif('g', this)">
+            <label id="l-hero" style="margin-top:20px;">Кем ты будешь? (Выбери героя)</label>
+            <div class="gif-strip">
+                <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3A4Mjd6NjF6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3/snowwhite.gif" class="gif-btn active" onclick="selItem('h', this)">
+                <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3A4Mjd6NjF6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3/mickey.gif" class="gif-btn" onclick="selItem('h', this)">
+                <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3A4Mjd6NjF6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3/elsa.gif" class="gif-btn" onclick="selItem('h', this)">
+                <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3A4Mjd6NjF6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3/bee.gif" class="gif-btn" onclick="selItem('h', this)">
             </div>
-            <input type="text" id="giftUrl" placeholder="Ссылка на подарок...">
+
+            <label id="l-gift" style="margin-top:20px;">Подарок за успех</label>
+            <div class="gif-strip">
+                <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3A4Mjd6NjF6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3/gift1.gif" class="gif-btn active" onclick="selItem('g', this)">
+                <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3A4Mjd6NjF6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3/cup.gif" class="gif-btn" onclick="selItem('g', this)">
+                <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3A4Mjd6NjF6Z3R6Z3R6Z3R6Z3R6Z3R6Z3R6Z3/stars.gif" class="gif-btn" onclick="selItem('g', this)">
+            </div>
         </div>
 
         <div class="panel">
-            <div class="panel-h" id="h3">Настройка Кнопок</div>
+            <div class="panel-h" id="h3">Уровни и Интерфейс</div>
             
+            <label id="l-lvl">Уровень сложности</label>
+            <select id="gameLvl">
+                <option value="butterfly">🦋 Бабочка (Легкий)</option>
+                <option value="house">🏠 Дом (Средний)</option>
+                <option value="garden">🌳 Огород (Сложный)</option>
+            </select>
+
             <label id="lb1">Кнопка "Начать"</label>
             <input type="text" id="btn1" value="НАЧАТЬ">
-
             <label id="lb2">Кнопка "Завершить"</label>
             <input type="text" id="btn2" value="ЗАВЕРШИТЬ">
-
             <label id="lb3">Кнопка "Повторить задание"</label>
             <input type="text" id="btn3" value="ПОВТОРИТЬ ЗАДАНИЕ">
+            <label id="lb4">Кнопка "Начать игру заново"</label>
+            <input type="text" id="btn4" value="НАЧАТЬ ЗАНОВО">
 
-            <label id="lb4">Кнопка "Начать заново игру"</label>
-            <input type="text" id="btn4" value="НАЧАТЬ ЗАНОВО ИГРУ">
+            <label id="l-win" style="margin-top:15px;">Финальный текст</label>
+            <input type="text" id="txtWin" value="ТЫ ГЕНИЙ!">
         </div>
     </div>
 
-    <button class="btn-main" onclick="alert('Магия готова!')" id="btn-gen">🚀 СОЗДАТЬ МАГИЮ GENIALLY</button>
+    <button class="btn-build" onclick="alert('Код сгенерирован!')" id="btn-gen">🚀 СОЗДАТЬ МАГИЮ GENIALLY</button>
 </div>
 
 <script>
-    const dict = {
-        ru: { h1: "Настройка Категорий", h2: "Герои и Подарки", h3: "Тексты Кнопок", lb1: "Начать", lb2: "Завершить", lb3: "Повторить задание", lb4: "Начать заново", gen: "🚀 СОЗДАТЬ МАГИЮ", cat: "Категория", cWin: "Цвет", eWin: "Эффект" },
-        de: { h1: "Kategorien", h2: "Helden & Geschenke", h3: "Button-Texte", lb1: "Starten", lb2: "Beenden", lb3: "Aufgabe wiederholen", lb4: "Neu starten", gen: "🚀 SPIEL ERSTELLEN", cat: "Kategorie", cWin: "Farbe", eWin: "Effekt" },
-        zh: { h1: "分类设置", h2: "人物与礼物", h3: "按钮文本", lb1: "开始", lb2: "结束", lb3: "重复任务", lb4: "重新开始", gen: "🚀 生成游戏", cat: "分类", cWin: "颜色", eWin: "效果" },
-        ja: { h1: "カテゴリ設定", h2: "キャラとギフト", h3: "ボタンテキスト", lb1: "スタート", lb2: "終了", lb3: "タスクを繰り返す", lb4: "最初から始める", gen: "🚀 ゲームを作成", cat: "カテゴリ", cWin: "色", eWin: "エフェクト" }
+    const dictionary = {
+        ru: { h1: "Категории", h2: "Мир и Герои", h3: "Кнопки", b1: "Начать", b2: "Завершить", b3: "Повторить задание", b4: "Начать заново", gen: "🚀 СОЗДАТЬ МАГИЮ" },
+        de: { h1: "Kategorien", h2: "Welt & Helden", h3: "Buttons", b1: "Starten", b2: "Beenden", b3: "Aufgabe wiederholen", b4: "Neu starten", gen: "🚀 SPIEL ERSTELLEN" },
+        zh: { h1: "分类设置", h2: "世界与角色", h3: "控制按钮", b1: "开始", b2: "结束", b3: "重复任务", b4: "重新开始", gen: "🚀 生成游戏" },
+        ja: { h1: "カテゴリ", h2: "世界とキャラ", h3: "ボタン", b1: "スタート", b2: "終了", b3: "もう一度", b4: "最初から", gen: "🚀 ゲーム作成" }
     };
 
-    function translateAll() {
+    function translate() {
         const l = document.getElementById('uiLang').value;
-        const d = dict[l] || dict.ru;
+        const d = dictionary[l] || dictionary.ru;
         document.getElementById('h1').innerText = d.h1;
         document.getElementById('h2').innerText = d.h2;
         document.getElementById('h3').innerText = d.h3;
-        document.getElementById('lb1').innerText = d.lb1;
-        document.getElementById('btn1').value = d.lb1.toUpperCase();
-        document.getElementById('btn2').value = d.lb2.toUpperCase();
-        document.getElementById('btn3').value = d.lb3.toUpperCase();
-        document.getElementById('btn4').value = d.lb4.toUpperCase();
+        document.getElementById('btn1').value = d.b1.toUpperCase();
+        document.getElementById('btn2').value = d.b2.toUpperCase();
+        document.getElementById('btn3').value = d.b3.toUpperCase();
+        document.getElementById('btn4').value = d.b4.toUpperCase();
         document.getElementById('btn-gen').innerText = d.gen;
-        
-        for(let i=1; i<=4; i++) {
-            document.getElementById(`cl-${i}`).innerText = `${d.cat} ${i}`;
-            document.getElementById(`col-l-${i}`).innerText = d.cWin;
-            document.getElementById(`eff-l-${i}`).innerText = d.eWin;
-        }
     }
 
     const catRoot = document.getElementById('cat-root');
     for(let i=1; i<=4; i++) {
         catRoot.innerHTML += `
             <div class="cat-card">
-                <label id="cl-${i}">Категория ${i}</label>
-                <input type="text" value="${['Der','Die','Das','Plural'][i-1] || ''}">
-                <div class="double-select">
-                    <div>
-                        <label id="col-l-${i}">Цвет</label>
-                        <input type="color" value="#6C5CE7">
-                    </div>
-                    <div>
-                        <label id="eff-l-${i}">Эффект</label>
-                        <select>
-                            <option>Нет</option><option>Глитч</option><option>Неон</option><option>Огонь</option>
-                        </select>
-                    </div>
+                <label>Категория ${i}</label>
+                <input type="text" value="${['Der','Die','Das','Extra'][i-1]}">
+                
+                <label style="margin-top:10px;">Выберите Цвет</label>
+                <input type="color" value="${['#ff7675','#74b9ff','#55efc4','#ffeaa7'][i-1]}">
+                
+                <label style="margin-top:10px;">Выберите Эффект (Клик!)</label>
+                <div class="visual-selector">
+                    <div class="v-item active" onclick="selV(this)">🚫</div>
+                    <div class="v-item" onclick="selV(this)">📺</div>
+                    <div class="v-item" onclick="selV(this)">🔥</div>
+                    <div class="v-item" onclick="selV(this)">🌈</div>
+                    <div class="v-item" onclick="selV(this)">❄️</div>
+                    <div class="v-item" onclick="selV(this)">✨</div>
                 </div>
-                <textarea rows="1" placeholder="Слова..."></textarea>
+                
+                <textarea rows="1" placeholder="Слова через запятую..."></textarea>
             </div>`;
     }
 
-    function selGif(type, el) {
-        const parent = el.parentElement;
-        parent.querySelectorAll('.gif-option').forEach(img => img.classList.remove('active'));
+    function selV(el) {
+        el.parentElement.querySelectorAll('.v-item').forEach(i => i.classList.remove('active'));
         el.classList.add('active');
-        if(type === 'h') document.getElementById('heroUrl').value = el.src;
-        else document.getElementById('giftUrl').value = el.src;
     }
 
-    translateAll();
+    function selItem(type, el) {
+        el.parentElement.querySelectorAll('.gif-btn').forEach(i => i.classList.remove('active'));
+        el.classList.add('active');
+    }
+
+    translate();
 </script>
 
 </body>
