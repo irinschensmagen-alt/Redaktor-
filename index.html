@@ -2,35 +2,39 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Deutsch interaktiv 30.0 | Full Recovery</title>
+    <title>Deutsch interaktiv | Редактор</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --p: #6C5CE7; --a: #FD79A8; --ok: #00B894; }
         body { font-family: 'Montserrat', sans-serif; background: #f0f2f5; padding: 20px; color: #2d3436; margin: 0; }
-        .wrapper { max-width: 1450px; margin: 0 auto; background: white; border-radius: 40px; border: 5px solid var(--p); padding: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
+        .wrapper { max-width: 1400px; margin: 0 auto; background: white; border-radius: 40px; border: 5px solid var(--p); padding: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
         
+        /* HEADER */
         .header { display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid #eee; padding-bottom: 20px; margin-bottom: 25px; }
-        .logo-link { transition: 0.3s; cursor: pointer; text-decoration: none; }
+        .logo-link { transition: 0.3s; cursor: pointer; text-decoration: none; display: flex; align-items: center; gap: 20px; }
         .logo-img { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--a); }
+        .header-titles h2 { margin: 0; color: var(--p); font-size: 2.2rem; line-height: 1; }
+        .header-titles span { color: var(--a); font-weight: 700; font-size: 0.9rem; }
 
-        .grid { display: grid; grid-template-columns: 1fr 1fr 380px; gap: 20px; }
+        .grid { display: grid; grid-template-columns: 1.1fr 1fr 380px; gap: 20px; }
         .panel { background: #F8F9FF; border-radius: 25px; padding: 20px; border: 1px solid #E1E2EF; }
         .panel-h { font-weight: 900; color: var(--p); border-left: 6px solid var(--a); padding-left: 12px; margin-bottom: 20px; text-transform: uppercase; }
 
-        /* ЦВЕТА */
+        /* ГРАДИЕНТ */
         .hue-slider { -webkit-appearance: none; width: 100%; height: 15px; border-radius: 10px; background: linear-gradient(to right, red, yellow, green, cyan, blue, magenta, red); margin: 15px 0; cursor: pointer; }
         .hue-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; background: white; border: 3px solid var(--p); border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 
-        /* ИКОНКИ */
-        .img-grid { display: flex; gap: 10px; flex-wrap: wrap; padding: 10px 0; }
-        .img-card { width: 70px; height: 70px; border-radius: 12px; border: 3px solid #ddd; cursor: pointer; transition: 0.2s; background: white; object-fit: contain; padding: 5px; }
-        .img-card.active { border-color: var(--a); transform: scale(1.1); background: #fff5f8; }
+        /* ХУДОЖНИКИ И ПРЕДМЕТЫ */
+        .img-grid { display: flex; gap: 12px; flex-wrap: wrap; padding: 10px 0; }
+        .img-card { width: 85px; height: 85px; border-radius: 15px; border: 3px solid #ddd; cursor: pointer; transition: 0.2s; background: white; object-fit: contain; padding: 5px; }
+        .img-card.active { border-color: var(--a); transform: scale(1.08); background: #fff5f8; box-shadow: 0 5px 15px rgba(253,121,168,0.2); }
 
-        .eff-bar { display: flex; gap: 5px; margin-bottom: 15px; }
-        .eff-btn { flex: 1; padding: 10px; background: #eee; border-radius: 10px; cursor: pointer; text-align: center; border: 2px solid transparent; font-size: 1.1rem; }
+        .eff-bar { display: flex; gap: 6px; margin-bottom: 15px; }
+        .eff-btn { flex: 1; padding: 10px; background: #eee; border-radius: 10px; cursor: pointer; text-align: center; border: 2px solid transparent; font-size: 1.2rem; }
         .eff-btn.active { background: white; border-color: var(--a); }
 
-        input, select, textarea { width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #ddd; margin-bottom: 10px; font-family: inherit; box-sizing: border-box; }
+        input, select, textarea { width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #ddd; margin-bottom: 10px; font-family: inherit; box-sizing: border-box; font-size: 0.95rem; }
+        label { font-size: 0.8rem; font-weight: 700; color: #636e72; margin-bottom: 5px; display: block; }
         
         .btn { width: 100%; padding: 18px; border: none; border-radius: 18px; font-weight: 900; cursor: pointer; transition: 0.2s; color: white; margin-top: 10px; }
         .btn-save { background: var(--ok); box-shadow: 0 5px 0 #008a6e; }
@@ -42,26 +46,19 @@
 
 <div class="wrapper">
     <div class="header">
-        <div style="display:flex; align-items:center; gap:20px;">
-            <a href="https://t.me/DI_von_Irina" target="_blank" class="logo-link">
-                <img src="https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/logo.png" class="logo-img">
-            </a>
-            <div>
-                <h2 style="margin:0; color:var(--p); font-size: 1.8rem;">Deutsch interaktiv</h2>
-                <small id="ui-ver" style="color:var(--a); font-weight:900;">VERSION 30.0 • RECOVERY</small>
+        <a href="https://t.me/DI_von_Irina" target="_blank" class="logo-link">
+            <img src="https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/logo.png" class="logo-img">
+            <div class="header-titles">
+                <h2>Deutsch interaktiv</h2>
+                <span>KREATIV-EDITOR</span>
             </div>
-        </div>
-        <div style="text-align: right;">
-            <label style="font-size: 0.7rem; font-weight: 900;" id="l-lang">ЯЗЫК РЕДАКТОРА</label>
-            <select id="uiLang" onchange="applyTranslation()" style="width:180px; margin-top: 5px;">
+        </a>
+        <div style="width: 220px;">
+            <label id="l-ui">ЯЗЫК РЕДАКТОРА</label>
+            <select id="uiLang" onchange="applyTranslation()">
                 <option value="ru">Русский (RU)</option>
                 <option value="de">Deutsch (DE)</option>
                 <option value="en">English (EN)</option>
-                <option value="es">Español (ES)</option>
-                <option value="fr">Français (FR)</option>
-                <option value="it">Italiano (IT)</option>
-                <option value="zh">中文 (ZH)</option>
-                <option value="ja">日本語 (JA)</option>
             </select>
         </div>
     </div>
@@ -73,94 +70,64 @@
         </div>
 
         <div class="panel">
-            <div class="panel-h" id="h2">МИР И ГЕРОИ</div>
-            <label id="lt">Фон игры</label>
-            <select id="theme-sel">
-                <option>В огороде 🌻</option>
-                <option>Замок 🏰</option>
-                <option>Космос 🚀</option>
+            <div class="panel-h" id="h2">МИР И ХУДОЖНИКИ</div>
+            <label id="l-theme">Локация</label>
+            <select>
+                <option>Студия художника 🎨</option>
+                <option>Галерея 🖼️</option>
+                <option>Пленэр 🌳</option>
             </select>
 
-            <label style="margin-top:20px; display:block;" id="lh">Выберите персонажа</label>
+            <label style="margin-top:20px;" id="l-hero">Выберите персонажа</label>
             <div class="img-grid">
-                <img src="https://img.icons8.com/color/96/mickey-mouse.png" class="img-card active" onclick="sel(this)">
-                <img src="https://img.icons8.com/color/96/elsa.png" class="img-card" onclick="sel(this)">
-                <img src="https://img.icons8.com/color/96/bumblebee.png" class="img-card" onclick="sel(this)">
-                <img src="https://img.icons8.com/color/96/snow-white.png" class="img-card" onclick="sel(this)">
+                <img src="https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/%D0%92%D0%B5%D1%81%D1%91%D0%BB%D1%8B%D0%B9%20%D1%85%D1%83%D0%B4%D0%BE%D0%B6%D0%BD%D0%B8%D0%BA.png" class="img-card active" onclick="sel(this)" title="Весёлый художник">
+                <img src="https://img.icons8.com/color/144/female-artist.png" class="img-card" onclick="sel(this)" title="Художница">
+                <img src="https://img.icons8.com/color/144/artist.png" class="img-card" onclick="sel(this)" title="Художник">
             </div>
 
-            <label style="margin-top:20px; display:block;" id="lg">Выберите подарок</label>
+            <label style="margin-top:20px;" id="l-gift">Предмет за успех</label>
             <div class="img-grid">
-                <img src="https://img.icons8.com/color/96/trophy.png" class="img-card active" onclick="sel(this)">
-                <img src="https://img.icons8.com/color/96/filled-star.png" class="img-card" onclick="sel(this)">
-                <img src="https://img.icons8.com/color/96/confetti.png" class="img-card" onclick="sel(this)">
-                <img src="https://img.icons8.com/color/96/diamond--v1.png" class="img-card" onclick="sel(this)">
+                <img src="https://img.icons8.com/color/144/paint-palette.png" class="img-card active" onclick="sel(this)">
+                <img src="https://img.icons8.com/color/144/drawing-brushes.png" class="img-card" onclick="sel(this)">
+                <img src="https://img.icons8.com/color/144/beret.png" class="img-card" onclick="sel(this)">
+                <img src="https://img.icons8.com/color/144/trophy.png" class="img-card" onclick="sel(this)">
             </div>
         </div>
 
         <div class="panel">
             <div class="panel-h" id="h3">ИНТЕРФЕЙС</div>
-            <label id="lb1">Кнопка Начать</label><input type="text" id="i1" value="НАЧАТЬ">
-            <label id="lb2">Кнопка Завершить</label><input type="text" id="i2" value="ЗАВЕРШИТЬ">
-            <label id="lb3">Кнопка Повторить</label><input type="text" id="i3" value="ПОВТОРИТЬ">
-            <label id="lb4">Кнопка Заново</label><input type="text" id="i4" value="ЗАНОВО">
-            <label id="lw">Текст победы</label><input type="text" id="i5" value="ТЫ ГЕНИЙ!">
+            <label id="lb1">Кнопка Начать</label><input type="text" id="i1" value="SPIELEN">
+            <label id="lb2">Кнопка Завершить</label><input type="text" id="i2" value="BEENDEN">
+            <label id="lb3">Кнопка Повторить</label><input type="text" id="i3" value="NOCHMAL">
+            <label id="lb4">Кнопка Заново</label><input type="text" id="i4" value="NEU STARTEN">
+            <label id="lw">Победный текст</label><input type="text" id="i5" value="AUSGEZEICHNET!">
             
-            <button class="btn btn-save" id="b-save" onclick="saveData()">💾 СОХРАНИТЬ ПРЕСЕТ</button>
-            <button class="btn btn-main" id="b-gen" onclick="alert('Код сгенерирован!')">🚀 СОЗДАТЬ ИГРУ</button>
+            <button class="btn btn-save" id="btn-s" onclick="save()">💾 СОХРАНИТЬ ПРЕСЕТ</button>
+            <button class="btn btn-main" id="btn-g" onclick="alert('Готово!')">🚀 СОЗДАТЬ ИГРУ</button>
         </div>
     </div>
 </div>
 
 <script>
     const dict = {
-        ru: {h1:"КАТЕГОРИИ", h2:"МИР И ГЕРОИ", h3:"ИНТЕРФЕЙС", bS:"💾 СОХРАНИТЬ ПРЕСЕТ", bG:"🚀 СОЗДАТЬ ИГРУ", cat:"Категория", l1:"Начать", l2:"Завершить", l3:"Повторить", l4:"Заново", l5:"Победа"},
-        de: {h1:"KATEGORIEN", h2:"WELT & HELDEN", h3:"INTERFACE", bS:"💾 PRESET SPEICHERN", bG:"🚀 SPIEL ERSTELLEN", cat:"Kategorie", l1:"Starten", l2:"Beenden", l3:"Wiederholen", l4:"Neu starten", l5:"Sieg"},
-        en: {h1:"CATEGORIES", h2:"WORLD & HEROES", h3:"INTERFACE", bS:"💾 SAVE PRESET", bG:"🚀 CREATE GAME", cat:"Category", l1:"Start", l2:"Finish", l3:"Repeat", l4:"Restart", l5:"Victory"}
+        ru: {h1:"КАТЕГОРИИ", h2:"МИР И ХУДОЖНИКИ", h3:"ИНТЕРФЕЙС", bs:"💾 СОХРАНИТЬ ПРЕСЕТ", bg:"🚀 СОЗДАТЬ ИГРУ", cat:"Категория"},
+        de: {h1:"KATEGORIEN", h2:"WELT & KÜNSTLER", h3:"INTERFACE", bs:"💾 PRESET SPEICHERN", bg:"🚀 SPIEL ERSTELLEN", cat:"Kategorie"}
     };
 
-    const box = document.getElementById('cats-box');
+    const container = document.getElementById('cats-box');
     for(let i=1; i<=4; i++) {
-        box.innerHTML += `
-            <div style="background:white; padding:15px; border-radius:15px; margin-bottom:15px; border:1px solid #eee;">
+        container.innerHTML += `
+            <div style="background:white; padding:15px; border-radius:15px; margin-bottom:12px; border:1px solid #eee;">
                 <label id="cl-${i}">Категория ${i}</label>
                 <input type="text" id="ct${i}" value="${['Der','Die','Das','Extra'][i-1] || ''}">
-                <input type="range" id="ch${i}" class="hue-slider">
+                <input type="range" class="hue-slider">
                 <div class="eff-bar">
                     <div class="eff-btn active" onclick="eff(this)">🚫</div>
                     <div class="eff-btn" onclick="eff(this)">🔥</div>
                     <div class="eff-btn" onclick="eff(this)">✨</div>
                 </div>
-                <textarea id="cw${i}" rows="1" placeholder="Слова..."></textarea>
+                <textarea rows="1" placeholder="Слова через запятую..."></textarea>
             </div>`;
     }
 
-    function sel(el) { el.parentElement.querySelectorAll('img').forEach(i=>i.classList.remove('active')); el.classList.add('active'); }
-    function eff(el) { el.parentElement.querySelectorAll('div').forEach(i=>i.classList.remove('active')); el.classList.add('active'); }
-
-    function applyTranslation() {
-        const l = document.getElementById('uiLang').value;
-        const d = dict[l] || dict.ru;
-        document.getElementById('h1').innerText = d.h1;
-        document.getElementById('h2').innerText = d.h2;
-        document.getElementById('h3').innerText = d.h3;
-        document.getElementById('b-save').innerText = d.bS;
-        document.getElementById('b-gen').innerText = d.bG;
-        document.getElementById('lb1').innerText = d.l1;
-        document.getElementById('lb2').innerText = d.l2;
-        document.getElementById('lb3').innerText = d.l3;
-        document.getElementById('lb4').innerText = d.l4;
-        document.getElementById('lw').innerText = d.l5;
-        for(let i=1; i<=4; i++) { if(document.getElementById(`cl-${i}`)) document.getElementById(`cl-${i}`).innerText = `${d.cat} ${i}`; }
-    }
-
-    function saveData() {
-        const data = { lang: document.getElementById('uiLang').value };
-        localStorage.setItem('game_v30', JSON.stringify(data));
-        alert('Настройки успешно восстановлены и сохранены!');
-    }
-
-    applyTranslation();
-</script>
-</body>
-</html>
+    function sel(el) { el.parentElement.querySelectorAll('img').forEach(i=>i.classList.remove('active')); el.classList
