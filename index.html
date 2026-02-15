@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Редактор игры "Весёлый художник" | Deutsch interaktiv</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <title>Редактор игры "Весёлый художник" | Deutsch interaktiv PRO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { 
             --primary: #6C5CE7;
             --accent: #FD79A8; 
+            --success: #00b894;
             --dark: #2D3436;
             --red: #ff7675;
             --blue: #74b9ff;
@@ -16,460 +17,458 @@
             --yellow: #ffeaa7;
         }
         
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body { 
             font-family: 'Montserrat', sans-serif; 
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-            margin: 0; 
-            padding: 20px;
-            min-height: 100vh;
             overflow-y: scroll;
             scroll-behavior: smooth;
         }
         
-        /* СТИЛИЗОВАННЫЙ СКРОЛЛБАР */
-        body::-webkit-scrollbar {
-            width: 14px;
-        }
-        
-        body::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-        }
-        
-        body::-webkit-scrollbar-thumb {
+        /* СКРОЛЛБАРЫ */
+        body::-webkit-scrollbar { width: 14px; }
+        body::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+        body::-webkit-scrollbar-thumb { 
             background: linear-gradient(135deg, var(--primary), var(--accent));
             border-radius: 10px;
             border: 2px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s;
+        }
+        body::-webkit-scrollbar-thumb:hover { background: linear-gradient(135deg, var(--accent), var(--primary)); }
+        
+        .container {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
         }
         
-        body::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, var(--accent), var(--primary));
-            border-color: rgba(255, 255, 255, 0.4);
+        /* ЛЕВАЯ ПАНЕЛЬ - РЕДАКТОР */
+        .editor-panel {
+            width: 45%;
+            background: white;
+            overflow-y: auto;
+            box-shadow: 5px 0 30px rgba(0,0,0,0.3);
         }
         
-        /* Firefox скроллбар */
-        * {
-            scrollbar-width: thin;
-            scrollbar-color: var(--primary) rgba(255, 255, 255, 0.1);
+        .editor-panel::-webkit-scrollbar { width: 10px; }
+        .editor-panel::-webkit-scrollbar-track { background: #f0f0f0; }
+        .editor-panel::-webkit-scrollbar-thumb { 
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 10px;
         }
         
-        .wrapper { 
-            max-width: 1650px; 
-            margin: 0 auto; 
-            background: white; 
-            border-radius: 40px; 
-            border: 6px solid var(--primary); 
-            padding: 40px; 
-            box-shadow: 0 30px 80px rgba(0,0,0,0.3);
-            animation: slideIn 0.6s ease-out;
+        /* ПРАВАЯ ПАНЕЛЬ - ПРЕДПРОСМОТР */
+        .preview-panel {
+            width: 55%;
+            background: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
         
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* HEADER РЕДАКТОРА */
+        .editor-header {
+            background: linear-gradient(135deg, var(--primary), #5848c2);
+            color: white;
+            padding: 25px 30px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
         }
         
-        /* HEADER */
-        .header { 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            border-bottom: 5px solid #f0f0f0; 
-            padding-bottom: 30px; 
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 20px;
+        .editor-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
         }
         
-        .logo-section {
+        .editor-header .subtitle {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            font-weight: 600;
+            letter-spacing: 2px;
+        }
+        
+        /* КОНТЕНТ РЕДАКТОРА */
+        .editor-content {
+            padding: 30px;
+        }
+        
+        /* СЕКЦИИ */
+        .section {
+            background: linear-gradient(135deg, #F9F9FF 0%, #FFF5F8 100%);
+            border-radius: 25px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 2px solid #E1E2EF;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
-            gap: 30px;
+            gap: 10px;
+            border-left: 6px solid var(--accent);
+            padding-left: 12px;
         }
         
-        .logo-img { 
-            width: 120px; 
-            height: 120px; 
-            border-radius: 50%; 
-            border: 5px solid var(--accent); 
-            object-fit: cover; 
-            background: white;
-            box-shadow: 0 10px 25px rgba(253, 121, 168, 0.3);
+        /* ФОРМА */
+        .form-group {
+            margin-bottom: 20px;
         }
         
-        .title-section h1 {
-            margin: 0;
-            color: var(--primary);
-            font-size: 2.5rem;
-            font-weight: 900;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .title-section .version {
-            font-weight: 900;
-            color: var(--accent);
-            letter-spacing: 3px;
-            font-size: 0.9rem;
-        }
-
-        .lang-box {
-            text-align: right;
-        }
-        
-        .lang-box label {
+        label {
             display: block;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             font-weight: 800;
             color: #636e72;
             text-transform: uppercase;
             margin-bottom: 8px;
-        }
-        
-        .lang-box select {
-            padding: 12px 20px;
-            border: 3px solid var(--primary);
-            border-radius: 15px;
-            font-family: inherit;
-            font-weight: 700;
-            background: white;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .lang-box select:hover {
-            border-color: var(--accent);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3);
-        }
-
-        /* GRID */
-        .grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); 
-            gap: 30px;
-            margin-bottom: 30px;
-        }
-        
-        .panel { 
-            background: linear-gradient(135deg, #F9F9FF 0%, #FFF5F8 100%);
-            border-radius: 30px; 
-            padding: 30px; 
-            border: 3px solid #E1E2EF;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            transition: all 0.3s;
-        }
-        
-        .panel:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
-        }
-        
-        .panel-h { 
-            font-weight: 900; 
-            color: var(--primary); 
-            text-transform: uppercase; 
-            margin-bottom: 25px; 
-            border-left: 8px solid var(--accent); 
-            padding-left: 15px; 
-            font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .panel-h::before {
-            content: "🎨";
-            font-size: 1.5rem;
-        }
-
-        /* КАТЕГОРИИ */
-        .cat-card { 
-            background: white; 
-            padding: 25px; 
-            border-radius: 25px; 
-            margin-bottom: 20px; 
-            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-            border: 2px solid transparent;
-            transition: all 0.3s;
-        }
-        
-        .cat-card:hover {
-            border-color: var(--accent);
-            transform: scale(1.02);
-        }
-        
-        .visual-selector { 
-            display: flex; 
-            gap: 10px; 
-            overflow-x: auto; 
-            padding: 15px 10px; 
-            margin: 15px 0; 
-            border: 2px dashed #E1E2EF; 
-            border-radius: 20px;
-            background: #FAFAFA;
-            scroll-behavior: smooth;
-        }
-        
-        .visual-selector::-webkit-scrollbar {
-            height: 8px;
-        }
-        
-        .visual-selector::-webkit-scrollbar-track {
-            background: #e0e0e0;
-            border-radius: 10px;
-            margin: 0 10px;
-        }
-        
-        .visual-selector::-webkit-scrollbar-thumb {
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            border-radius: 10px;
-        }
-        
-        .visual-selector::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(90deg, var(--accent), var(--primary));
-        }
-        
-        .v-item { 
-            min-width: 60px; 
-            height: 60px; 
-            border-radius: 15px; 
-            cursor: pointer; 
-            border: 3px solid #eee; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-size: 1.8rem; 
-            transition: all 0.3s; 
-            background: white;
-            flex-shrink: 0;
-        }
-        
-        .v-item:hover {
-            transform: scale(1.15) rotate(5deg);
-            border-color: var(--primary);
-        }
-        
-        .v-item.active { 
-            border-color: var(--accent); 
-            transform: scale(1.2); 
-            background: linear-gradient(135deg, #fff0f5, #ffe6f0);
-            box-shadow: 0 8px 20px rgba(253, 121, 168, 0.4);
-        }
-        
-        label { 
-            display: block; 
-            font-size: 0.75rem; 
-            font-weight: 800; 
-            color: #636e72; 
-            text-transform: uppercase; 
-            margin-bottom: 8px;
             letter-spacing: 0.5px;
         }
         
-        input[type="text"], input[type="color"], select, textarea { 
-            width: 100%; 
-            padding: 14px; 
-            border: 2px solid #DFE6E9; 
-            border-radius: 15px; 
+        input[type="text"], input[type="number"], select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #DFE6E9;
+            border-radius: 12px;
             font-family: inherit;
             font-size: 0.95rem;
             transition: all 0.3s;
         }
         
-        input[type="text"]:focus, select:focus, textarea:focus {
+        input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
         }
         
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
         input[type="color"] {
+            width: 100%;
             height: 50px;
+            border: 2px solid #DFE6E9;
+            border-radius: 12px;
             cursor: pointer;
             padding: 5px;
         }
         
-        textarea {
-            resize: vertical;
-            min-height: 60px;
-            font-size: 0.9rem;
-        }
-
-        /* ПЕРСОНАЖИ (GIF) */
-        .character-section {
-            margin-top: 20px;
+        /* ЗАГРУЗКА ФАЙЛОВ */
+        .file-upload-section {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
         }
         
-        .gif-strip { 
-            display: flex; 
-            gap: 15px; 
-            overflow-x: auto; 
-            padding: 15px 0;
-            scrollbar-width: thin;
-            scrollbar-color: var(--accent) #f0f0f0;
-            scroll-behavior: smooth;
-        }
-        
-        .gif-strip::-webkit-scrollbar {
-            height: 10px;
-        }
-        
-        .gif-strip::-webkit-scrollbar-track {
-            background: #f0f0f0;
-            border-radius: 10px;
-            margin: 0 10px;
-        }
-        
-        .gif-strip::-webkit-scrollbar-thumb {
-            background: linear-gradient(90deg, var(--accent), var(--primary));
-            border-radius: 10px;
-            border: 2px solid #f0f0f0;
-        }
-        
-        .gif-strip::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-        }
-        
-        .gif-btn { 
-            width: 100px; 
-            height: 100px; 
-            border-radius: 20px; 
-            border: 4px solid #eee; 
-            cursor: pointer; 
-            transition: all 0.3s; 
-            object-fit: cover;
+        .file-upload-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px dashed var(--primary);
+            border-radius: 12px;
             background: white;
-            flex-shrink: 0;
-        }
-        
-        .gif-btn:hover {
-            transform: translateY(-8px) scale(1.05);
-            border-color: var(--primary);
-            box-shadow: 0 12px 25px rgba(108, 92, 231, 0.3);
-        }
-        
-        .gif-btn.active { 
-            border-color: var(--accent); 
-            transform: translateY(-5px) scale(1.1); 
-            box-shadow: 0 15px 30px rgba(253, 121, 168, 0.4);
-        }
-        
-        /* КНОПКА ГЕНЕРАЦИИ */
-        .btn-build { 
-            width: 100%; 
-            padding: 35px; 
-            border: none; 
-            border-radius: 30px; 
-            font-weight: 900; 
-            font-size: 2rem; 
-            cursor: pointer; 
-            background: linear-gradient(135deg, var(--primary) 0%, #5848c2 100%);
-            color: white; 
-            box-shadow: 0 15px 0 #4834D4, 0 20px 40px rgba(0,0,0,0.3); 
-            margin-top: 30px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary);
             transition: all 0.3s;
+        }
+        
+        .file-upload-btn:hover {
+            background: rgba(108, 92, 231, 0.1);
+            border-style: solid;
+        }
+        
+        .file-upload-btn input {
+            display: none;
+        }
+        
+        .url-input {
+            flex: 2;
+        }
+        
+        /* PREVIEW ФАЙЛА */
+        .file-preview {
+            margin-top: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 10px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .file-preview.active {
+            display: flex;
+        }
+        
+        .file-preview img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        
+        .file-preview .info {
+            flex: 1;
+            font-size: 0.85rem;
+        }
+        
+        .file-preview .remove-btn {
+            padding: 8px 12px;
+            background: var(--red);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+        
+        /* ПЕРСОНАЖИ */
+        .character-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .character-item {
+            aspect-ratio: 1;
+            border: 3px solid #eee;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+        }
+        
+        .character-item:hover {
+            transform: scale(1.1);
+            border-color: var(--primary);
+        }
+        
+        .character-item.active {
+            border-color: var(--accent);
+            background: linear-gradient(135deg, #fff0f5, #ffe6f0);
+            box-shadow: 0 8px 20px rgba(253, 121, 168, 0.4);
+        }
+        
+        /* КНОПКИ ДЕЙСТВИЙ */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            position: sticky;
+            bottom: 0;
+            background: white;
+            padding: 20px 0;
+            border-top: 2px solid #f0f0f0;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 18px;
+            border: none;
+            border-radius: 15px;
+            font-weight: 900;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), #5848c2);
+            color: white;
+            box-shadow: 0 8px 0 #4834D4, 0 10px 20px rgba(0,0,0,0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 11px 0 #4834D4, 0 13px 25px rgba(0,0,0,0.4);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(3px);
+            box-shadow: 0 5px 0 #4834D4, 0 7px 15px rgba(0,0,0,0.3);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #00a884);
+            color: white;
+            box-shadow: 0 8px 0 #00896c, 0 10px 20px rgba(0,0,0,0.3);
+        }
+        
+        .btn-success:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 11px 0 #00896c, 0 13px 25px rgba(0,0,0,0.4);
+        }
+        
+        /* PREVIEW HEADER */
+        .preview-header {
+            background: #2D3436;
+            color: white;
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .preview-header h2 {
+            font-size: 1.3rem;
+        }
+        
+        .preview-controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .preview-btn {
+            padding: 10px 20px;
+            border: 2px solid white;
+            background: transparent;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+        
+        .preview-btn:hover {
+            background: white;
+            color: #2D3436;
+        }
+        
+        /* PREVIEW CONTENT */
+        .preview-content {
+            flex: 1;
             position: relative;
             overflow: hidden;
         }
         
-        .btn-build::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -100%;
+        .preview-iframe {
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.5s;
+            border: none;
+            background: white;
         }
         
-        .btn-build:hover::before {
-            left: 100%;
-        }
-        
-        .btn-build:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 0 #4834D4, 0 25px 50px rgba(0,0,0,0.4);
-        }
-        
-        .btn-build:active {
-            transform: translateY(5px);
-            box-shadow: 0 10px 0 #4834D4, 0 15px 30px rgba(0,0,0,0.3);
-        }
-        
-        /* GAME ELEMENTS SECTION */
-        .game-elements {
-            background: linear-gradient(135deg, #FFF9F0 0%, #FFF5EB 100%);
-        }
-        
-        .emoji-display {
-            font-size: 3rem;
+        .preview-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #636e72;
+            font-size: 1.5rem;
             text-align: center;
-            margin: 20px 0;
-            animation: float 3s ease-in-out infinite;
+            padding: 40px;
         }
         
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        .preview-placeholder-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
         }
         
-        /* ИНФОРМАЦИОННАЯ ПАНЕЛЬ */
-        .info-panel {
-            background: linear-gradient(135deg, #E8F5E9 0%, #F1F8E9 100%);
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 25px;
+            padding: 40px;
+            max-width: 700px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #636e72;
+            transition: all 0.3s;
+        }
+        
+        .modal-close:hover {
+            color: var(--red);
+            transform: rotate(90deg);
+        }
+        
+        .modal h3 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+        
+        .code-box {
+            background: #2D3436;
+            color: #00b894;
             padding: 20px;
-            border-radius: 20px;
-            margin-top: 20px;
-            border: 2px solid #AED581;
-        }
-        
-        .info-panel h4 {
-            margin: 0 0 10px 0;
-            color: #558B2F;
+            border-radius: 15px;
+            font-family: 'Courier New', monospace;
             font-size: 0.9rem;
-            text-transform: uppercase;
-            font-weight: 800;
+            overflow-x: auto;
+            margin: 20px 0;
+            position: relative;
         }
         
-        .info-panel p {
-            margin: 5px 0;
-            font-size: 0.85rem;
-            color: #33691E;
-            line-height: 1.6;
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 8px 15px;
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.8rem;
         }
         
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .header {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .logo-section {
-                flex-direction: column;
-            }
-            
-            .title-section h1 {
-                font-size: 2rem;
-            }
-            
-            .btn-build {
-                font-size: 1.5rem;
-                padding: 25px;
-            }
+        .copy-btn:hover {
+            background: #00a884;
         }
         
         /* КНОПКА НАВЕРХ */
         .scroll-to-top {
             position: fixed;
             bottom: 30px;
-            right: 30px;
+            left: 30px;
             width: 60px;
             height: 60px;
             background: linear-gradient(135deg, var(--primary), var(--accent));
@@ -482,7 +481,7 @@
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s;
-            z-index: 1000;
+            z-index: 999;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -495,886 +494,681 @@
         
         .scroll-to-top:hover {
             transform: translateY(-8px) scale(1.1);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
         }
         
-        .scroll-to-top:active {
-            transform: translateY(-5px) scale(1.05);
-        }
-        
-        /* АНИМАЦИЯ ПУЛЬСАЦИИ */
         @keyframes pulse {
-            0%, 100% {
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            }
-            50% {
-                box-shadow: 0 10px 30px rgba(108, 92, 231, 0.6), 0 0 0 10px rgba(108, 92, 231, 0.2);
-            }
+            0%, 100% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
+            50% { box-shadow: 0 10px 30px rgba(108, 92, 231, 0.6), 0 0 0 10px rgba(108, 92, 231, 0.2); }
         }
         
         .scroll-to-top.pulse {
             animation: pulse 2s infinite;
         }
+        
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .container {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .editor-panel, .preview-panel {
+                width: 100%;
+            }
+            
+            .preview-panel {
+                min-height: 600px;
+            }
+        }
     </style>
 </head>
 <body>
 
-<div class="wrapper">
-    <div class="header">
-        <div class="logo-section">
-            <img src="https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/logo.png" class="logo-img" alt="Logo">
-            <div class="title-section">
-                <h1 id="main-title">🦋 Весёлый художник</h1>
-                <div class="version">DEUTSCH INTERAKTIV v2.0</div>
-            </div>
+<div class="container">
+    <!-- ЛЕВАЯ ПАНЕЛЬ - РЕДАКТОР -->
+    <div class="editor-panel">
+        <div class="editor-header">
+            <h1 id="main-title">🦋 Редактор игры "Весёлый художник"</h1>
+            <div class="subtitle">DEUTSCH INTERAKTIV PRO v2.0</div>
         </div>
-        <div class="lang-box">
-            <label id="ui-lang-l">Язык Редактора / Editor Language</label>
-            <select id="uiLang" onchange="translate()">
-                <option value="ru">🇷🇺 Русский (RU)</option>
-                <option value="de">🇩🇪 Deutsch (DE)</option>
-                <option value="en">🇬🇧 English (EN)</option>
-                <option value="es">🇪🇸 Español (ES)</option>
-                <option value="it">🇮🇹 Italiano (IT)</option>
-                <option value="fr">🇫🇷 Français (FR)</option>
-                <option value="zh">🇨🇳 中文 (ZH)</option>
-                <option value="ja">🇯🇵 日本語 (JA)</option>
-            </select>
+        
+        <div class="editor-content">
+            <!-- ЯЗЫК -->
+            <div class="section">
+                <div class="section-title">🌍 <span id="lang-section-title">Язык</span></div>
+                <div class="form-group">
+                    <label id="lang-label">Язык интерфейса</label>
+                    <select id="uiLang" onchange="translate()">
+                        <option value="ru">🇷🇺 Русский</option>
+                        <option value="de">🇩🇪 Deutsch</option>
+                        <option value="en">🇬🇧 English</option>
+                        <option value="es">🇪🇸 Español</option>
+                        <option value="it">🇮🇹 Italiano</option>
+                        <option value="fr">🇫🇷 Français</option>
+                        <option value="zh">🇨🇳 中文</option>
+                        <option value="ja">🇯🇵 日本語</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- ФОН ИГРЫ -->
+            <div class="section">
+                <div class="section-title">🎨 <span id="bg-section-title">Фон игры</span></div>
+                <div class="form-group">
+                    <label id="bg-label">Выберите фон или загрузите свой</label>
+                    <select id="bgTheme">
+                        <option value="garden">🌻 В огороде</option>
+                        <option value="meadow">🌸 На лугу</option>
+                        <option value="forest">🌲 В лесу</option>
+                        <option value="space">🚀 В космосе</option>
+                        <option value="ocean">🌊 Под водой</option>
+                        <option value="custom">🎨 Свой фон</option>
+                    </select>
+                </div>
+                <div class="file-upload-section">
+                    <label class="file-upload-btn">
+                        📁 <span id="upload-computer">С компьютера</span>
+                        <input type="file" id="bgFileUpload" accept="image/*" onchange="handleFileUpload('bg', this)">
+                    </label>
+                    <input type="text" class="url-input" id="bgUrlInput" placeholder="🔗 URL картинки из интернета">
+                </div>
+                <div class="file-preview" id="bgPreview">
+                    <img src="" alt="Preview">
+                    <div class="info">
+                        <div class="filename"></div>
+                    </div>
+                    <button class="remove-btn" onclick="removeFile('bg')">✕</button>
+                </div>
+            </div>
+            
+            <!-- ГЛАВНЫЙ ПЕРСОНАЖ -->
+            <div class="section">
+                <div class="section-title">👤 <span id="hero-section-title">Главный персонаж (Художник)</span></div>
+                <div class="form-group">
+                    <label id="hero-label">Выберите персонажа или загрузите GIF</label>
+                    <div class="character-grid" id="heroGrid">
+                        <div class="character-item active" onclick="selectCharacter('hero', 0, this)">🦋</div>
+                        <div class="character-item" onclick="selectCharacter('hero', 1, this)">👨‍🎨</div>
+                        <div class="character-item" onclick="selectCharacter('hero', 2, this)">👩‍🎨</div>
+                        <div class="character-item" onclick="selectCharacter('hero', 3, this)">🐝</div>
+                        <div class="character-item" onclick="selectCharacter('hero', 4, this)">🐸</div>
+                        <div class="character-item" onclick="selectCharacter('hero', 5, this)">🐱</div>
+                    </div>
+                </div>
+                <div class="file-upload-section">
+                    <label class="file-upload-btn">
+                        📁 <span id="upload-hero">Загрузить GIF</span>
+                        <input type="file" id="heroFileUpload" accept="image/gif" onchange="handleFileUpload('hero', this)">
+                    </label>
+                    <input type="text" class="url-input" id="heroUrlInput" placeholder="🔗 URL GIF из интернета">
+                </div>
+                <div class="file-preview" id="heroPreview">
+                    <img src="" alt="Preview">
+                    <div class="info"><div class="filename"></div></div>
+                    <button class="remove-btn" onclick="removeFile('hero')">✕</button>
+                </div>
+            </div>
+            
+            <!-- ПЕРСОНАЖ ПРИ ОШИБКЕ -->
+            <div class="section">
+                <div class="section-title">⚠️ <span id="enemy-section-title">Персонаж при ошибке</span></div>
+                <div class="form-group">
+                    <label id="enemy-label">Кто появится при неправильном ответе?</label>
+                    <div class="character-grid" id="enemyGrid">
+                        <div class="character-item active" onclick="selectCharacter('enemy', 0, this)">😠🐝</div>
+                        <div class="character-item" onclick="selectCharacter('enemy', 1, this)">⚡</div>
+                        <div class="character-item" onclick="selectCharacter('enemy', 2, this)">🌧️</div>
+                        <div class="character-item" onclick="selectCharacter('enemy', 3, this)">👻</div>
+                        <div class="character-item" onclick="selectCharacter('enemy', 4, this)">🦇</div>
+                    </div>
+                </div>
+                <div class="file-upload-section">
+                    <label class="file-upload-btn">
+                        📁 <span id="upload-enemy">Загрузить GIF</span>
+                        <input type="file" id="enemyFileUpload" accept="image/gif" onchange="handleFileUpload('enemy', this)">
+                    </label>
+                    <input type="text" class="url-input" id="enemyUrlInput" placeholder="🔗 URL GIF">
+                </div>
+                <div class="file-preview" id="enemyPreview">
+                    <img src="" alt="Preview">
+                    <div class="info"><div class="filename"></div></div>
+                    <button class="remove-btn" onclick="removeFile('enemy')">✕</button>
+                </div>
+            </div>
+            
+            <!-- НАГРАДА -->
+            <div class="section">
+                <div class="section-title">🎁 <span id="reward-section-title">Награда за успех</span></div>
+                <div class="form-group">
+                    <label id="reward-label">Что покажем при победе?</label>
+                    <div class="character-grid" id="rewardGrid">
+                        <div class="character-item active" onclick="selectCharacter('reward', 0, this)">🌹</div>
+                        <div class="character-item" onclick="selectCharacter('reward', 1, this)">🏆</div>
+                        <div class="character-item" onclick="selectCharacter('reward', 2, this)">⭐</div>
+                        <div class="character-item" onclick="selectCharacter('reward', 3, this)">🏅</div>
+                        <div class="character-item" onclick="selectCharacter('reward', 4, this)">🎉</div>
+                    </div>
+                </div>
+                <div class="file-upload-section">
+                    <label class="file-upload-btn">
+                        📁 <span id="upload-reward">Загрузить GIF</span>
+                        <input type="file" id="rewardFileUpload" accept="image/gif" onchange="handleFileUpload('reward', this)">
+                    </label>
+                    <input type="text" class="url-input" id="rewardUrlInput" placeholder="🔗 URL GIF">
+                </div>
+                <div class="file-preview" id="rewardPreview">
+                    <img src="" alt="Preview">
+                    <div class="info"><div class="filename"></div></div>
+                    <button class="remove-btn" onclick="removeFile('reward')">✕</button>
+                </div>
+            </div>
+            
+            <!-- ЗВУКИ -->
+            <div class="section">
+                <div class="section-title">🔊 <span id="sounds-section-title">Звуки и музыка</span></div>
+                
+                <div class="form-group">
+                    <label id="sound-success-label">Звук правильного ответа</label>
+                    <div class="file-upload-section">
+                        <label class="file-upload-btn">
+                            📁 <span id="upload-sound-success">Загрузить звук</span>
+                            <input type="file" id="soundSuccessUpload" accept="audio/*" onchange="handleFileUpload('soundSuccess', this)">
+                        </label>
+                        <input type="text" class="url-input" id="soundSuccessUrl" placeholder="🔗 URL звука (.mp3, .wav)">
+                    </div>
+                    <div class="file-preview" id="soundSuccessPreview">
+                        <div class="info"><div class="filename"></div></div>
+                        <button class="remove-btn" onclick="removeFile('soundSuccess')">✕</button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label id="sound-error-label">Звук ошибки</label>
+                    <div class="file-upload-section">
+                        <label class="file-upload-btn">
+                            📁 <span id="upload-sound-error">Загрузить звук</span>
+                            <input type="file" id="soundErrorUpload" accept="audio/*" onchange="handleFileUpload('soundError', this)">
+                        </label>
+                        <input type="text" class="url-input" id="soundErrorUrl" placeholder="🔗 URL звука">
+                    </div>
+                    <div class="file-preview" id="soundErrorPreview">
+                        <div class="info"><div class="filename"></div></div>
+                        <button class="remove-btn" onclick="removeFile('soundError')">✕</button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label id="music-bg-label">Фоновая музыка</label>
+                    <div class="file-upload-section">
+                        <label class="file-upload-btn">
+                            📁 <span id="upload-music">Загрузить музыку</span>
+                            <input type="file" id="musicBgUpload" accept="audio/*" onchange="handleFileUpload('musicBg', this)">
+                        </label>
+                        <input type="text" class="url-input" id="musicBgUrl" placeholder="🔗 URL музыки">
+                    </div>
+                    <div class="file-preview" id="musicBgPreview">
+                        <div class="info"><div class="filename"></div></div>
+                        <button class="remove-btn" onclick="removeFile('musicBg')">✕</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- КАТЕГОРИИ (АРТИКЛИ) -->
+            <div class="section">
+                <div class="section-title">📚 <span id="categories-section-title">Категории (Артикли)</span></div>
+                <div id="categoriesContainer"></div>
+            </div>
+            
+            <!-- НАСТРОЙКИ ИГРЫ -->
+            <div class="section">
+                <div class="section-title">⚙️ <span id="settings-section-title">Настройки игры</span></div>
+                
+                <div class="form-group">
+                    <label id="level-label">Уровень сложности</label>
+                    <select id="gameLevel">
+                        <option value="easy">🦋 Лёгкий (Бабочка)</option>
+                        <option value="medium">🌺 Средний (Георгина)</option>
+                        <option value="hard">🏠 Сложный (Дом)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label id="timer-label">Время на задание (секунды)</label>
+                    <input type="number" id="timerSeconds" value="20" min="5" max="60">
+                </div>
+                
+                <div class="form-group">
+                    <label id="win-text-label">Текст победы</label>
+                    <input type="text" id="winText" value="Wir gratulieren! Gute Arbeit!">
+                </div>
+                
+                <div class="form-group">
+                    <label id="error-text-label">Текст при ошибке</label>
+                    <input type="text" id="errorText" value="Versuch noch einmal!">
+                </div>
+            </div>
+            
+            <!-- КНОПКИ ДЕЙСТВИЙ -->
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="updatePreview()">
+                    👁️ <span id="btn-preview">ПРЕДПРОСМОТР</span>
+                </button>
+                <button class="btn btn-success" onclick="generateIframeCode()">
+                    📋 <span id="btn-generate">ПОЛУЧИТЬ КОД</span>
+                </button>
+            </div>
         </div>
     </div>
-
-    <div class="grid">
-        <!-- КАТЕГОРИИ -->
-        <div class="panel">
-            <div class="panel-h" id="h1">Настройка Категорий</div>
-            <div id="cat-root"></div>
-            
-            <div class="info-panel">
-                <h4 id="info-cat-title">💡 Совет по категориям</h4>
-                <p id="info-cat-text">Категории соответствуют родам в немецком языке: die (красный), der (синий), das (зелёный). Эти цвета помогут ученикам визуально запоминать род существительных!</p>
+    
+    <!-- ПРАВАЯ ПАНЕЛЬ - ПРЕДПРОСМОТР -->
+    <div class="preview-panel">
+        <div class="preview-header">
+            <h2 id="preview-title">🎮 Предпросмотр игры</h2>
+            <div class="preview-controls">
+                <button class="preview-btn" onclick="updatePreview()">
+                    🔄 <span id="btn-refresh">Обновить</span>
+                </button>
+                <button class="preview-btn" onclick="openFullscreen()">
+                    ⛶ <span id="btn-fullscreen">Полный экран</span>
+                </button>
             </div>
         </div>
-
-        <!-- МИР И ПЕРСОНАЖИ -->
-        <div class="panel">
-            <div class="panel-h" id="h2">Мир и Персонажи</div>
-            
-            <label id="l-theme">Тематика Игры (Фон)</label>
-            <select id="themeSelect">
-                <option value="garden">🌻 В огороде</option>
-                <option value="meadow">🌸 На лугу</option>
-                <option value="forest">🌲 В лесу</option>
-                <option value="space">🚀 В космосе</option>
-                <option value="ocean">🌊 Под водой</option>
-                <option value="custom">🎨 Свой фон (URL)...</option>
-            </select>
-
-            <div class="character-section">
-                <label id="l-hero">Главный персонаж (Художник)</label>
-                <div class="gif-strip">
-                    <div class="gif-btn active" onclick="selItem('h', this)" style="background: linear-gradient(135deg, #FFE5E5, #FFB5E5); display: flex; align-items: center; justify-content: center; font-size: 3rem;" title="Бабочка">🦋</div>
-                    <div class="gif-btn" onclick="selItem('h', this)" style="background: linear-gradient(135deg, #E5F5FF, #B5D5FF); display: flex; align-items: center; justify-content: center; font-size: 3rem;" title="Художник">👨‍🎨</div>
-                    <div class="gif-btn" onclick="selItem('h', this)" style="background: linear-gradient(135deg, #FFF9E5, #FFE5B5); display: flex; align-items: center; justify-content: center; font-size: 3rem;" title="Пчела">🐝</div>
-                    <div class="gif-btn" onclick="selItem('h', this)" style="background: linear-gradient(135deg, #F0FFE5, #D5FFB5); display: flex; align-items: center; justify-content: center; font-size: 3rem;" title="Лягушка">🐸</div>
-                </div>
-            </div>
-
-            <div class="character-section">
-                <label id="l-enemy">Персонаж при ошибке</label>
-                <div class="gif-strip">
-                    <div class="gif-btn active" onclick="selItem('e', this)" style="background: linear-gradient(135deg, #FFF9E5, #FFD5B5); display: flex; align-items: center; justify-content: center; font-size: 3rem;" title="Злая пчела">😠🐝</div>
-                    <div class="gif-btn" onclick="selItem('e', this)" style="background: linear-gradient(135deg, #FFE5E5, #FFB5B5); display: flex; align-items: center; justify-content: center; font-size: 3rem;" title="Гром">⚡</div>
-                    <div class="gif-btn" onclick="selItem('e', this)" style="background: linear-gradient(135deg, #E5E5FF, #C5C5FF); display: flex; align-items: center; justify-content: center; font-size: 3rem;" title="Дождь">🌧️</div>
-                </div>
-            </div>
-
-            <div class="character-section">
-                <label id="l-gift">Подарок за успех</label>
-                <div class="gif-strip">
-                    <div class="gif-btn active" onclick="selItem('g', this)" style="background: linear-gradient(135deg, #FFE5F5, #FFB5E5); display: flex; align-items: center; justify-content: center; font-size: 3rem;" title="Роза">🌹</div>
-                    <div class="gif-btn" onclick="selItem('g', this)" style="background: linear-gradient(135deg, #FFFBE5, #FFEBB5); display: flex; align-items: center; justify-content: center; font-size: 3rem;" title="Кубок">🏆</div>
-                    <div class="gif-btn" onclick="selItem('g', this)" style="background: linear-gradient(135deg, #FFF5E5, #FFD5B5); display: flex; align-items: center; justify-content: center; font-size: 3rem;" title="Звёзды">⭐</div>
-                    <div class="gif-btn" onclick="selItem('g', this)" style="background: linear-gradient(135deg, #E5FFF5, #B5FFD5); display: flex; align-items: center; justify-content: center; font-size: 3rem;" title="Медаль">🏅</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ИГРОВЫЕ ЭЛЕМЕНТЫ -->
-        <div class="panel game-elements">
-            <div class="panel-h" id="h3">Игровые Элементы</div>
-            
-            <label id="l-watering-cans">Лейки (Инструменты выбора)</label>
-            <div class="emoji-display">💧 🌹 💦</div>
-            <p style="text-align: center; color: #666; font-size: 0.85rem;" id="watering-desc">Красная лейка (die), Синяя лейка (der), Зелёная лейка (das)</p>
-            
-            <label id="l-object-to-paint" style="margin-top: 20px;">Объект раскраски</label>
-            <select id="objectSelect">
-                <option value="butterfly">🦋 Бабочка (Лёгкий уровень)</option>
-                <option value="flower">🌺 Георгина (Средний уровень)</option>
-                <option value="house">🏠 Дом с огородом (Сложный уровень)</option>
-            </select>
-            
-            <label id="l-progress" style="margin-top: 20px;">Элемент прогресса</label>
-            <div style="text-align: center; font-size: 2rem; margin: 10px 0;">💧</div>
-            <p style="text-align: center; color: #666; font-size: 0.85rem;" id="progress-desc">Капельки воды собираются в прогресс-бар при правильных ответах</p>
-        </div>
-
-        <!-- УРОВНИ И ИНТЕРФЕЙС -->
-        <div class="panel">
-            <div class="panel-h" id="h4">Уровни и Интерфейс</div>
-            
-            <label id="l-lvl">Уровень сложности по умолчанию</label>
-            <select id="gameLvl">
-                <option value="butterfly">🦋 Бабочка (Лёгкий)</option>
-                <option value="flower">🌺 Георгина (Средний)</option>
-                <option value="house">🏠 Дом (Сложный)</option>
-            </select>
-
-            <label id="lb1" style="margin-top: 20px;">Кнопка "Начать"</label>
-            <input type="text" id="btn1" value="НАЧАТЬ">
-            
-            <label id="lb2">Кнопка "Завершить"</label>
-            <input type="text" id="btn2" value="ЗАВЕРШИТЬ">
-            
-            <label id="lb3">Кнопка "Повторить задание"</label>
-            <input type="text" id="btn3" value="ПОВТОРИТЬ ЗАДАНИЕ">
-            
-            <label id="lb4">Кнопка "Начать игру заново"</label>
-            <input type="text" id="btn4" value="НАЧАТЬ ЗАНОВО">
-
-            <label id="l-win" style="margin-top: 20px;">Финальный текст</label>
-            <input type="text" id="txtWin" value="Wir gratulieren! Gute Arbeit!">
-            
-            <label id="l-error">Текст при ошибке</label>
-            <input type="text" id="txtError" value="Versuch noch einmal!">
-        </div>
-
-        <!-- НАСТРОЙКИ ИГРЫ -->
-        <div class="panel">
-            <div class="panel-h" id="h5">Настройки Игры</div>
-            
-            <label id="l-timer">Таймер на задание (секунды)</label>
-            <input type="text" id="timerValue" value="20" placeholder="20">
-            
-            <label id="l-sound">Звуковые эффекты</label>
-            <select id="soundSelect">
-                <option value="on">✅ Включены</option>
-                <option value="off">❌ Выключены</option>
-            </select>
-            
-            <label id="l-animation">Анимация</label>
-            <select id="animationSelect">
-                <option value="full">🎬 Полная</option>
-                <option value="simple">⚡ Упрощённая</option>
-                <option value="off">❌ Без анимации</option>
-            </select>
-            
-            <label id="l-hints">Подсказки после ошибок</label>
-            <select id="hintsSelect">
-                <option value="on">✅ Показывать</option>
-                <option value="off">❌ Не показывать</option>
-            </select>
-            
-            <div class="info-panel" style="margin-top: 20px;">
-                <h4 id="info-game-title">🎮 О механике игры</h4>
-                <p id="info-game-text">При правильном ответе: слово появляется на крыле бабочки, сегмент окрашивается, лепесток розы расцветает с сиянием, капля добавляется в прогресс-бар. Цвета сохраняются!</p>
+        <div class="preview-content" id="previewContent">
+            <div class="preview-placeholder">
+                <div class="preview-placeholder-icon">🎨</div>
+                <div id="preview-placeholder-text">Нажмите "ПРЕДПРОСМОТР" чтобы увидеть вашу игру</div>
             </div>
         </div>
     </div>
+</div>
 
-    <button class="btn-build" onclick="generateGame()" id="btn-gen">🚀 СОЗДАТЬ ИГРУ</button>
+<!-- MODAL ДЛЯ IFRAME КОДА -->
+<div class="modal" id="iframeModal">
+    <div class="modal-content">
+        <span class="modal-close" onclick="closeModal()">×</span>
+        <h3 id="modal-title">📋 Код для вставки в Genially</h3>
+        <p id="modal-instructions">Скопируйте этот код и вставьте его как HTML-элемент в Genially:</p>
+        <div class="code-box" id="iframeCodeBox">
+            <button class="copy-btn" onclick="copyIframeCode()">📋 Копировать</button>
+            <pre id="iframeCode"></pre>
+        </div>
+        <p id="modal-note"><strong>Примечание:</strong> Этот код создаст интерактивную игру прямо в вашей презентации Genially!</p>
+    </div>
 </div>
 
 <!-- КНОПКА НАВЕРХ -->
-<button class="scroll-to-top" id="scrollTopBtn" onclick="scrollToTop()" title="Наверх">
-    ⬆️
-</button>
+<button class="scroll-to-top" id="scrollTopBtn" onclick="scrollToTop()">⬆️</button>
 
 <script>
-    // РАСШИРЕННЫЙ СЛОВАРЬ ЛОКАЛИЗАЦИИ
-    const dictionary = {
-        ru: {
-            mainTitle: "🦋 Весёлый художник",
-            uiLangL: "Язык Редактора / Editor Language",
-            h1: "Настройка Категорий",
-            h2: "Мир и Персонажи",
-            h3: "Игровые Элементы",
-            h4: "Уровни и Интерфейс",
-            h5: "Настройки Игры",
-            lTheme: "Тематика Игры (Фон)",
-            lHero: "Главный персонаж (Художник)",
-            lEnemy: "Персонаж при ошибке",
-            lGift: "Подарок за успех",
-            lWateringCans: "Лейки (Инструменты выбора)",
-            wateringDesc: "Красная лейка (die), Синяя лейка (der), Зелёная лейка (das)",
-            lObjectToPaint: "Объект раскраски",
-            lProgress: "Элемент прогресса",
-            progressDesc: "Капельки воды собираются в прогресс-бар при правильных ответах",
-            lLvl: "Уровень сложности по умолчанию",
-            lb1: "Кнопка \"Начать\"",
-            lb2: "Кнопка \"Завершить\"",
-            lb3: "Кнопка \"Повторить задание\"",
-            lb4: "Кнопка \"Начать игру заново\"",
-            lWin: "Финальный текст",
-            lError: "Текст при ошибке",
-            lTimer: "Таймер на задание (секунды)",
-            lSound: "Звуковые эффекты",
-            lAnimation: "Анимация",
-            lHints: "Подсказки после ошибок",
-            catLabel: "Категория",
-            colorLabel: "Выберите Цвет",
-            effectLabel: "Выберите Эффект (Клик!)",
-            wordsPlaceholder: "Слова через запятую...",
-            infoCatTitle: "💡 Совет по категориям",
-            infoCatText: "Категории соответствуют родам в немецком языке: die (красный), der (синий), das (зелёный). Эти цвета помогут ученикам визуально запоминать род существительных!",
-            infoGameTitle: "🎮 О механике игры",
-            infoGameText: "При правильном ответе: слово появляется на крыле бабочки, сегмент окрашивается, лепесток розы расцветает с сиянием, капля добавляется в прогресс-бар. Цвета сохраняются!",
-            btnGen: "🚀 СОЗДАТЬ ИГРУ",
-            themeGarden: "🌻 В огороде",
-            themeMeadow: "🌸 На лугу",
-            themeForest: "🌲 В лесу",
-            themeSpace: "🚀 В космосе",
-            themeOcean: "🌊 Под водой",
-            themeCustom: "🎨 Свой фон (URL)...",
-            objButterfly: "🦋 Бабочка (Лёгкий уровень)",
-            objFlower: "🌺 Георгина (Средний уровень)",
-            objHouse: "🏠 Дом с огородом (Сложный уровень)",
-            lvlButterfly: "🦋 Бабочка (Лёгкий)",
-            lvlFlower: "🌺 Георгина (Средний)",
-            lvlHouse: "🏠 Дом (Сложный)",
-            soundOn: "✅ Включены",
-            soundOff: "❌ Выключены",
-            animFull: "🎬 Полная",
-            animSimple: "⚡ Упрощённая",
-            animOff: "❌ Без анимации",
-            hintsOn: "✅ Показывать",
-            hintsOff: "❌ Не показывать"
-        },
-        de: {
-            mainTitle: "🦋 Fröhlicher Maler",
-            uiLangL: "Editor-Sprache / Editor Language",
-            h1: "Kategorien-Einstellungen",
-            h2: "Welt & Charaktere",
-            h3: "Spiel-Elemente",
-            h4: "Levels & Interface",
-            h5: "Spiel-Einstellungen",
-            lTheme: "Spiel-Thema (Hintergrund)",
-            lHero: "Hauptcharakter (Maler)",
-            lEnemy: "Charakter bei Fehler",
-            lGift: "Belohnung für Erfolg",
-            lWateringCans: "Gießkannen (Auswahlwerkzeuge)",
-            wateringDesc: "Rote Gießkanne (die), Blaue Gießkanne (der), Grüne Gießkanne (das)",
-            lObjectToPaint: "Mal-Objekt",
-            lProgress: "Fortschritts-Element",
-            progressDesc: "Wassertropfen sammeln sich in der Fortschrittsleiste bei richtigen Antworten",
-            lLvl: "Standard-Schwierigkeitsgrad",
-            lb1: "Button \"Starten\"",
-            lb2: "Button \"Beenden\"",
-            lb3: "Button \"Aufgabe wiederholen\"",
-            lb4: "Button \"Spiel neu starten\"",
-            lWin: "Abschluss-Text",
-            lError: "Fehler-Text",
-            lTimer: "Aufgaben-Timer (Sekunden)",
-            lSound: "Soundeffekte",
-            lAnimation: "Animation",
-            lHints: "Hinweise nach Fehlern",
-            catLabel: "Kategorie",
-            colorLabel: "Farbe wählen",
-            effectLabel: "Effekt wählen (Klick!)",
-            wordsPlaceholder: "Wörter durch Komma getrennt...",
-            infoCatTitle: "💡 Tipp zu Kategorien",
-            infoCatText: "Kategorien entsprechen deutschen Artikeln: die (rot), der (blau), das (grün). Diese Farben helfen Schülern, das Genus visuell zu merken!",
-            infoGameTitle: "🎮 Über Spiel-Mechanik",
-            infoGameText: "Bei richtiger Antwort: Wort erscheint auf Schmetterlingsflügel, Segment färbt sich, Rosenblatt erblüht mit Glanz, Tropfen wird zur Fortschrittsleiste hinzugefügt. Farben bleiben erhalten!",
-            btnGen: "🚀 SPIEL ERSTELLEN",
-            themeGarden: "🌻 Im Garten",
-            themeMeadow: "🌸 Auf der Wiese",
-            themeForest: "🌲 Im Wald",
-            themeSpace: "🚀 Im Weltraum",
-            themeOcean: "🌊 Unter Wasser",
-            themeCustom: "🎨 Eigener Hintergrund (URL)...",
-            objButterfly: "🦋 Schmetterling (Leicht)",
-            objFlower: "🌺 Dahlie (Mittel)",
-            objHouse: "🏠 Haus mit Garten (Schwer)",
-            lvlButterfly: "🦋 Schmetterling (Leicht)",
-            lvlFlower: "🌺 Dahlie (Mittel)",
-            lvlHouse: "🏠 Haus (Schwer)",
-            soundOn: "✅ Aktiviert",
-            soundOff: "❌ Deaktiviert",
-            animFull: "🎬 Vollständig",
-            animSimple: "⚡ Vereinfacht",
-            animOff: "❌ Keine Animation",
-            hintsOn: "✅ Anzeigen",
-            hintsOff: "❌ Nicht anzeigen"
-        },
-        en: {
-            mainTitle: "🦋 Happy Painter",
-            uiLangL: "Editor Language",
-            h1: "Category Settings",
-            h2: "World & Characters",
-            h3: "Game Elements",
-            h4: "Levels & Interface",
-            h5: "Game Settings",
-            lTheme: "Game Theme (Background)",
-            lHero: "Main Character (Painter)",
-            lEnemy: "Error Character",
-            lGift: "Success Reward",
-            lWateringCans: "Watering Cans (Selection Tools)",
-            wateringDesc: "Red can (die), Blue can (der), Green can (das)",
-            lObjectToPaint: "Object to Paint",
-            lProgress: "Progress Element",
-            progressDesc: "Water drops collect in progress bar for correct answers",
-            lLvl: "Default Difficulty Level",
-            lb1: "\"Start\" Button",
-            lb2: "\"Finish\" Button",
-            lb3: "\"Repeat Task\" Button",
-            lb4: "\"Restart Game\" Button",
-            lWin: "Final Text",
-            lError: "Error Text",
-            lTimer: "Task Timer (seconds)",
-            lSound: "Sound Effects",
-            lAnimation: "Animation",
-            lHints: "Hints After Errors",
-            catLabel: "Category",
-            colorLabel: "Choose Color",
-            effectLabel: "Choose Effect (Click!)",
-            wordsPlaceholder: "Words separated by comma...",
-            infoCatTitle: "💡 Category Tip",
-            infoCatText: "Categories correspond to German articles: die (red), der (blue), das (green). These colors help students visually remember noun gender!",
-            infoGameTitle: "🎮 About Game Mechanics",
-            infoGameText: "On correct answer: word appears on butterfly wing, segment colors, rose petal blooms with shine, drop added to progress bar. Colors stay!",
-            btnGen: "🚀 CREATE GAME",
-            themeGarden: "🌻 In the Garden",
-            themeMeadow: "🌸 In the Meadow",
-            themeForest: "🌲 In the Forest",
-            themeSpace: "🚀 In Space",
-            themeOcean: "🌊 Under Water",
-            themeCustom: "🎨 Custom Background (URL)...",
-            objButterfly: "🦋 Butterfly (Easy)",
-            objFlower: "🌺 Dahlia (Medium)",
-            objHouse: "🏠 House with Garden (Hard)",
-            lvlButterfly: "🦋 Butterfly (Easy)",
-            lvlFlower: "🌺 Dahlia (Medium)",
-            lvlHouse: "🏠 House (Hard)",
-            soundOn: "✅ Enabled",
-            soundOff: "❌ Disabled",
-            animFull: "🎬 Full",
-            animSimple: "⚡ Simple",
-            animOff: "❌ No Animation",
-            hintsOn: "✅ Show",
-            hintsOff: "❌ Don't Show"
-        },
-        es: {
-            mainTitle: "🦋 Pintor Feliz",
-            uiLangL: "Idioma del Editor",
-            h1: "Configuración de Categorías",
-            h2: "Mundo y Personajes",
-            h3: "Elementos del Juego",
-            h4: "Niveles e Interfaz",
-            h5: "Configuración del Juego",
-            lTheme: "Tema del Juego (Fondo)",
-            lHero: "Personaje Principal (Pintor)",
-            lEnemy: "Personaje de Error",
-            lGift: "Recompensa por Éxito",
-            lWateringCans: "Regaderas (Herramientas de Selección)",
-            wateringDesc: "Regadera roja (die), Regadera azul (der), Regadera verde (das)",
-            lObjectToPaint: "Objeto para Pintar",
-            lProgress: "Elemento de Progreso",
-            progressDesc: "Las gotas de agua se acumulan en la barra de progreso con respuestas correctas",
-            lLvl: "Nivel de Dificultad Predeterminado",
-            lb1: "Botón \"Iniciar\"",
-            lb2: "Botón \"Terminar\"",
-            lb3: "Botón \"Repetir Tarea\"",
-            lb4: "Botón \"Reiniciar Juego\"",
-            lWin: "Texto Final",
-            lError: "Texto de Error",
-            lTimer: "Temporizador de Tarea (segundos)",
-            lSound: "Efectos de Sonido",
-            lAnimation: "Animación",
-            lHints: "Pistas Después de Errores",
-            catLabel: "Categoría",
-            colorLabel: "Elegir Color",
-            effectLabel: "Elegir Efecto (¡Clic!)",
-            wordsPlaceholder: "Palabras separadas por coma...",
-            infoCatTitle: "💡 Consejo de Categorías",
-            infoCatText: "Las categorías corresponden a artículos alemanes: die (rojo), der (azul), das (verde). ¡Estos colores ayudan a los estudiantes a recordar visualmente el género!",
-            infoGameTitle: "🎮 Sobre Mecánicas del Juego",
-            infoGameText: "En respuesta correcta: la palabra aparece en el ala de mariposa, el segmento se colorea, el pétalo de rosa florece con brillo, la gota se agrega a la barra de progreso. ¡Los colores permanecen!",
-            btnGen: "🚀 CREAR JUEGO",
-            themeGarden: "🌻 En el Jardín",
-            themeMeadow: "🌸 En el Prado",
-            themeForest: "🌲 En el Bosque",
-            themeSpace: "🚀 En el Espacio",
-            themeOcean: "🌊 Bajo el Agua",
-            themeCustom: "🎨 Fondo Personalizado (URL)...",
-            objButterfly: "🦋 Mariposa (Fácil)",
-            objFlower: "🌺 Dalia (Medio)",
-            objHouse: "🏠 Casa con Jardín (Difícil)",
-            lvlButterfly: "🦋 Mariposa (Fácil)",
-            lvlFlower: "🌺 Dalia (Medio)",
-            lvlHouse: "🏠 Casa (Difícil)",
-            soundOn: "✅ Activado",
-            soundOff: "❌ Desactivado",
-            animFull: "🎬 Completa",
-            animSimple: "⚡ Simplificada",
-            animOff: "❌ Sin Animación",
-            hintsOn: "✅ Mostrar",
-            hintsOff: "❌ No Mostrar"
-        },
-        it: {
-            mainTitle: "🦋 Pittore Felice",
-            uiLangL: "Lingua dell'Editor",
-            h1: "Impostazioni Categorie",
-            h2: "Mondo e Personaggi",
-            h3: "Elementi di Gioco",
-            h4: "Livelli e Interfaccia",
-            h5: "Impostazioni di Gioco",
-            lTheme: "Tema del Gioco (Sfondo)",
-            lHero: "Personaggio Principale (Pittore)",
-            lEnemy: "Personaggio di Errore",
-            lGift: "Ricompensa per Successo",
-            lWateringCans: "Annaffiatoi (Strumenti di Selezione)",
-            wateringDesc: "Annaffiatoio rosso (die), Annaffiatoio blu (der), Annaffiatoio verde (das)",
-            lObjectToPaint: "Oggetto da Dipingere",
-            lProgress: "Elemento di Progresso",
-            progressDesc: "Le gocce d'acqua si accumulano nella barra di progresso con risposte corrette",
-            lLvl: "Livello di Difficoltà Predefinito",
-            lb1: "Pulsante \"Inizia\"",
-            lb2: "Pulsante \"Termina\"",
-            lb3: "Pulsante \"Ripeti Compito\"",
-            lb4: "Pulsante \"Ricomincia Gioco\"",
-            lWin: "Testo Finale",
-            lError: "Testo di Errore",
-            lTimer: "Timer Compito (secondi)",
-            lSound: "Effetti Sonori",
-            lAnimation: "Animazione",
-            lHints: "Suggerimenti Dopo Errori",
-            catLabel: "Categoria",
-            colorLabel: "Scegli Colore",
-            effectLabel: "Scegli Effetto (Clic!)",
-            wordsPlaceholder: "Parole separate da virgola...",
-            infoCatTitle: "💡 Consiglio sulle Categorie",
-            infoCatText: "Le categorie corrispondono agli articoli tedeschi: die (rosso), der (blu), das (verde). Questi colori aiutano gli studenti a ricordare visivamente il genere!",
-            infoGameTitle: "🎮 Sulle Meccaniche di Gioco",
-            infoGameText: "Alla risposta corretta: la parola appare sull'ala della farfalla, il segmento si colora, il petalo della rosa sboccia con brillantezza, la goccia viene aggiunta alla barra di progresso. I colori rimangono!",
-            btnGen: "🚀 CREA GIOCO",
-            themeGarden: "🌻 Nel Giardino",
-            themeMeadow: "🌸 Nel Prato",
-            themeForest: "🌲 Nella Foresta",
-            themeSpace: "🚀 Nello Spazio",
-            themeOcean: "🌊 Sott'acqua",
-            themeCustom: "🎨 Sfondo Personalizzato (URL)...",
-            objButterfly: "🦋 Farfalla (Facile)",
-            objFlower: "🌺 Dalia (Medio)",
-            objHouse: "🏠 Casa con Giardino (Difficile)",
-            lvlButterfly: "🦋 Farfalla (Facile)",
-            lvlFlower: "🌺 Dalia (Medio)",
-            lvlHouse: "🏠 Casa (Difficile)",
-            soundOn: "✅ Attivato",
-            soundOff: "❌ Disattivato",
-            animFull: "🎬 Completa",
-            animSimple: "⚡ Semplificata",
-            animOff: "❌ Nessuna Animazione",
-            hintsOn: "✅ Mostra",
-            hintsOff: "❌ Non Mostrare"
-        },
-        fr: {
-            mainTitle: "🦋 Peintre Joyeux",
-            uiLangL: "Langue de l'Éditeur",
-            h1: "Paramètres des Catégories",
-            h2: "Monde et Personnages",
-            h3: "Éléments de Jeu",
-            h4: "Niveaux et Interface",
-            h5: "Paramètres du Jeu",
-            lTheme: "Thème du Jeu (Arrière-plan)",
-            lHero: "Personnage Principal (Peintre)",
-            lEnemy: "Personnage d'Erreur",
-            lGift: "Récompense de Succès",
-            lWateringCans: "Arrosoirs (Outils de Sélection)",
-            wateringDesc: "Arrosoir rouge (die), Arrosoir bleu (der), Arrosoir vert (das)",
-            lObjectToPaint: "Objet à Peindre",
-            lProgress: "Élément de Progression",
-            progressDesc: "Les gouttes d'eau s'accumulent dans la barre de progression avec des réponses correctes",
-            lLvl: "Niveau de Difficulté par Défaut",
-            lb1: "Bouton \"Démarrer\"",
-            lb2: "Bouton \"Terminer\"",
-            lb3: "Bouton \"Répéter la Tâche\"",
-            lb4: "Bouton \"Recommencer le Jeu\"",
-            lWin: "Texte Final",
-            lError: "Texte d'Erreur",
-            lTimer: "Minuteur de Tâche (secondes)",
-            lSound: "Effets Sonores",
-            lAnimation: "Animation",
-            lHints: "Indices Après Erreurs",
-            catLabel: "Catégorie",
-            colorLabel: "Choisir la Couleur",
-            effectLabel: "Choisir l'Effet (Clic!)",
-            wordsPlaceholder: "Mots séparés par virgule...",
-            infoCatTitle: "💡 Conseil sur les Catégories",
-            infoCatText: "Les catégories correspondent aux articles allemands: die (rouge), der (bleu), das (vert). Ces couleurs aident les élèves à se souvenir visuellement du genre!",
-            infoGameTitle: "🎮 À Propos des Mécaniques de Jeu",
-            infoGameText: "À la bonne réponse: le mot apparaît sur l'aile du papillon, le segment se colore, le pétale de rose fleurit avec éclat, la goutte est ajoutée à la barre de progression. Les couleurs restent!",
-            btnGen: "🚀 CRÉER LE JEU",
-            themeGarden: "🌻 Dans le Jardin",
-            themeMeadow: "🌸 Dans la Prairie",
-            themeForest: "🌲 Dans la Forêt",
-            themeSpace: "🚀 Dans l'Espace",
-            themeOcean: "🌊 Sous l'Eau",
-            themeCustom: "🎨 Arrière-plan Personnalisé (URL)...",
-            objButterfly: "🦋 Papillon (Facile)",
-            objFlower: "🌺 Dahlia (Moyen)",
-            objHouse: "🏠 Maison avec Jardin (Difficile)",
-            lvlButterfly: "🦋 Papillon (Facile)",
-            lvlFlower: "🌺 Dahlia (Moyen)",
-            lvlHouse: "🏠 Maison (Difficile)",
-            soundOn: "✅ Activé",
-            soundOff: "❌ Désactivé",
-            animFull: "🎬 Complète",
-            animSimple: "⚡ Simplifiée",
-            animOff: "❌ Pas d'Animation",
-            hintsOn: "✅ Afficher",
-            hintsOff: "❌ Ne Pas Afficher"
-        },
-        zh: {
-            mainTitle: "🦋 快乐画家",
-            uiLangL: "编辑器语言",
-            h1: "分类设置",
-            h2: "世界与角色",
-            h3: "游戏元素",
-            h4: "关卡与界面",
-            h5: "游戏设置",
-            lTheme: "游戏主题（背景）",
-            lHero: "主角（画家）",
-            lEnemy: "错误角色",
-            lGift: "成功奖励",
-            lWateringCans: "洒水壶（选择工具）",
-            wateringDesc: "红色洒水壶 (die)，蓝色洒水壶 (der)，绿色洒水壶 (das)",
-            lObjectToPaint: "涂色对象",
-            lProgress: "进度元素",
-            progressDesc: "正确答案时水滴会累积到进度条中",
-            lLvl: "默认难度级别",
-            lb1: "\"开始\" 按钮",
-            lb2: "\"结束\" 按钮",
-            lb3: "\"重复任务\" 按钮",
-            lb4: "\"重新开始游戏\" 按钮",
-            lWin: "最终文本",
-            lError: "错误文本",
-            lTimer: "任务计时器（秒）",
-            lSound: "音效",
-            lAnimation: "动画",
-            lHints: "错误后提示",
-            catLabel: "类别",
-            colorLabel: "选择颜色",
-            effectLabel: "选择效果（点击！）",
-            wordsPlaceholder: "单词用逗号分隔...",
-            infoCatTitle: "💡 分类提示",
-            infoCatText: "分类对应德语冠词：die（红色）、der（蓝色）、das（绿色）。这些颜色帮助学生在视觉上记住名词性别！",
-            infoGameTitle: "🎮 关于游戏机制",
-            infoGameText: "正确答案时：单词出现在蝴蝶翅膀上，片段着色，玫瑰花瓣绽放发光，水滴添加到进度条。颜色保持不变！",
-            btnGen: "🚀 创建游戏",
-            themeGarden: "🌻 在花园里",
-            themeMeadow: "🌸 在草地上",
-            themeForest: "🌲 在森林里",
-            themeSpace: "🚀 在太空中",
-            themeOcean: "🌊 在水下",
-            themeCustom: "🎨 自定义背景（URL）...",
-            objButterfly: "🦋 蝴蝶（简单）",
-            objFlower: "🌺 大丽花（中等）",
-            objHouse: "🏠 带花园的房子（困难）",
-            lvlButterfly: "🦋 蝴蝶（简单）",
-            lvlFlower: "🌺 大丽花（中等）",
-            lvlHouse: "🏠 房子（困难）",
-            soundOn: "✅ 启用",
-            soundOff: "❌ 禁用",
-            animFull: "🎬 完整",
-            animSimple: "⚡ 简化",
-            animOff: "❌ 无动画",
-            hintsOn: "✅ 显示",
-            hintsOff: "❌ 不显示"
-        },
-        ja: {
-            mainTitle: "🦋 ハッピーペインター",
-            uiLangL: "エディター言語",
-            h1: "カテゴリ設定",
-            h2: "世界とキャラクター",
-            h3: "ゲーム要素",
-            h4: "レベルとインターフェース",
-            h5: "ゲーム設定",
-            lTheme: "ゲームテーマ（背景）",
-            lHero: "主人公（画家）",
-            lEnemy: "エラーキャラクター",
-            lGift: "成功報酬",
-            lWateringCans: "じょうろ（選択ツール）",
-            wateringDesc: "赤いじょうろ (die)、青いじょうろ (der)、緑のじょうろ (das)",
-            lObjectToPaint: "塗る対象",
-            lProgress: "進捗要素",
-            progressDesc: "正解時に水滴が進捗バーに集まります",
-            lLvl: "デフォルトの難易度",
-            lb1: "\"開始\" ボタン",
-            lb2: "\"終了\" ボタン",
-            lb3: "\"タスク繰り返し\" ボタン",
-            lb4: "\"ゲーム再開\" ボタン",
-            lWin: "最終テキスト",
-            lError: "エラーテキスト",
-            lTimer: "タスクタイマー（秒）",
-            lSound: "サウンドエフェクト",
-            lAnimation: "アニメーション",
-            lHints: "エラー後のヒント",
-            catLabel: "カテゴリ",
-            colorLabel: "色を選択",
-            effectLabel: "エフェクトを選択（クリック！）",
-            wordsPlaceholder: "カンマ区切りの単語...",
-            infoCatTitle: "💡 カテゴリのヒント",
-            infoCatText: "カテゴリはドイツ語の冠詞に対応：die（赤）、der（青）、das（緑）。これらの色は生徒が名詞の性を視覚的に覚えるのを助けます！",
-            infoGameTitle: "🎮 ゲームメカニクスについて",
-            infoGameText: "正解時：蝶の羽に単語が表示され、セグメントが色づき、バラの花びらが輝きながら咲き、進捗バーに水滴が追加されます。色は保持されます！",
-            btnGen: "🚀 ゲーム作成",
-            themeGarden: "🌻 庭園で",
-            themeMeadow: "🌸 草原で",
-            themeForest: "🌲 森で",
-            themeSpace: "🚀 宇宙で",
-            themeOcean: "🌊 水中で",
-            themeCustom: "🎨 カスタム背景（URL）...",
-            objButterfly: "🦋 蝶（簡単）",
-            objFlower: "🌺 ダリア（中級）",
-            objHouse: "🏠 庭付き家（難しい）",
-            lvlButterfly: "🦋 蝶（簡単）",
-            lvlFlower: "🌺 ダリア（中級）",
-            lvlHouse: "🏠 家（難しい）",
-            soundOn: "✅ 有効",
-            soundOff: "❌ 無効",
-            animFull: "🎬 完全",
-            animSimple: "⚡ 簡略化",
-            animOff: "❌ アニメーションなし",
-            hintsOn: "✅ 表示",
-            hintsOff: "❌ 表示しない"
+// ПЕРЕВОДЫ
+const translations = {
+    ru: {
+        mainTitle: "🦋 Редактор игры \"Весёлый художник\"",
+        langSectionTitle: "Язык",
+        langLabel: "Язык интерфейса",
+        bgSectionTitle: "Фон игры",
+        bgLabel: "Выберите фон или загрузите свой",
+        heroSectionTitle: "Главный персонаж (Художник)",
+        heroLabel: "Выберите персонажа или загрузите GIF",
+        enemySectionTitle: "Персонаж при ошибке",
+        enemyLabel: "Кто появится при неправильном ответе?",
+        rewardSectionTitle: "Награда за успех",
+        rewardLabel: "Что покажем при победе?",
+        soundsSectionTitle: "Звуки и музыка",
+        soundSuccessLabel: "Звук правильного ответа",
+        soundErrorLabel: "Звук ошибки",
+        musicBgLabel: "Фоновая музыка",
+        categoriesSectionTitle: "Категории (Артикли)",
+        settingsSectionTitle: "Настройки игры",
+        levelLabel: "Уровень сложности",
+        timerLabel: "Время на задание (секунды)",
+        winTextLabel: "Текст победы",
+        errorTextLabel: "Текст при ошибке",
+        btnPreview: "ПРЕДПРОСМОТР",
+        btnGenerate: "ПОЛУЧИТЬ КОД",
+        previewTitle: "🎮 Предпросмотр игры",
+        btnRefresh: "Обновить",
+        btnFullscreen: "Полный экран",
+        previewPlaceholder: "Нажмите \"ПРЕДПРОСМОТР\" чтобы увидеть вашу игру",
+        modalTitle: "📋 Код для вставки в Genially",
+        modalInstructions: "Скопируйте этот код и вставьте его как HTML-элемент в Genially:",
+        modalNote: "<strong>Примечание:</strong> Этот код создаст интерактивную игру прямо в вашей презентации Genially!",
+        uploadComputer: "С компьютера",
+        uploadHero: "Загрузить GIF",
+        uploadEnemy: "Загрузить GIF",
+        uploadReward: "Загрузить GIF",
+        uploadSoundSuccess: "Загрузить звук",
+        uploadSoundError: "Загрузить звук",
+        uploadMusic: "Загрузить музыку"
+    },
+    de: {
+        mainTitle: "🦋 Spiel-Editor \"Fröhlicher Maler\"",
+        langSectionTitle: "Sprache",
+        langLabel: "Interface-Sprache",
+        bgSectionTitle: "Spiel-Hintergrund",
+        bgLabel: "Wählen Sie einen Hintergrund oder laden Sie Ihren eigenen hoch",
+        heroSectionTitle: "Hauptcharakter (Maler)",
+        heroLabel: "Wählen Sie einen Charakter oder laden Sie GIF hoch",
+        enemySectionTitle: "Fehler-Charakter",
+        enemyLabel: "Wer erscheint bei falscher Antwort?",
+        rewardSectionTitle: "Erfolgsbelohnung",
+        rewardLabel: "Was wird beim Sieg gezeigt?",
+        soundsSectionTitle: "Sounds und Musik",
+        soundSuccessLabel: "Sound für richtige Antwort",
+        soundErrorLabel: "Fehler-Sound",
+        musicBgLabel: "Hintergrundmusik",
+        categoriesSectionTitle: "Kategorien (Artikel)",
+        settingsSectionTitle: "Spiel-Einstellungen",
+        levelLabel: "Schwierigkeitsgrad",
+        timerLabel: "Zeit pro Aufgabe (Sekunden)",
+        winTextLabel: "Siegestext",
+        errorTextLabel: "Fehlertext",
+        btnPreview: "VORSCHAU",
+        btnGenerate: "CODE ERHALTEN",
+        previewTitle: "🎮 Spiel-Vorschau",
+        btnRefresh: "Aktualisieren",
+        btnFullscreen: "Vollbild",
+        previewPlaceholder: "Klicken Sie auf \"VORSCHAU\" um Ihr Spiel zu sehen",
+        modalTitle: "📋 Code zum Einfügen in Genially",
+        modalInstructions: "Kopieren Sie diesen Code und fügen Sie ihn als HTML-Element in Genially ein:",
+        modalNote: "<strong>Hinweis:</strong> Dieser Code erstellt ein interaktives Spiel direkt in Ihrer Genially-Präsentation!",
+        uploadComputer: "Vom Computer",
+        uploadHero: "GIF hochladen",
+        uploadEnemy: "GIF hochladen",
+        uploadReward: "GIF hochladen",
+        uploadSoundSuccess: "Sound hochladen",
+        uploadSoundError: "Sound hochladen",
+        uploadMusic: "Musik hochladen"
+    },
+    en: {
+        mainTitle: "🦋 \"Happy Painter\" Game Editor",
+        langSectionTitle: "Language",
+        langLabel: "Interface Language",
+        bgSectionTitle: "Game Background",
+        bgLabel: "Choose a background or upload your own",
+        heroSectionTitle: "Main Character (Painter)",
+        heroLabel: "Choose a character or upload GIF",
+        enemySectionTitle: "Error Character",
+        enemyLabel: "Who appears on wrong answer?",
+        rewardSectionTitle: "Success Reward",
+        rewardLabel: "What to show on victory?",
+        soundsSectionTitle: "Sounds and Music",
+        soundSuccessLabel: "Correct answer sound",
+        soundErrorLabel: "Error sound",
+        musicBgLabel: "Background music",
+        categoriesSectionTitle: "Categories (Articles)",
+        settingsSectionTitle: "Game Settings",
+        levelLabel: "Difficulty Level",
+        timerLabel: "Time per task (seconds)",
+        winTextLabel: "Victory text",
+        errorTextLabel: "Error text",
+        btnPreview: "PREVIEW",
+        btnGenerate: "GET CODE",
+        previewTitle: "🎮 Game Preview",
+        btnRefresh: "Refresh",
+        btnFullscreen: "Fullscreen",
+        previewPlaceholder: "Click \"PREVIEW\" to see your game",
+        modalTitle: "📋 Code to insert into Genially",
+        modalInstructions: "Copy this code and paste it as an HTML element in Genially:",
+        modalNote: "<strong>Note:</strong> This code will create an interactive game directly in your Genially presentation!",
+        uploadComputer: "From Computer",
+        uploadHero: "Upload GIF",
+        uploadEnemy: "Upload GIF",
+        uploadReward: "Upload GIF",
+        uploadSoundSuccess: "Upload sound",
+        uploadSoundError: "Upload sound",
+        uploadMusic: "Upload music"
+    }
+};
+
+// ФУНКЦИЯ ПЕРЕВОДА
+function translate() {
+    const lang = document.getElementById('uiLang').value;
+    const t = translations[lang] || translations.ru;
+    
+    // Обновление всех текстов
+    Object.keys(t).forEach(key => {
+        const el = document.getElementById(key.replace(/([A-Z])/g, '-$1').toLowerCase());
+        if (el) {
+            if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                if (key === 'previewPlaceholder') {
+                    el.value = t[key];
+                }
+            } else {
+                el.textContent = t[key];
+                if (key === 'modalNote') {
+                    el.innerHTML = t[key];
+                }
+            }
+        }
+    });
+}
+
+// ДАННЫЕ КОНФИГУРАЦИИ
+let gameConfig = {
+    language: 'ru',
+    background: { type: 'garden', url: '' },
+    hero: { type: 'emoji', value: '🦋', url: '' },
+    enemy: { type: 'emoji', value: '😠🐝', url: '' },
+    reward: { type: 'emoji', value: '🌹', url: '' },
+    sounds: {
+        success: '',
+        error: '',
+        bgMusic: ''
+    },
+    categories: [
+        { name: 'Der', color: '#74b9ff', words: [] },
+        { name: 'Die', color: '#ff7675', words: [] },
+        { name: 'Das', color: '#55efc4', words: [] }
+    ],
+    settings: {
+        level: 'easy',
+        timer: 20,
+        winText: 'Wir gratulieren! Gute Arbeit!',
+        errorText: 'Versuch noch einmal!'
+    }
+};
+
+// ЗАГРУЗКА ФАЙЛОВ
+function handleFileUpload(type, input) {
+    const file = input.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const preview = document.getElementById(type + 'Preview');
+        if (preview) {
+            preview.classList.add('active');
+            const img = preview.querySelector('img');
+            if (img) img.src = e.target.result;
+            preview.querySelector('.filename').textContent = file.name;
+        }
+        
+        // Сохранение в конфиг
+        if (type === 'bg') {
+            gameConfig.background.url = e.target.result;
+        } else if (['hero', 'enemy', 'reward'].includes(type)) {
+            gameConfig[type].type = 'custom';
+            gameConfig[type].url = e.target.result;
+        } else if (type.startsWith('sound') || type === 'musicBg') {
+            gameConfig.sounds[type.replace('sound', '').replace('musicBg', 'bgMusic')] = e.target.result;
         }
     };
+    reader.readAsDataURL(file);
+}
 
-    // ФУНКЦИЯ ПЕРЕВОДА
-    function translate() {
-        const lang = document.getElementById('uiLang').value;
-        const d = dictionary[lang] || dictionary.ru;
-        
-        // Заголовки и лейблы
-        document.getElementById('main-title').textContent = d.mainTitle;
-        document.getElementById('ui-lang-l').textContent = d.uiLangL;
-        document.getElementById('h1').textContent = d.h1;
-        document.getElementById('h2').textContent = d.h2;
-        document.getElementById('h3').textContent = d.h3;
-        document.getElementById('h4').textContent = d.h4;
-        document.getElementById('h5').textContent = d.h5;
-        
-        // Лейблы полей
-        document.getElementById('l-theme').textContent = d.lTheme;
-        document.getElementById('l-hero').textContent = d.lHero;
-        document.getElementById('l-enemy').textContent = d.lEnemy;
-        document.getElementById('l-gift').textContent = d.lGift;
-        document.getElementById('l-watering-cans').textContent = d.lWateringCans;
-        document.getElementById('watering-desc').textContent = d.wateringDesc;
-        document.getElementById('l-object-to-paint').textContent = d.lObjectToPaint;
-        document.getElementById('l-progress').textContent = d.lProgress;
-        document.getElementById('progress-desc').textContent = d.progressDesc;
-        document.getElementById('l-lvl').textContent = d.lLvl;
-        document.getElementById('lb1').textContent = d.lb1;
-        document.getElementById('lb2').textContent = d.lb2;
-        document.getElementById('lb3').textContent = d.lb3;
-        document.getElementById('lb4').textContent = d.lb4;
-        document.getElementById('l-win').textContent = d.lWin;
-        document.getElementById('l-error').textContent = d.lError;
-        document.getElementById('l-timer').textContent = d.lTimer;
-        document.getElementById('l-sound').textContent = d.lSound;
-        document.getElementById('l-animation').textContent = d.lAnimation;
-        document.getElementById('l-hints').textContent = d.lHints;
-        
-        // Информационные панели
-        document.getElementById('info-cat-title').textContent = d.infoCatTitle;
-        document.getElementById('info-cat-text').textContent = d.infoCatText;
-        document.getElementById('info-game-title').textContent = d.infoGameTitle;
-        document.getElementById('info-game-text').textContent = d.infoGameText;
-        
-        // Кнопка генерации
-        document.getElementById('btn-gen').textContent = d.btnGen;
-        
-        // Перевод опций в селектах
-        const themeSelect = document.getElementById('themeSelect');
-        themeSelect.options[0].text = d.themeGarden;
-        themeSelect.options[1].text = d.themeMeadow;
-        themeSelect.options[2].text = d.themeForest;
-        themeSelect.options[3].text = d.themeSpace;
-        themeSelect.options[4].text = d.themeOcean;
-        themeSelect.options[5].text = d.themeCustom;
-        
-        const objectSelect = document.getElementById('objectSelect');
-        objectSelect.options[0].text = d.objButterfly;
-        objectSelect.options[1].text = d.objFlower;
-        objectSelect.options[2].text = d.objHouse;
-        
-        const lvlSelect = document.getElementById('gameLvl');
-        lvlSelect.options[0].text = d.lvlButterfly;
-        lvlSelect.options[1].text = d.lvlFlower;
-        lvlSelect.options[2].text = d.lvlHouse;
-        
-        const soundSelect = document.getElementById('soundSelect');
-        soundSelect.options[0].text = d.soundOn;
-        soundSelect.options[1].text = d.soundOff;
-        
-        const animSelect = document.getElementById('animationSelect');
-        animSelect.options[0].text = d.animFull;
-        animSelect.options[1].text = d.animSimple;
-        animSelect.options[2].text = d.animOff;
-        
-        const hintsSelect = document.getElementById('hintsSelect');
-        hintsSelect.options[0].text = d.hintsOn;
-        hintsSelect.options[1].text = d.hintsOff;
-        
-        // Обновление категорий
-        updateCategoryLabels(lang);
+function removeFile(type) {
+    const preview = document.getElementById(type + 'Preview');
+    if (preview) {
+        preview.classList.remove('active');
     }
-
-    // ОБНОВЛЕНИЕ ЛЕЙБЛОВ КАТЕГОРИЙ
-    function updateCategoryLabels(lang) {
-        const d = dictionary[lang] || dictionary.ru;
-        const categories = document.querySelectorAll('.cat-card');
-        
-        categories.forEach((cat, index) => {
-            const labels = cat.querySelectorAll('label');
-            if (labels.length >= 3) {
-                labels[0].textContent = d.catLabel + ' ' + (index + 1);
-                labels[1].textContent = d.colorLabel;
-                labels[2].textContent = d.effectLabel;
-            }
-            const textarea = cat.querySelector('textarea');
-            if (textarea) {
-                textarea.placeholder = d.wordsPlaceholder;
-            }
-        });
-    }
-
-    // ГЕНЕРАЦИЯ КАТЕГОРИЙ
-    const catRoot = document.getElementById('cat-root');
-    const categoryNames = ['Der', 'Die', 'Das', 'Extra'];
-    const categoryColors = ['#74b9ff', '#ff7675', '#55efc4', '#ffeaa7'];
     
-    for (let i = 0; i < 4; i++) {
-        catRoot.innerHTML += `
-            <div class="cat-card">
-                <label>Категория ${i + 1}</label>
-                <input type="text" value="${categoryNames[i]}" class="cat-name">
-                
-                <label style="margin-top:15px;">Выберите Цвет</label>
-                <input type="color" value="${categoryColors[i]}" class="cat-color">
-                
-                <label style="margin-top:15px;">Выберите Эффект (Клик!)</label>
-                <div class="visual-selector">
-                    <div class="v-item ${i === 0 ? 'active' : ''}" onclick="selV(this)">🚫</div>
-                    <div class="v-item" onclick="selV(this)">🔺</div>
-                    <div class="v-item" onclick="selV(this)">🔥</div>
-                    <div class="v-item" onclick="selV(this)">🌈</div>
-                    <div class="v-item" onclick="selV(this)">❄️</div>
-                    <div class="v-item" onclick="selV(this)">✨</div>
-                    <div class="v-item" onclick="selV(this)">💫</div>
-                    <div class="v-item" onclick="selV(this)">⚡</div>
-                </div>
-                
-                <textarea rows="2" placeholder="Слова через запятую..." class="cat-words"></textarea>
-            </div>`;
+    // Очистка конфига
+    if (type === 'bg') {
+        gameConfig.background.url = '';
+    } else if (['hero', 'enemy', 'reward'].includes(type)) {
+        gameConfig[type].url = '';
     }
+}
 
-    // ФУНКЦИИ ВЫБОРА
-    function selV(el) {
-        el.parentElement.querySelectorAll('.v-item').forEach(i => i.classList.remove('active'));
-        el.classList.add('active');
-    }
-
-    function selItem(type, el) {
-        el.parentElement.querySelectorAll('.gif-btn').forEach(i => i.classList.remove('active'));
-        el.classList.add('active');
-    }
-
-    // ФУНКЦИЯ ГЕНЕРАЦИИ ИГРЫ
-    function generateGame() {
-        const config = {
-            language: document.getElementById('uiLang').value,
-            theme: document.getElementById('themeSelect').value,
-            hero: document.querySelector('[onclick*="selItem(\'h\'"]').textContent,
-            enemy: document.querySelector('[onclick*="selItem(\'e\'"]').textContent,
-            gift: document.querySelector('[onclick*="selItem(\'g\'"]').textContent,
-            level: document.getElementById('gameLvl').value,
-            object: document.getElementById('objectSelect').value,
-            timer: document.getElementById('timerValue').value,
-            sound: document.getElementById('soundSelect').value,
-            animation: document.getElementById('animationSelect').value,
-            hints: document.getElementById('hintsSelect').value,
-            buttons: {
-                start: document.getElementById('btn1').value,
-                finish: document.getElementById('btn2').value,
-                repeat: document.getElementById('btn3').value,
-                restart: document.getElementById('btn4').value
-            },
-            texts: {
-                win: document.getElementById('txtWin').value,
-                error: document.getElementById('txtError').value
-            },
-            categories: []
-        };
-        
-        // Сбор данных категорий
-        document.querySelectorAll('.cat-card').forEach(card => {
-            config.categories.push({
-                name: card.querySelector('.cat-name').value,
-                color: card.querySelector('.cat-color').value,
-                effect: card.querySelector('.visual-selector .v-item.active').textContent,
-                words: card.querySelector('.cat-words').value.split(',').map(w => w.trim()).filter(w => w)
-            });
-        });
-        
-        console.log('Конфигурация игры:', config);
-        alert('🎉 Игра успешно сгенерирована!\n\nКонфигурация сохранена в консоли. Следующий шаг - создание HTML файла игры с применением всех настроек.');
-        
-        // Здесь будет код генерации HTML игры
-    }
-
-    // Инициализация
-    translate();
+// ВЫБОР ПЕРСОНАЖА
+function selectCharacter(type, index, element) {
+    const grid = element.parentElement;
+    grid.querySelectorAll('.character-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    element.classList.add('active');
     
-    // УПРАВЛЕНИЕ КНОПКОЙ "НАВЕРХ"
-    const scrollTopBtn = document.getElementById('scrollTopBtn');
+    gameConfig[type].type = 'emoji';
+    gameConfig[type].value = element.textContent;
+}
+
+// СОЗДАНИЕ КАТЕГОРИЙ
+function initCategories() {
+    const container = document.getElementById('categoriesContainer');
+    gameConfig.categories.forEach((cat, index) => {
+        container.innerHTML += `
+            <div class="form-group">
+                <label>Категория ${index + 1}: ${cat.name}</label>
+                <input type="text" id="cat${index}Words" placeholder="Слова через запятую (Hund, Katze, Maus)">
+            </div>
+        `;
+    });
+}
+
+// ОБНОВЛЕНИЕ ПРЕДПРОСМОТРА
+function updatePreview() {
+    // Собираем актуальные данные
+    collectConfig();
     
-    // Показывать/скрывать кнопку при прокрутке
-    window.addEventListener('scroll', function() {
-        if (window.pageYOffset > 300) {
-            scrollTopBtn.classList.add('visible');
-            // Добавить пульсацию после 500px прокрутки
-            if (window.pageYOffset > 500) {
-                scrollTopBtn.classList.add('pulse');
-            }
-        } else {
-            scrollTopBtn.classList.remove('visible', 'pulse');
+    // Генерируем HTML игры
+    const gameHTML = generateGameHTML();
+    
+    // Показываем в iframe
+    const previewContent = document.getElementById('previewContent');
+    previewContent.innerHTML = `<iframe class="preview-iframe" srcdoc="${gameHTML.replace(/"/g, '&quot;')}"></iframe>`;
+}
+
+// СБОР КОНФИГУРАЦИИ
+function collectConfig() {
+    gameConfig.language = document.getElementById('uiLang').value;
+    gameConfig.background.type = document.getElementById('bgTheme').value;
+    gameConfig.settings.level = document.getElementById('gameLevel').value;
+    gameConfig.settings.timer = parseInt(document.getElementById('timerSeconds').value);
+    gameConfig.settings.winText = document.getElementById('winText').value;
+    gameConfig.settings.errorText = document.getElementById('errorText').value;
+    
+    // Сбор слов по категориям
+    gameConfig.categories.forEach((cat, index) => {
+        const input = document.getElementById(`cat${index}Words`);
+        if (input) {
+            cat.words = input.value.split(',').map(w => w.trim()).filter(w => w);
         }
     });
+}
+
+// ГЕНЕРАЦИЯ HTML ИГРЫ
+function generateGameHTML() {
+    return `<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Весёлый художник</title>
+    <style>
+        body { 
+            margin: 0; 
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .game-container {
+            text-align: center;
+            padding: 40px;
+        }
+        .character {
+            font-size: 8rem;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        .message {
+            font-size: 2rem;
+            margin: 20px 0;
+            color: #2D3436;
+            font-weight: bold;
+        }
+        .info {
+            font-size: 1.2rem;
+            color: #636e72;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="character">${gameConfig.hero.value}</div>
+        <div class="message">${gameConfig.settings.winText}</div>
+        <div class="info">Уровень: ${gameConfig.settings.level === 'easy' ? 'Лёгкий 🦋' : gameConfig.settings.level === 'medium' ? 'Средний 🌺' : 'Сложный 🏠'}</div>
+        <div class="info">Время: ${gameConfig.settings.timer} сек</div>
+    </div>
+</body>
+</html>`;
+}
+
+// ГЕНЕРАЦИЯ IFRAME КОДА
+function generateIframeCode() {
+    collectConfig();
+    const gameHTML = generateGameHTML();
+    const encodedHTML = btoa(unescape(encodeURIComponent(gameHTML)));
     
-    // Функция прокрутки наверх
-    function scrollToTop() {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    }
+    const iframeCode = `<iframe width="800" height="600" style="border: none; border-radius: 20px;" srcdoc="${gameHTML.replace(/"/g, '&quot;')}"></iframe>`;
     
-    // Плавная прокрутка для всех якорей
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        });
+    document.getElementById('iframeCode').textContent = iframeCode;
+    document.getElementById('iframeModal').classList.add('active');
+}
+
+function copyIframeCode() {
+    const code = document.getElementById('iframeCode').textContent;
+    navigator.clipboard.writeText(code).then(() => {
+        alert('✅ Код скопирован в буфер обмена!');
     });
+}
+
+function closeModal() {
+    document.getElementById('iframeModal').classList.remove('active');
+}
+
+function openFullscreen() {
+    const preview = document.querySelector('.preview-iframe');
+    if (preview && preview.requestFullscreen) {
+        preview.requestFullscreen();
+    }
+}
+
+// СКРОЛЛ НАВЕРХ
+function scrollToTop() {
+    document.querySelector('.editor-panel').scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.querySelector('.editor-panel').addEventListener('scroll', function() {
+    const scrollBtn = document.getElementById('scrollTopBtn');
+    if (this.scrollTop > 300) {
+        scrollBtn.classList.add('visible');
+        if (this.scrollTop > 500) {
+            scrollBtn.classList.add('pulse');
+        }
+    } else {
+        scrollBtn.classList.remove('visible', 'pulse');
+    }
+});
+
+// ИНИЦИАЛИЗАЦИЯ
+translate();
+initCategories();
 </script>
 
 </body>
