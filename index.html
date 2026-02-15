@@ -1,77 +1,193 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Простой Редактор</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-    #editor {
-      width: 100%;
-      height: 300px;
-      border: 1px solid #ccc;
-      padding: 10px;
-      font-size: 16px;
-      resize: none;
-    }
-    .controls {
-      margin-bottom: 10px;
-    }
-    .controls label {
-      margin-right: 10px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>Deutsch interaktiv | Конструктор Игр 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --p: #6C5CE7; --a: #FD79A8; --ok: #00B894; --bg: #F9FAFB; --dark: #2D3436; }
+        body { font-family: 'Montserrat', sans-serif; background: var(--bg); margin: 0; color: var(--dark); }
+
+        /* HEADER */
+        .top-bar { background: white; padding: 20px 50px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #eee; position: sticky; top: 0; z-index: 100; }
+        .logo-area { display: flex; align-items: center; gap: 15px; }
+        .logo-text h1 { margin: 0; font-size: 1.2rem; color: var(--p); font-weight: 900; }
+
+        /* ЦЕНТРАЛЬНЫЙ КОНТЕЙНЕР */
+        .container { max-width: 900px; margin: 40px auto; background: white; border-radius: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.05); overflow: hidden; border: 1px solid #eee; }
+        
+        /* БЛОКИ НАСТРОЕК */
+        .section { padding: 40px; border-bottom: 1px solid #f0f0f0; }
+        .section:nth-child(even) { background: #fafaff; }
+        .section-title { display: flex; align-items: center; gap: 10px; margin-bottom: 25px; }
+        .section-title span { background: var(--p); color: white; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: 900; font-size: 0.8rem; }
+        .section-title h2 { margin: 0; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* ПОЛЯ ВВОДА */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .full { grid-column: span 2; }
+        label { display: block; font-size: 0.75rem; font-weight: 800; color: #888; margin-bottom: 8px; text-transform: uppercase; }
+        input, select, textarea { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #e0e0e0; font-family: inherit; font-size: 1rem; transition: 0.3s; box-sizing: border-box; }
+        input:focus { border-color: var(--p); outline: none; background: white; }
+        textarea { resize: vertical; min-height: 80px; }
+
+        /* КАТЕГОРИИ */
+        .cat-box { background: white; border: 2px solid #eee; padding: 20px; border-radius: 20px; margin-bottom: 15px; }
+        .cat-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .color-picker { width: 50px; height: 50px; border: none; border-radius: 50%; cursor: pointer; padding: 0; overflow: hidden; }
+
+        /* ФИНАЛЬНАЯ ПАНЕЛЬ */
+        .action-bar { padding: 40px; text-align: center; background: #fff; }
+        .btn { padding: 20px 40px; border: none; border-radius: 20px; font-weight: 900; font-size: 1rem; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
+        .btn-main { background: var(--p); color: white; box-shadow: 0 10px 30px rgba(108, 92, 231, 0.4); }
+        .btn-main:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(108, 92, 231, 0.6); }
+
+        /* МОДАЛЬНОЕ ОКНО IFRAME */
+        #iframe-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(45, 52, 54, 0.95); z-index: 1000; align-items: center; justify-content: center; }
+        .modal-content { background: white; width: 90%; max-width: 800px; padding: 50px; border-radius: 40px; position: relative; }
+        .close-btn { position: absolute; top: 20px; right: 20px; font-size: 2rem; cursor: pointer; color: #888; }
+        #code-area { background: #2d3436; color: #fab1a0; padding: 25px; border-radius: 15px; font-family: monospace; font-size: 1.1rem; word-break: break-all; margin: 20px 0; border: 1px solid #444; }
+
+        .v-selector { display: flex; gap: 10px; margin-top: 10px; }
+        .v-item { cursor: pointer; font-size: 1.5rem; padding: 10px; border: 2px solid #eee; border-radius: 12px; transition: 0.2s; }
+        .v-item.active { border-color: var(--a); background: #fff0f5; transform: scale(1.1); }
+    </style>
 </head>
 <body>
 
-  <h2>Простой Редактор текста</h2>
+<div class="top-bar">
+    <div class="logo-area">
+        <img src="https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/logo.png" width="60">
+        <div class="logo-text">
+            <h1>DEUTSCH INTERAKTIV</h1>
+            <small style="color:#aaa; font-weight:700;">КОНСТРУКТОР ИГР 2026</small>
+        </div>
+    </div>
+    <div class="header-actions">
+        <button class="btn btn-main" style="padding: 12px 25px; font-size: 0.8rem;" onclick="generateIframe()">Получить код</button>
+    </div>
+</div>
 
-  <div class="controls">
-    <label>
-      Цвет текста:
-      <input type="color" id="textColor" value="#000000">
-    </label>
-    <label>
-      Размер шрифта:
-      <input type="number" id="fontSize" value="16" min="8" max="72"> px
-    </label>
-    <label>
-      Шрифт:
-      <select id="fontFamily">
-        <option value="Arial">Arial</option>
-        <option value="Verdana">Verdana</option>
-        <option value="Times New Roman">Times New Roman</option>
-        <option value="Courier New">Courier New</option>
-      </select>
-    </label>
-  </div>
+<div class="container">
+    <div class="section">
+        <div class="section-title"><span>1</span><h2>Основные настройки</h2></div>
+        <div class="grid">
+            <div>
+                <label>Язык интерфейса игры</label>
+                <select id="game-lang">
+                    <option value="ru">Русский</option>
+                    <option value="de">Deutsch</option>
+                    <option value="en">English</option>
+                    <option value="es">Español</option>
+                    <option value="it">Italiano</option>
+                    <option value="zh">Chinese</option>
+                </select>
+            </div>
+            <div>
+                <label>Сложность и Объект</label>
+                <select id="game-lvl">
+                    <option value="butterfly">🦋 Лёгкий (Бабочка)</option>
+                    <option value="dahlia">🌸 Средний (Георгина)</option>
+                    <option value="house">🏠 Сложный (Дом)</option>
+                </select>
+            </div>
+        </div>
+    </div>
 
-  <textarea id="editor" placeholder="Начните писать здесь..."></textarea>
+    <div class="section">
+        <div class="section-title"><span>2</span><h2>Настройка артиклей и слов</h2></div>
+        <div id="cat-list">
+            </div>
+    </div>
 
-  <script>
-    const editor = document.getElementById('editor');
-    const textColor = document.getElementById('textColor');
-    const fontSize = document.getElementById('fontSize');
-    const fontFamily = document.getElementById('fontFamily');
+    <div class="section">
+        <div class="section-title"><span>3</span><h2>Оформление</h2></div>
+        <div class="grid">
+            <div>
+                <label>Фоновая картинка (Заставка)</label>
+                <input type="file" accept="image/*" onchange="encodeImg(this, 'bg')">
+            </div>
+            <div>
+                <label>Главный герой (Художник)</label>
+                <input type="file" accept="image/*" onchange="encodeImg(this, 'hero')">
+            </div>
+            <div class="full">
+                <label>Текст поздравления в финале</label>
+                <input type="text" id="win-text" placeholder="GUT GEMACHT! Ты настоящий мастер!">
+            </div>
+        </div>
+    </div>
 
-    // Меняем цвет текста
-    textColor.addEventListener('input', () => {
-      editor.style.color = textColor.value;
-    });
+    <div class="action-bar">
+        <button class="btn btn-main" onclick="exportHTML()">📦 СКАЧАТЬ ГОТОВУЮ ИГРУ (.HTML)</button>
+        <p style="font-size: 0.8rem; color: #aaa; margin-top: 15px;">После скачивания файл можно открыть в любом браузере или загрузить на сайт.</p>
+    </div>
+</div>
 
-    // Меняем размер шрифта
-    fontSize.addEventListener('input', () => {
-      editor.style.fontSize = fontSize.value + 'px';
-    });
+<div id="iframe-modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="document.getElementById('iframe-modal').style.display='none'">&times;</span>
+        <h2 style="color:var(--p); margin-top:0;">Ваш Iframe Код</h2>
+        <p>Скопируйте этот код и вставьте его в HTML-блок на вашем сайте (Tilda, WordPress и др.):</p>
+        <div id="code-area"></div>
+        <button class="btn btn-main" style="width:100%;" onclick="copyCode()">Копировать код</button>
+    </div>
+</div>
 
-    // Меняем шрифт
-    fontFamily.addEventListener('change', () => {
-      editor.style.fontFamily = fontFamily.value;
-    });
-  </script>
+<script>
+    const CATS = [
+        { lab: 'Der', color: '#74b9ff', words: 'Tisch, Tag, Apfel' },
+        { lab: 'Die', color: '#ff7675', words: 'Lampe, Nacht, Frau' },
+        { lab: 'Das', color: '#55efc4', words: 'Haus, Kind, Buch' }
+    ];
 
+    function init() {
+        const root = document.getElementById('cat-list');
+        CATS.forEach((cat, i) => {
+            root.innerHTML += `
+                <div class="cat-box">
+                    <div class="cat-head">
+                        <input type="text" value="${cat.lab}" style="width:120px; font-weight:900; border:none; border-bottom:3px solid ${cat.color};">
+                        <input type="color" value="${cat.color}" class="color-picker">
+                    </div>
+                    <label>Список слов (через запятую)</label>
+                    <textarea>${cat.words}</textarea>
+                    <label>Визуальный эффект при закрашивании</label>
+                    <div class="v-selector">
+                        <div class="v-item active">🚫</div>
+                        <div class="v-item">🔥</div>
+                        <div class="v-item">✨</div>
+                        <div class="v-item">🌈</div>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    function generateIframe() {
+        const modal = document.getElementById('iframe-modal');
+        const code = `<iframe src="https://your-domain.com/game.html" width="1000" height="600" frameborder="0" allowfullscreen></iframe>`;
+        document.getElementById('code-area').innerText = code;
+        modal.style.display = 'flex';
+    }
+
+    function copyCode() {
+        const text = document.getElementById('code-area').innerText;
+        navigator.clipboard.writeText(text);
+        alert('Код скопирован!');
+    }
+
+    function exportHTML() {
+        // Логика создания чистого файла игры на основе данных анкеты
+        alert('Собираю игру... Файл скачается автоматически.');
+        const blob = new Blob(["<html>...Содержимое игры на основе ваших настроек...</html>"], {type: 'text/html'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = "Deutsch_Interaktiv_Game.html";
+        a.click();
+    }
+
+    init();
+</script>
 </body>
 </html>
