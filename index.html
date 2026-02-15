@@ -1,201 +1,582 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Весёлый художник — Редактор игры</title>
-<style>
-/* Общие стили */
-body, html {margin:0; padding:0; font-family:sans-serif; overflow-x:hidden;}
-.wrapper {display:block; width:100%; height:100vh; position:relative; background:#e0f7fa;}
-button {cursor:pointer; font-family:sans-serif;}
-
-/* БАБОЧКА */
-#butterflyWrap {position:absolute; top:60px; left:50%; transform:translateX(-50%);}
-.segment {transition: all 0.6s ease; stroke:#888; stroke-width:3; cursor:pointer;}
-.segment:hover {filter:brightness(1.05);}
-@keyframes flap {0%{transform:scaleX(1);}50%{transform:scaleX(0.92);}100%{transform:scaleX(1);}}
-@keyframes flyUp {0%{transform:translateX(-50%) translateY(0);}100%{transform:translateX(-50%) translateY(-600px);opacity:0;}}
-@keyframes floatIdle {0%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(-8px);}100%{transform:translateX(-50%) translateY(0);}}
-.butterfly-flap {animation:flap 0.5s ease-in-out 3;}
-.butterfly-fly {animation:flyUp 3s ease-in-out forwards;}
-.butterfly-idle {animation:floatIdle 4s ease-in-out infinite;}
-
-/* РОЗА */
-.petal {stroke:#999; stroke-width:2; transition: all 0.6s ease;}
-.petal.glow {fill:#ff1a1a !important; filter:drop-shadow(0 0 12px #ff4d4d);}
-#rose {width:220px; position:absolute; bottom:40px; left:50%; transform:translateX(-50%);}
-.life-drop {font-size:22px;}
-
-/* ДАЛЬШИЕ Стили */
-#timer {position:absolute; top:20px; left:20px; font-weight:900; font-size:1.5rem;}
-#lives {position:absolute; top:60px; left:20px; display:flex; gap:8px;}
-#victoryMessage {position:absolute; top:40%; left:50%; transform:translate(-50%,-50%); font-size:2rem; font-weight:900; color:#6C5CE7; display:none; text-align:center;}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🦋 Весёлый художник - Редактор</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #6C5CE7;
+            --accent: #FD79A8;
+            --success: #00b894;
+        }
+        
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .editor-panel {
+            width: 45%;
+            background: white;
+            overflow-y: auto;
+        }
+        
+        .editor-panel::-webkit-scrollbar { width: 10px; }
+        .editor-panel::-webkit-scrollbar-thumb { 
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 10px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary), #5848c2);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            font-weight: 600;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .section {
+            background: #f8f9fa;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 2px solid #e9ecef;
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-left: 15px;
+            border-left: 6px solid var(--accent);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #495057;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        
+        input[type="text"], input[type="number"], select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .chars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .char-item {
+            aspect-ratio: 1;
+            border: 3px solid #dee2e6;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            cursor: pointer;
+            background: white;
+            transition: all 0.3s;
+        }
+        
+        .char-item:hover {
+            transform: scale(1.1);
+            border-color: var(--primary);
+        }
+        
+        .char-item.active {
+            border-color: var(--accent);
+            background: linear-gradient(135deg, #fff0f5, #ffe6f0);
+            box-shadow: 0 5px 15px rgba(253, 121, 168, 0.5);
+            transform: scale(1.15);
+        }
+        
+        .actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            position: sticky;
+            bottom: 0;
+            background: white;
+            padding: 20px 0;
+            border-top: 2px solid #f0f0f0;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 18px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 900;
+            font-size: 1.1rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), #5848c2);
+            color: white;
+            box-shadow: 0 6px 0 #4834D4;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 9px 0 #4834D4;
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #00a884);
+            color: white;
+            box-shadow: 0 6px 0 #00896c;
+        }
+        
+        .btn-success:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 9px 0 #00896c;
+        }
+        
+        .preview-panel {
+            width: 55%;
+            display: flex;
+            flex-direction: column;
+            background: #2d3436;
+        }
+        
+        .preview-header {
+            background: #2d3436;
+            color: white;
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .preview-btn {
+            padding: 10px 20px;
+            border: 2px solid white;
+            background: transparent;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+        
+        .preview-btn:hover {
+            background: white;
+            color: #2d3436;
+        }
+        
+        .preview-content {
+            flex: 1;
+            background: #f5f5f5;
+            position: relative;
+        }
+        
+        .preview-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white;
+        }
+        
+        .preview-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #636e72;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .preview-placeholder-icon {
+            font-size: 6rem;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #636e72;
+            background: none;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+        
+        .modal-close:hover {
+            color: white;
+            background: #e74c3c;
+        }
+        
+        .modal h3 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        
+        .code-box {
+            background: #2d3436;
+            color: #00b894;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            overflow: auto;
+            margin: 20px 0;
+            max-height: 400px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .download-btn {
+            padding: 15px 30px;
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1rem;
+            margin: 10px;
+        }
+        
+        .download-btn:hover {
+            background: #00a884;
+        }
+        
+        @media (max-width: 1024px) {
+            .container { flex-direction: column; }
+            .editor-panel, .preview-panel { width: 100%; }
+            .preview-panel { min-height: 600px; }
+        }
+    </style>
 </head>
 <body>
 
-<!-- Экран выбора роли -->
-<div id="roleScreen" style="position:fixed; inset:0; background:linear-gradient(135deg,#6C5CE7,#FD79A8); display:flex; flex-direction:column; align-items:center; justify-content:center; color:white; z-index:9999;">
-<h1 style="font-size:2.5rem;">Весёлый художник</h1>
-<div style="display:flex; gap:40px; margin-top:40px;">
-<button onclick="enterTeacher()" style="padding:20px 40px; font-size:1.2rem;">👩‍🏫 Учитель</button>
-<button onclick="enterStudent()" style="padding:20px 40px; font-size:1.2rem;">🎓 Ученик</button>
+<div class="container">
+    <div class="editor-panel">
+        <div class="header">
+            <h1>🦋 Весёлый художник</h1>
+            <div class="subtitle">РЕДАКТОР ИГРЫ</div>
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <div class="section-title">🌍 Язык</div>
+                <div class="form-group">
+                    <label>Язык игры</label>
+                    <select id="lang">
+                        <option value="ru">🇷🇺 Русский</option>
+                        <option value="de" selected>🇩🇪 Deutsch</option>
+                        <option value="en">🇬🇧 English</option>
+                        <option value="es">🇪🇸 Español</option>
+                        <option value="it">🇮🇹 Italiano</option>
+                        <option value="fr">🇫🇷 Français</option>
+                        <option value="zh">🇨🇳 中文</option>
+                        <option value="ja">🇯🇵 日本語</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">🎨 Фон</div>
+                <div class="form-group">
+                    <select id="bg">
+                        <option value="garden">🌻 Огород</option>
+                        <option value="meadow">🌸 Луг</option>
+                        <option value="forest">🌲 Лес</option>
+                        <option value="space">🚀 Космос</option>
+                        <option value="ocean">🌊 Океан</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">👤 Персонажи</div>
+                <div class="form-group">
+                    <label>Главный герой</label>
+                    <div class="chars-grid">
+                        <div class="char-item active" data-type="hero" data-value="🦋" onclick="select(this)">🦋</div>
+                        <div class="char-item" data-type="hero" data-value="👨‍🎨" onclick="select(this)">👨‍🎨</div>
+                        <div class="char-item" data-type="hero" data-value="👩‍🎨" onclick="select(this)">👩‍🎨</div>
+                        <div class="char-item" data-type="hero" data-value="🐝" onclick="select(this)">🐝</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>При ошибке</label>
+                    <div class="chars-grid">
+                        <div class="char-item active" data-type="enemy" data-value="😠🐝" onclick="select(this)">😠🐝</div>
+                        <div class="char-item" data-type="enemy" data-value="⚡" onclick="select(this)">⚡</div>
+                        <div class="char-item" data-type="enemy" data-value="🌧️" onclick="select(this)">🌧️</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Награда</label>
+                    <div class="chars-grid">
+                        <div class="char-item active" data-type="reward" data-value="🌹" onclick="select(this)">🌹</div>
+                        <div class="char-item" data-type="reward" data-value="🏆" onclick="select(this)">🏆</div>
+                        <div class="char-item" data-type="reward" data-value="⭐" onclick="select(this)">⭐</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">📚 Слова</div>
+                <div class="form-group">
+                    <label>Der (синий)</label>
+                    <textarea id="der">Hund, Fisch, Vogel, Hamster</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Die (красный)</label>
+                    <textarea id="die">Katze, Maus, Spinne, Gans</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Das (зелёный)</label>
+                    <textarea id="das">Schwein, Reh, Pferd, Huhn</textarea>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">⚙️ Настройки</div>
+                <div class="form-group">
+                    <label>Время (сек)</label>
+                    <input type="number" id="timer" value="20" min="5" max="120">
+                </div>
+                <div class="form-group">
+                    <label>Текст победы</label>
+                    <input type="text" id="win" value="Wir gratulieren!">
+                </div>
+            </div>
+            
+            <div class="actions">
+                <button class="btn btn-primary" onclick="preview()">👁️ Предпросмотр</button>
+                <button class="btn btn-success" onclick="getCode()">📋 Код</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="preview-panel">
+        <div class="preview-header">
+            <h2>🎮 Предпросмотр</h2>
+            <button class="preview-btn" onclick="preview()">🔄</button>
+        </div>
+        <div class="preview-content" id="prev">
+            <div class="preview-placeholder">
+                <div class="preview-placeholder-icon">🎨</div>
+                <h3>Нажмите "Предпросмотр"</h3>
+            </div>
+        </div>
+    </div>
 </div>
+
+<div class="modal" id="modal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeM()">×</button>
+        <h3>📋 Ваша игра готова!</h3>
+        <p><strong>Способ 1:</strong> Скачать HTML файл и загрузить в Genially как файл</p>
+        <button class="download-btn" onclick="download()">📥 Скачать game.html</button>
+        <p style="margin-top:20px;"><strong>Способ 2:</strong> Скопировать код для iframe</p>
+        <div class="code-box" id="code"></div>
+        <button class="download-btn" onclick="copy()">📋 Копировать код</button>
+        <p style="margin-top:15px; font-size:0.9rem; color:#636e72;">
+            💡 В Genially: Вставка → HTML → вставить код → Insert
+        </p>
+    </div>
 </div>
-
-<div class="wrapper">
-
-<!-- Панель редактора (только учитель) -->
-<div class="panel" style="padding:20px;">
-<label>Выбор шаблона:</label>
-<div style="display:flex; gap:15px; flex-wrap:wrap; margin-bottom:10px;">
-<button onclick="setTemplate('garden')">🌷 Сад</button>
-<button onclick="setTemplate('space')">🚀 Космос</button>
-<button onclick="setTemplate('ocean')">🌊 Океан</button>
-<button onclick="setTemplate('castle')">🏰 Замок</button>
-</div>
-<label>Выбор уровня:</label>
-<select id="gameLvl">
-<option value="butterfly">Лёгкий — Бабочка</option>
-<option value="house">Средний — Георгина</option>
-<option value="garden">Сложный — Дом</option>
-</select>
-<button onclick="exportGame()">📦 Экспорт игры</button>
-<button onclick="changePassword()">🔐 Сменить пароль</button>
-</div>
-
-<!-- Game Area -->
-<div id="gameArea" style="width:100%; height:100vh; position:relative; overflow:hidden; background:#d0f0c0;">
-
-<!-- Таймер и жизни -->
-<div id="timer">⏱ 20</div>
-<div id="lives"></div>
-
-<!-- Бабочка -->
-<div id="butterflyWrap">
-<svg id="butterfly" viewBox="0 0 600 400" style="width:420px;">
-<rect x="290" y="130" width="20" height="160" rx="10" fill="#444"/>
-<circle cx="300" cy="110" r="20" fill="#444"/>
-<!-- Левые крылья -->
-<ellipse class="segment" data-id="0" cx="180" cy="140" rx="120" ry="90" fill="#f0f0f0"/>
-<ellipse class="segment" data-id="1" cx="160" cy="250" rx="100" ry="80" fill="#f0f0f0"/>
-<ellipse class="segment" data-id="2" cx="230" cy="200" rx="70" ry="60" fill="#f0f0f0"/>
-<ellipse class="segment" data-id="3" cx="120" cy="190" rx="60" ry="50" fill="#f0f0f0"/>
-<!-- Правые крылья -->
-<ellipse class="segment" data-id="4" cx="420" cy="140" rx="120" ry="90" fill="#f0f0f0"/>
-<ellipse class="segment" data-id="5" cx="440" cy="250" rx="100" ry="80" fill="#f0f0f0"/>
-<ellipse class="segment" data-id="6" cx="370" cy="200" rx="70" ry="60" fill="#f0f0f0"/>
-<ellipse class="segment" data-id="7" cx="480" cy="190" rx="60" ry="50" fill="#f0f0f0"/>
-</svg>
-</div>
-
-<!-- Роза -->
-<svg id="rose" viewBox="0 0 400 400">
-<g id="petals">
-<ellipse class="petal" cx="200" cy="140" rx="60" ry="40" fill="#eee"/>
-<ellipse class="petal" cx="260" cy="170" rx="60" ry="40" fill="#eee"/>
-<ellipse class="petal" cx="260" cy="230" rx="60" ry="40" fill="#eee"/>
-<ellipse class="petal" cx="200" cy="260" rx="60" ry="40" fill="#eee"/>
-<ellipse class="petal" cx="140" cy="230" rx="60" ry="40" fill="#eee"/>
-<ellipse class="petal" cx="140" cy="170" rx="60" ry="40" fill="#eee"/>
-<ellipse class="petal" cx="200" cy="200" rx="50" ry="35" fill="#eee"/>
-<ellipse class="petal" cx="200" cy="120" rx="40" ry="25" fill="#eee"/>
-<ellipse class="petal" cx="280" cy="200" rx="40" ry="25" fill="#eee"/>
-<ellipse class="petal" cx="120" cy="200" rx="40" ry="25" fill="#eee"/>
-</g>
-<circle cx="200" cy="200" r="25" fill="#ccc"/>
-<rect x="190" y="260" width="20" height="120" fill="#9ccc65"/>
-<ellipse cx="160" cy="320" rx="40" ry="20" fill="#9ccc65"/>
-<ellipse cx="240" cy="340" rx="40" ry="20" fill="#9ccc65"/>
-</svg>
-
-<!-- Георгина -->
-<svg id="dahlia" viewBox="0 0 400 400" style="width:300px; position:absolute; top:80px; left:50%; transform:translateX(-50%); display:none;">
-<g id="dahliaPetals">
-<ellipse class="dPetal" cx="200" cy="80" rx="40" ry="70" fill="#eee"/>
-<ellipse class="dPetal" cx="280" cy="120" rx="40" ry="70" fill="#eee"/>
-<ellipse class="dPetal" cx="320" cy="200" rx="40" ry="70" fill="#eee"/>
-<ellipse class="dPetal" cx="280" cy="280" rx="40" ry="70" fill="#eee"/>
-<ellipse class="dPetal" cx="200" cy="320" rx="40" ry="70" fill="#eee"/>
-<ellipse class="dPetal" cx="120" cy="280" rx="40" ry="70" fill="#eee"/>
-<ellipse class="dPetal" cx="80" cy="200" rx="40" ry="70" fill="#eee"/>
-<ellipse class="dPetal" cx="120" cy="120" rx="40" ry="70" fill="#eee"/>
-</g>
-<circle cx="200" cy="200" r="40" fill="#ccc"/>
-</svg>
-
-<!-- Дом -->
-<svg id="house" viewBox="0 0 500 400" style="width:400px; position:absolute; top:60px; left:50%; transform:translateX(-50%); display:none;">
-<rect class="houseSeg" x="150" y="180" width="200" height="150" fill="#eee"/>
-<polygon class="houseSeg" points="140,180 360,180 250,80" fill="#eee"/>
-<rect class="houseSeg" x="220" y="240" width="60" height="90" fill="#eee"/>
-<rect class="houseSeg" x="170" y="210" width="40" height="40" fill="#eee"/>
-<rect class="houseSeg" x="290" y="210" width="40" height="40" fill="#eee"/>
-</svg>
-
-<!-- Финальное сообщение -->
-<div id="victoryMessage"></div>
-
-</div>
-
-<!-- Звуки -->
-<audio id="flySound" preload="auto">
-<source src="https://assets.mixkit.co/sfx/preview/mixkit-fairy-tale-magic-sparkle-871.mp3" type="audio/mpeg">
-</audio>
 
 <script>
-// Переменные
-let segments = document.querySelectorAll(".segment");
-let petals = document.querySelectorAll(".petal");
-let paintedSegments = 0;
-let paintedPetals = 0;
-let lives = 3;
-let timerInterval;
-let timeLeft = 20;
-const butterflyWrap = document.getElementById("butterflyWrap");
-const genderColors = { die:"#ff0000", der:"#2196f3", das:"#4caf50" };
-const dPetals = document.querySelectorAll(".dPetal");
-let dahliaIndex = 0;
-const houseSegments = document.querySelectorAll(".houseSeg");
-let houseIndex = 0;
-
-const dictionary = {
-victory:{ru:"Поздравляем! Отличная работа!", de:"Wir gratulieren! Gute Arbeit!", en:"Congratulations! Great job!"}
+const cfg = {
+    lang: 'de',
+    bg: 'garden',
+    hero: '🦋',
+    enemy: '😠🐝',
+    reward: '🌹',
+    der: 'Hund, Fisch, Vogel, Hamster',
+    die: 'Katze, Maus, Spinne, Gans',
+    das: 'Schwein, Reh, Pferd, Huhn',
+    timer: 20,
+    win: 'Wir gratulieren!'
 };
 
-// Роли
-function enterTeacher(){
-    const savedPass = localStorage.getItem("teacherPass") || "1234";
-    const input = prompt("Введите пароль:");
-    if(input === savedPass){
-        document.getElementById("roleScreen").style.display="none";
-        document.querySelector(".wrapper").style.display="block";
-    } else { alert("Неверный пароль"); }
-}
-function enterStudent(){
-    document.getElementById("roleScreen").style.display="none";
-    document.querySelectorAll(".panel").forEach(p=>p.style.display="none");
-}
-function changePassword(){
-    const newPass = prompt("Введите новый пароль:");
-    if(newPass){ localStorage.setItem("teacherPass", newPass); alert("Пароль сохранён"); }
+const txt = {
+    ru: {s:'Выберите слово:',t:'Время:',w:'Поздравляем!',a:'Ещё'},
+    de: {s:'Wähle ein Wort:',t:'Zeit:',w:'Glückwunsch!',a:'Nochmal'},
+    en: {s:'Choose word:',t:'Time:',w:'Congrats!',a:'Again'},
+    es: {s:'Elige palabra:',t:'Tiempo:',w:'¡Feliz!',a:'Otra'},
+    it: {s:'Scegli parola:',t:'Tempo:',w:'Bravo!',a:'Ancora'},
+    fr: {s:'Choisir mot:',t:'Temps:',w:'Bravo!',a:'Encore'},
+    zh: {s:'选词:',t:'时间:',w:'恭喜!',a:'再来'},
+    ja: {s:'選択:',t:'時間:',w:'おめでとう!',a:'もう一度'}
+};
+
+function select(el) {
+    const type = el.dataset.type;
+    document.querySelectorAll(`[data-type="${type}"]`).forEach(e => e.classList.remove('active'));
+    el.classList.add('active');
+    cfg[type] = el.dataset.value;
 }
 
-// Шаблоны
-function setTemplate(type){
-    const gameArea = document.getElementById("gameArea");
-    if(type==="garden"){ gameArea.style.background="#d0f0c0"; }
-    if(type==="space"){ gameArea.style.background="#0d1b2a"; }
-    if(type==="ocean"){ gameArea.style.background="#a0e1ff"; }
-    if(type==="castle"){ gameArea.style.background="#f5f5dc"; }
+function collect() {
+    cfg.lang = document.getElementById('lang').value;
+    cfg.bg = document.getElementById('bg').value;
+    cfg.der = document.getElementById('der').value;
+    cfg.die = document.getElementById('die').value;
+    cfg.das = document.getElementById('das').value;
+    cfg.timer = document.getElementById('timer').value;
+    cfg.win = document.getElementById('win').value;
 }
 
-// Таймер и жизни
-function startTimer(){
-    timeLeft = 20;
-    document.getElementById("timer").innerText = "⏱ "+timeLeft;
-    clearInterval(timerInterval);
-    timerInterval = setInterval(()=>{
-        timeLeft--;
-        document.getElementById("timer").innerText = "⏱ "+timeLeft;
+function makeHTML() {
+    collect();
+    const t = txt[cfg.lang];
+    const bgs = {
+        garden:'linear-gradient(135deg,#a8edea 0%,#fed6e3 100%)',
+        meadow:'linear-gradient(135deg,#ffecd2 0%,#fcb69f 100%)',
+        forest:'linear-gradient(135deg,#d4fc79 0%,#96e6a1 100%)',
+        space:'linear-gradient(135deg,#1e3c72 0%,#2a5298 100%)',
+        ocean:'linear-gradient(135deg,#00d2ff 0%,#3a7bd5 100%)'
+    };
+    const w = {
+        der: cfg.der.split(',').map(x=>x.trim()).filter(x=>x),
+        die: cfg.die.split(',').map(x=>x.trim()).filter(x=>x),
+        das: cfg.das.split(',').map(x=>x.trim()).filter(x=>x)
+    };
+    
+    return `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial;background:${bgs[cfg.bg]};overflow:hidden}.s{width:100vw;height:100vh;display:flex;flex-direction:column}.top{height:80px;background:rgba(255,255,255,0.95);display:flex;justify-content:space-between;align-items:center;padding:0 30px;box-shadow:0 5px 20px rgba(0,0,0,0.2)}.prog{flex:1;max-width:400px;height:50px;background:#f0f0f0;border-radius:25px;border:3px solid #6C5CE7;overflow:hidden;position:relative}.bar{height:100%;background:linear-gradient(90deg,#6C5CE7,#FD79A8);width:0%;transition:width 0.5s}.drops{position:absolute;top:50%;left:10px;transform:translateY(-50%);display:flex;gap:5px;z-index:1}.drop{font-size:1.5rem;animation:di 0.5s}@keyframes di{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}.tim{font-size:2rem;font-weight:bold;color:#6C5CE7;min-width:100px;text-align:center}.tim.w{color:#e74c3c;animation:p 0.5s infinite}@keyframes p{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}.g{flex:1;display:flex;align-items:center;justify-content:center;position:relative;padding:20px}.bf{width:400px;height:400px;position:relative}.b{width:100%;height:100%;position:relative}.b.a{animation:f 4s ease-in-out infinite}@keyframes f{0%,100%{transform:translate(0,0)}25%{transform:translate(30px,-30px)}50%{transform:translate(0,-60px)}75%{transform:translate(-30px,-30px)}}.wg{position:absolute;width:150px;height:200px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;border:5px solid #2d3436;background:#e0e0e0;display:flex;flex-wrap:wrap}.wl{left:50px;top:100px;transform:rotate(-15deg)}.wr{right:50px;top:100px;transform:rotate(15deg)}.sg{flex:1 1 33%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:bold;color:#fff;text-align:center;padding:3px;transition:all 0.5s}.sg.c{box-shadow:inset 0 0 20px rgba(255,255,255,0.5),0 0 15px currentColor}.bd{position:absolute;width:50px;height:180px;background:linear-gradient(180deg,#2d3436,#636e72);border-radius:25px;left:50%;top:130px;transform:translateX(-50%)}.hd{position:absolute;width:60px;height:60px;background:#2d3436;border-radius:50%;left:50%;top:110px;transform:translateX(-50%)}.an{position:absolute;width:2px;height:30px;background:#2d3436;top:-25px}.al{left:15px;transform:rotate(-30deg)}.ar{right:15px;transform:rotate(30deg)}.an::after{content:'⭕';position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-size:1rem}.rs{position:absolute;bottom:-60px;left:50%;transform:translateX(-50%);width:200px;height:200px}.r{position:relative;width:120px;height:120px;margin:0 auto}.r.a{animation:gl 2s ease-in-out infinite}@keyframes gl{0%,100%{filter:drop-shadow(0 0 10px #ff7675)}50%{filter:drop-shadow(0 0 20px #e74c3c)}}.rc{position:absolute;width:30px;height:30px;background:#ffd93d;border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);z-index:5}.pt{position:absolute;width:60px;height:60px;background:#2d3436;border-radius:50%;transition:all 0.5s}.pt.c{background:#e74c3c;box-shadow:0 0 20px #e74c3c}.p1{top:-25px;left:30px}.p2{top:10px;left:70px}.p3{top:50px;left:70px}.p4{top:70px;left:30px}.p5{top:70px;left:-10px}.p6{top:50px;left:-25px}.p7{top:10px;left:-25px}.st{position:absolute;width:8px;height:100px;background:#2d3436;bottom:-100px;left:50%;transform:translateX(-50%);transition:all 0.5s}.st.gr{background:linear-gradient(180deg,#27ae60,#229954)}.ch{position:absolute;font-size:4rem;z-index:50}.pa{bottom:150px;left:100px;animation:wk 4s ease-in-out infinite}@keyframes wk{0%,100%{transform:translateX(0)}50%{transform:translateX(50px)}}.be{top:120px;right:100px;display:none;animation:ch 2s}.be.a{display:block}@keyframes ch{0%{transform:translate(0,0)}50%{transform:translate(-150px,50px)}100%{transform:translate(0,0)}}.wd{position:absolute;top:50%;right:30px;transform:translateY(-50%);background:rgba(255,255,255,0.95);border-radius:20px;padding:20px;max-width:250px;box-shadow:0 10px 30px rgba(0,0,0,0.3);max-height:500px;overflow-y:auto}.wd h3{margin-bottom:15px;color:#6C5CE7;font-size:1.1rem}.wo{padding:12px;margin:8px 0;background:#fff;border:2px solid #dee2e6;border-radius:10px;cursor:pointer;font-weight:bold;text-align:center;transition:all 0.3s}.wo:hover{transform:scale(1.05);border-color:#6C5CE7}.wo.ok{background:#d4edda;border-color:#28a745;animation:ok 0.5s}@keyframes ok{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}.wo.no{animation:no 0.5s}@keyframes no{0%,100%{transform:translateX(0)}25%{transform:translateX(-10px)}75%{transform:translateX(10px)}}.bot{height:120px;background:rgba(255,255,255,0.95);display:flex;align-items:center;justify-content:center;gap:50px;box-shadow:0 -5px 20px rgba(0,0,0,0.2)}.cn{width:100px;height:100px;position:relative;cursor:pointer;transition:all 0.3s}.cn:hover{transform:scale(1.1)}.cb{width:80px;height:60px;border-radius:15px;border:4px solid #2d3436;display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:bold;color:#fff}.cr{background:linear-gradient(135deg,#ff7675,#e74c3c)}.cbl{background:linear-gradient(135deg,#74b9ff,#3498db)}.cg{background:linear-gradient(135deg,#55efc4,#00b894)}.cs{width:30px;height:10px;background:#2d3436;border-radius:0 8px 8px 0;position:absolute;right:-5px;top:25px}.ch2{width:40px;height:50px;border:4px solid #2d3436;border-radius:50%;border-left:none;position:absolute;left:-15px;top:5px}.mod{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);align-items:center;justify-content:center;z-index:1000}.mod.a{display:flex}.mc{background:#fff;border-radius:20px;padding:40px;text-align:center;max-width:500px}.mi{font-size:6rem;margin-bottom:20px}.mt{font-size:2.5rem;color:#6C5CE7;margin-bottom:15px}.mx{font-size:1.3rem;color:#636e72;margin-bottom:25px}.mb{padding:15px 40px;font-size:1.2rem;font-weight:bold;background:linear-gradient(135deg,#6C5CE7,#5848c2);color:#fff;border:none;border-radius:10px;cursor:pointer}</style></head><body><div class="s"><div class="top"><div class="prog"><div class="bar" id="bar"></div><div class="drops" id="drops"></div></div><div class="tim" id="tim">${cfg.timer}</div></div><div class="g"><div class="bf"><div class="b" id="b"><div class="hd"><div class="an al"></div><div class="an ar"></div></div><div class="bd"></div><div class="wg wl" id="wl"></div><div class="wg wr" id="wr"></div></div><div class="rs"><div class="r" id="r"><div class="pt p1"></div><div class="pt p2"></div><div class="pt p3"></div><div class="pt p4"></div><div class="pt p5"></div><div class="pt p6"></div><div class="pt p7"></div><div class="rc"></div></div><div class="st" id="st"></div></div></div><div class="ch pa">${cfg.hero}</div><div class="ch be" id="be">${cfg.enemy}</div><div class="wd"><h3>${t.s}</h3><div id="list"></div></div></div><div class="bot"><div class="cn"><div class="cb cr">die</div><div class="cs"></div><div class="ch2"></div></div><div class="cn"><div class="cb cbl">der</div><div class="cs"></div><div class="ch2"></div></div><div class="cn"><div class="cb cg">das</div><div class="cs"></div><div class="ch2"></div></div></div></div><div class="mod" id="win"><div class="mc"><div class="mi">${cfg.reward}</div><div class="mt">${t.w}</div><div class="mx">${cfg.win}</div><button class="mb" onclick="location.reload()">${t.a}</button></div></div><script>const W=${JSON.stringify(w)};const C={die:'#ff7675',der:'#74b9ff',das:'#55efc4'};let a=null,n=0,tm=${cfg.timer},ti=null,p=0;function init(){for(let i=0;i<6;i++){document.getElementById('wl').innerHTML+='<div class="sg"></div>';document.getElementById('wr').innerHTML+='<div class="sg"></div>';}start();}function start(){const ar=['die','der','das'];a=ar[Math.floor(Math.random()*ar.length)];high(a);gen();timer();}function high(x){document.querySelectorAll('.cn').forEach(c=>c.style.boxShadow='');const i=x==='die'?0:x==='der'?1:2;document.querySelectorAll('.cn')[i].style.boxShadow='0 0 30px '+C[x];}function gen(){const l=document.getElementById('list');l.innerHTML='';const ok=[...W[a]].sort(()=>Math.random()-0.5).slice(0,2);const ot=Object.keys(W).filter(k=>k!==a);const no=W[ot[Math.floor(Math.random()*ot.length)]][0];const ws=[...ok,no].sort(()=>Math.random()-0.5);ws.forEach(w=>{const d=document.createElement('div');d.className='wo';d.textContent=w;d.onclick=()=>check(w,d);l.appendChild(d);});}function check(w,e){clearInterval(ti);const ok=W[a].includes(w);if(ok){e.classList.add('ok');const s=document.querySelectorAll('.sg');const em=Array.from(s).find(x=>!x.classList.contains('c'));if(em){em.textContent=w;em.style.backgroundColor=C[a];em.classList.add('c');}const pt=document.querySelectorAll('.pt');if(p<pt.length){pt[p].classList.add('c');p++;if(p>=pt.length){document.getElementById('st').classList.add('gr');document.getElementById('r').classList.add('a');}}const dr=document.getElementById('drops');const d=document.createElement('span');d.className='drop';d.textContent='💧';dr.appendChild(d);document.getElementById('bar').style.width=((++n)/12*100)+'%';setTimeout(()=>{if(n>=12){document.getElementById('b').classList.add('a');setTimeout(()=>document.getElementById('win').classList.add('a'),2000);}else{start();}},1500);}else{e.classList.add('no');const b=document.getElementById('be');b.classList.add('a');setTimeout(()=>{b.classList.remove('a');start();},2000);}}function timer(){tm=${cfg.timer};document.getElementById('tim').textContent=tm;document.getElementById('tim').classList.remove('w');ti=setInterval(()=>{tm--;document.getElementById('tim').textContent=tm;if(tm<=5)document.getElementById('tim').classList.add('w');if(tm<=0){clearInterval(ti);document.getElementById('be').classList.add('a');setTimeout(()=>{document.getElementById('be').classList.remove('a');start();},2000);}},1000);}init();</script></body></html>`;
+}
+
+function preview() {
+    const html = makeHTML();
+    const area = document.getElementById('prev');
+    area.innerHTML = '<iframe class="preview-iframe" id="pf"></iframe>';
+    const iframe = document.getElementById('pf');
+    iframe.contentDocument.open();
+    iframe.contentDocument.write(html);
+    iframe.contentDocument.close();
+}
+
+function getCode() {
+    const html = makeHTML();
+    const code = `<iframe width="800" height="600" style="border:none;" src="data:text/html;charset=utf-8,${encodeURIComponent(html)}"></iframe>`;
+    document.getElementById('code').textContent = code;
+    document.getElementById('modal').classList.add('active');
+}
+
+function download() {
+    const html = makeHTML();
+    const blob = new Blob([html], {type: 'text/html'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'game.html';
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+function copy() {
+    const code = document.getElementById('code').textContent;
+    navigator.clipboard.writeText(code).then(() => {
+        alert('✅ Код скопирован!');
+    });
+}
+
+function closeM() {
+    document.getElementById('modal').classList.remove('active');
+}
+
+document.getElementById('modal').onclick = function(e) {
+    if (e.target === this) closeM();
+};
+</script>
+</body>
+</html>
