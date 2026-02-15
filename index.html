@@ -2,191 +2,78 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>MASTER EDITOR 2026 | Deutsch interaktiv</title>
+    <title>ULTIMATE EDITOR 2026</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #6C5CE7; --accent: #FD79A8; --bg: #F0F2F5; }
-        body { font-family: 'Montserrat', sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #2D3436; }
-        .wrapper { max-width: 1100px; margin: 0 auto; background: white; border-radius: 40px; border: 10px solid var(--primary); overflow: hidden; box-shadow: 0 50px 100px rgba(0,0,0,0.2); }
-        .head { background: var(--primary); padding: 30px; color: white; display: flex; align-items: center; justify-content: space-between; }
-        .body-p { padding: 40px; }
-        .lang-select { background: rgba(255,255,255,0.2); border: 2px solid white; color: white; padding: 10px; border-radius: 15px; font-weight: 900; outline: none; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 25px; margin-bottom: 30px; }
-        label { display: block; font-weight: 900; text-transform: uppercase; font-size: 12px; margin-bottom: 10px; color: #636E72; }
-        textarea { width: 100%; height: 150px; border-radius: 20px; border: 3px solid #E1E1E1; padding: 15px; font-family: inherit; resize: none; transition: 0.3s; box-sizing: border-box; }
-        textarea:focus { border-color: var(--accent); outline: none; }
-        .input-group { margin-bottom: 20px; }
-        input { width: 100%; padding: 15px; border-radius: 15px; border: 3px solid #E1E1E1; box-sizing: border-box; font-family: inherit; }
-        .btn-gen { background: var(--accent); color: white; border: none; padding: 25px; border-radius: 25px; font-weight: 900; font-size: 1.5rem; width: 100%; cursor: pointer; transition: 0.4s; text-transform: uppercase; letter-spacing: 2px; }
-        .btn-gen:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(253, 121, 168, 0.4); }
+        :root { --p: #6C5CE7; --a: #FD79A8; }
+        body { font-family: 'Montserrat', sans-serif; background: #f0f2f5; padding: 20px; margin: 0; }
+        .card { max-width: 1000px; margin: 0 auto; background: white; border-radius: 30px; border: 8px solid var(--p); overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
+        .h { background: var(--p); padding: 25px; color: white; display: flex; justify-content: space-between; align-items: center; }
+        .b { padding: 30px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        textarea { width: 100%; height: 120px; border-radius: 15px; border: 2px solid #ddd; padding: 10px; resize: none; box-sizing: border-box; }
+        label { display: block; font-weight: 900; font-size: 11px; color: #888; margin-bottom: 5px; text-transform: uppercase; }
+        input, select { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #ddd; box-sizing: border-box; font-family: inherit; }
+        .btn { background: var(--a); color: white; border: none; padding: 20px; border-radius: 20px; font-weight: 900; font-size: 1.2rem; cursor: pointer; width: 100%; transition: 0.3s; }
+        .btn:hover { transform: scale(1.02); filter: brightness(1.1); }
         #overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:999; align-items:center; justify-content:center; }
-        .modal { background: white; padding: 40px; border-radius: 40px; width: 90%; max-width: 800px; text-align: center; position: relative; }
-        #output { background: #1E272E; color: #0BEB85; padding: 20px; border-radius: 20px; font-family: 'Courier New', monospace; font-size: 13px; text-align: left; max-height: 250px; overflow-y: auto; word-break: break-all; margin: 20px 0; border: 5px solid #2F3640; }
+        #out { background: #1a1a1a; color: #00ff00; padding: 15px; border-radius: 10px; font-family: monospace; font-size: 12px; word-break: break-all; max-height: 250px; overflow-y: auto; margin: 20px 0; text-align: left; }
     </style>
 </head>
 <body>
 
-<div class="wrapper">
-    <div class="head">
-        <div style="display:flex; align-items:center; gap:20px;">
-            <img src="https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/logo.png" width="70">
-            <h1 style="margin:0;">РЕДАКТОР ИГРЫ v.FINAL</h1>
-        </div>
-        <select id="uiLang" class="lang-select">
-            <option value="ru">Русский</option>
-            <option value="de">Deutsch</option>
-            <option value="en">English</option>
-            <option value="es">Español</option>
-            <option value="it">Italiano</option>
-            <option value="zh">Chinese</option>
+<div class="card">
+    <div class="h">
+        <h2 style="margin:0;">РЕДАКТОР ИГРЫ</h2>
+        <select id="l" style="width:150px;">
+            <option value="ru">Русский</option><option value="de">Deutsch</option>
+            <option value="en">English</option><option value="es">Español</option>
+            <option value="it">Italiano</option><option value="zh">中文</option>
         </select>
     </div>
-
-    <div class="body-p">
+    <div class="b">
         <div class="grid">
-            <div><label style="color:#0984E3">Список слов DER</label><textarea id="derList">Hund, Tisch, Bär, Apfel, Stuhl, Computer</textarea></div>
-            <div><label style="color:#D63031">Список слов DIE</label><textarea id="dieList">Katze, Tasche, Blume, Schule, Lampe, Sonne</textarea></div>
-            <div><label style="color:#00B894">Список слов DAS</label><textarea id="dasList">Auto, Haus, Buch, Kind, Fenster, Bild</textarea></div>
+            <div><label>DER</label><textarea id="der">Hund, Tisch, Bär, Apfel</textarea></div>
+            <div><label>DIE</label><textarea id="die">Katze, Tasche, Blume, Sonne</textarea></div>
+            <div><label>DAS</label><textarea id="das">Auto, Haus, Buch, Kind</textarea></div>
         </div>
-
         <div class="grid" style="grid-template-columns: 2fr 1fr;">
-            <div class="input-group"><label>Ссылка на фоновую музыку (MP3)</label><input type="text" id="musicUrl" placeholder="https://example.com/music.mp3"></div>
-            <div class="input-group"><label>Капель до победы</label><input type="number" id="winLimit" value="10"></div>
+            <div><label>Музыка (URL mp3)</label><input type="text" id="m" placeholder="Ссылка на mp3"></div>
+            <div><label>Капель до победы</label><input type="number" id="sc" value="10"></div>
         </div>
-
-        <button class="btn-gen" onclick="generate()">Сгенерировать код игры</button>
+        <button class="btn" onclick="gen()">СГЕНЕРИРОВАТЬ ИГРУ</button>
     </div>
 </div>
 
 <div id="overlay">
-    <div class="modal">
-        <h2 style="color:var(--primary)">КОД ГОТОВ!</h2>
-        <p>Вставьте этот код в Genially через Insert -> Others</p>
-        <div id="output"></div>
-        <button class="btn-gen" onclick="copyCode()">Скопировать код</button>
-        <button onclick="document.getElementById('overlay').style.display='none'" style="margin-top:20px; background:none; border:none; color:gray; cursor:pointer; text-decoration:underline;">Вернуться к правкам</button>
+    <div style="background:white; padding:30px; border-radius:30px; width:90%; max-width:700px; text-align:center;">
+        <h2>КОД ГОТОВ!</h2>
+        <div id="out"></div>
+        <button class="btn" onclick="copy()">КОПИРОВАТЬ</button>
+        <button onclick="document.getElementById('overlay').style.display='none'" style="margin-top:15px; background:none; border:none; color:gray; cursor:pointer;">Назад</button>
     </div>
 </div>
 
 <script>
-    function generate() {
-        const config = {
-            der: document.getElementById('derList').value,
-            die: document.getElementById('dieList').value,
-            das: document.getElementById('dasList').value,
-            music: document.getElementById('musicUrl').value,
-            limit: document.getElementById('winLimit').value,
-            lang: document.getElementById('uiLang').value
-        };
-
-        const lex = {
-            ru: { win: "ПОБЕДА! Сад расцвел!", find: "Найди слово для:" },
-            de: { win: "SIEG! Der Garten blüht!", find: "Finde das Wort für:" },
-            en: { win: "VICTORY! The garden blooms!", find: "Find the word for:" },
-            es: { win: "¡VICTORIA! ¡El jardín florece!", find: "Busca la palabra:" },
-            it: { win: "VITTORIA! Il giardino fiorisce!", find: "Trova la parola:" },
-            zh: { win: "胜利！花园里鲜花盛开！", find: "找到这个词：" }
-        }[config.lang];
-
-        const engine = `
+function gen() {
+    const d={der:document.getElementById('der').value, die:document.getElementById('die').value, das:document.getElementById('das').value, m:document.getElementById('m').value, s:document.getElementById('sc').value, l:document.getElementById('l').value};
+    const t={ru:"Победа!", de:"Sieg!", en:"Victory!", es:"Victoria!", it:"Vittoria!", zh:"胜利!"}[d.l];
+    const engine = `
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <style>
-        body { margin:0; overflow:hidden; font-family:'Montserrat', sans-serif; background:url('https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/Background_Garden.jpg') center/cover; height:100vh; }
-        .game-canvas { position:relative; width:100%; height:100%; }
-        .cans-area { position:absolute; left:40px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:40px; z-index:100; }
-        .watering-can { width:100px; cursor:pointer; transition:0.4s ease; position:relative; }
-        .watering-can.active { filter: drop-shadow(0 0 20px gold); transform: scale(1.1); }
-        .watering-can.pour { transform: rotate(-55deg) translate(-20px, -20px); }
-        .can-label { position:absolute; top:-15px; width:100%; text-align:center; color:white; font-weight:900; font-size:22px; text-shadow:2px 2px 5px black; text-transform:uppercase; }
-        
-        #rose_obj { position:absolute; top:48%; left:52%; transform:translate(-50%,-50%); width:480px; z-index:10; filter: grayscale(1); transition: 1.5s ease; }
-        #butterfly_obj { position:absolute; top:48%; left:52%; transform:translate(-50%,-50%); width:450px; z-index:20; pointer-events:none; opacity:0.8; }
-        #artist_obj { position:absolute; bottom:20px; left:20px; width:160px; transition:0.5s; z-index:30; }
-        #bee_obj { position:absolute; top:20%; left:-200px; width:120px; z-index:40; }
-
-        .progress-box { position:absolute; top:20px; left:50%; transform:translateX(-50%); display:flex; gap:8px; background:rgba(255,255,255,0.8); padding:15px; border-radius:50px; border:4px solid #6C5CE7; z-index:100; }
-        .drop-unit { width:25px; opacity:0.1; transition:0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .drop-unit.active { opacity:1; filter: drop-shadow(0 0 8px #00FFFF); transform: scale(1.2); }
-
-        .ui-panel { position:absolute; right:50px; top:50%; transform:translateY(-50%); background:rgba(255,255,255,0.95); padding:35px; border-radius:40px; box-shadow:0 20px 60px rgba(0,0,0,0.4); display:none; min-width:250px; text-align:center; z-index:200; border:5px solid #6C5CE7; }
-        .word-btn { padding:18px; margin:12px 0; background:white; border-radius:20px; cursor:pointer; font-weight:900; font-size:20px; transition:0.3s; border: 4px solid #F0F0F0; }
-        .word-btn:hover { border-color:#FD79A8; transform: scale(1.05); color:#6C5CE7; }
-        
-        @keyframes neon-glow { from { filter: grayscale(0) drop-shadow(0 0 5px red); } to { filter: grayscale(0) drop-shadow(0 0 25px red); } }
-        .bloom { animation: neon-glow 2s infinite alternate; }
-        @keyframes bee-attack { 0% { left: -200px; } 50% { left: 40%; top: 60%; } 100% { left: 120%; } }
-        .bee-fly { animation: bee-attack 2.5s linear forwards; }
-    </style>
-</head>
-<body>
-    <audio id="bgMusic" loop src="${config.music}"></audio>
-    <div class="game-canvas">
-        <div class="progress-box" id="p-box"></div>
-        <div class="cans-area">
-            <div class="watering-can" id="can-der"><div class="can-label">der</div><img src="https://cdn-icons-png.flaticon.com/512/4343/4343028.png" style="width:100%; filter:hue-rotate(180deg)"></div>
-            <div class="watering-can" id="can-die"><div class="can-label">die</div><img src="https://cdn-icons-png.flaticon.com/512/4343/4343028.png" style="width:100%; filter:hue-rotate(300deg)"></div>
-            <div class="watering-can" id="can-das"><div class="can-label">das</div><img src="https://cdn-icons-png.flaticon.com/512/4343/4343028.png" style="width:100%; filter:hue-rotate(100deg)"></div>
-        </div>
-        
-        <img id="rose_obj" src="https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/Rose_Path.png">
-        <img id="butterfly_obj" src="https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/Butterfly_Alpha.png">
-        <img id="artist_obj" src="https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/%D0%92%D0%B5%D1%81%D1%91%D0%BB%D1%8B%D0%B9%20%D1%85%D1%83%D0%B4%D0%BE%D0%B6%D0%BD%D0%B8%D0%BA.png">
-        <img id="bee_obj" src="https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/%D0%97%D0%BB%D0%B0%D1%8F%20%D0%BF%D1%87%D0%B5%D0%BB%D0%B0.png">
-        
-        <div class="ui-panel" id="ui-panel"></div>
-    </div>
-
-    <script>
-        const words = { 
-            der: "${config.der}".split(",").map(s=>s.trim()), 
-            die: "${config.die}".split(",").map(s=>s.trim()), 
-            das: "${config.das}".split(",").map(s=>s.trim()) 
-        };
-        let currentArt = '';
-        let score = 0;
-
-        function run() {
-            const pb = document.getElementById('p-box');
-            for(let i=0; i<${config.limit}; i++) pb.innerHTML += '<img src="https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/%D0%94%D0%B5%D0%BA%D0%BE%D1%80%D0%B0%D1%82%D0%B8%D0%B2%D0%BD%D1%8B%D0%B9%20%D1%8D%D0%BB%D0%B5%D0%BC%D0%B5%D0%BD%D1%82%20%D0%9A%D0%B0%D0%BF%D0%BB%D1%8F.png" class="drop-unit">';
-            document.getElementById('bgMusic').play().catch(()=>{});
-            next();
-        }
-
-        function next() {
-            const arts = ['der','die','das'];
-            currentArt = arts[Math.floor(Math.random()*3)];
-            document.querySelectorAll('.watering-can').forEach(c=>c.classList.remove('active'));
-            document.getElementById('can-'+currentArt).classList.add('active');
-            
-            const panel = document.getElementById('ui-panel');
-            panel.style.display = 'block';
-            panel.innerHTML = '<div style="color:#6C5CE7; font-weight:900; margin-bottom:15px; font-size:14px;">${lex.find} '+currentArt.toUpperCase()+'</div>';
-            
-            const roundPool = [
-                {t: words.der[Math.floor(Math.random()*words.der.length)], a:'der'},
-                {t: words.die[Math.floor(Math.random()*words.die.length)], a:'die'},
-                {t: words.das[Math.floor(Math.random()*words.das.length)], a:'das'}
-            ].sort(()=>Math.random()-0.5);
-
-            roundPool.forEach(w => {
-                const b = document.createElement('div');
-                b.className = 'word-btn'; b.innerText = w.t;
-                b.onclick = () => {
-                    if(w.a === currentArt) {
-                        score++;
-                        const can = document.getElementById('can-'+currentArt);
-                        can.classList.add('pour');
-                        if(score <= ${config.limit}) document.querySelectorAll('.drop-unit')[score-1].classList.add('active');
-                        if(score === 1) document.getElementById('rose_obj').classList.add('bloom');
-                        
-                        setTimeout(()=>{ 
-                            can.classList.remove('pour');
-                            if(score >= ${config.limit}) { alert("${lex.win}"); location.reload(); } else next();
-                        }, 1000);
-                    } else {
-                        const bee = document.getElementById('bee_obj');
-                        const artist = document.getElementById('artist_obj');
-                        bee.classList.add('bee-fly');
+        body { margin:0; overflow:hidden; font-family:sans-serif; background:url('https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/Background_Garden.jpg') center/cover; height:100vh; }
+        .cans { position:absolute; left:20px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:30px; }
+        .can { width:80px; transition:0.4s; cursor:pointer; position:relative; }
+        .can.active { filter: drop-shadow(0 0 15px gold); transform: scale(1.1); }
+        .can.pour { transform: rotate(-50deg); }
+        .can-l { position:absolute; top:-10px; width:100%; text-align:center; color:white; font-weight:900; text-shadow:2px 2px 2px #000; }
+        #rose { position:absolute; top:45%; left:52%; transform:translate(-50%,-50%); width:450px; filter: grayscale(1); transition: 1s; }
+        #bee { position:absolute; top:20%; left:-200px; width:100px; transition: 2s linear; }
+        .bar { position:absolute; top:20px; left:50%; transform:translateX(-50%); display:flex; gap:5px; background:rgba(255,255,255,0.8); padding:10px; border-radius:50px; }
+        .drop { width:20px; opacity:0.1; transition:0.4s; }
+        .drop.on { opacity:1; filter: drop-shadow(0 0 8px cyan); }
+        .ui { position:absolute; right:30px; top:50%; transform:translateY(-50%); background:white; padding:20px; border-radius:25px; display:none; min-width:180px; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,0.3); }
+        .w { padding:12px; margin:
