@@ -1,582 +1,90 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🦋 Весёлый художник - Редактор</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        :root {
-            --primary: #6C5CE7;
-            --accent: #FD79A8;
-            --success: #00b894;
+        if(timeLeft <= 0){
+            clearInterval(timerInterval);
+            loseLife();
         }
-        
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-        
-        .container {
-            display: flex;
-            min-height: 100vh;
-        }
-        
-        .editor-panel {
-            width: 45%;
-            background: white;
-            overflow-y: auto;
-        }
-        
-        .editor-panel::-webkit-scrollbar { width: 10px; }
-        .editor-panel::-webkit-scrollbar-thumb { 
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            border-radius: 10px;
-        }
-        
-        .header {
-            background: linear-gradient(135deg, var(--primary), #5848c2);
-            color: white;
-            padding: 30px;
-            text-align: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        
-        .header h1 {
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-        
-        .subtitle {
-            font-size: 0.9rem;
-            opacity: 0.9;
-            font-weight: 600;
-        }
-        
-        .content {
-            padding: 30px;
-        }
-        
-        .section {
-            background: #f8f9fa;
-            border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 25px;
-            border: 2px solid #e9ecef;
-        }
-        
-        .section-title {
-            font-size: 1.4rem;
-            font-weight: 900;
-            color: var(--primary);
-            margin-bottom: 20px;
-            padding-left: 15px;
-            border-left: 6px solid var(--accent);
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: #495057;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-        }
-        
-        input[type="text"], input[type="number"], select, textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #dee2e6;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-family: inherit;
-        }
-        
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
-        }
-        
-        textarea {
-            resize: vertical;
-            min-height: 100px;
-            font-family: 'Courier New', monospace;
-        }
-        
-        .chars-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-            gap: 10px;
-            margin-top: 10px;
-        }
-        
-        .char-item {
-            aspect-ratio: 1;
-            border: 3px solid #dee2e6;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            cursor: pointer;
-            background: white;
-            transition: all 0.3s;
-        }
-        
-        .char-item:hover {
-            transform: scale(1.1);
-            border-color: var(--primary);
-        }
-        
-        .char-item.active {
-            border-color: var(--accent);
-            background: linear-gradient(135deg, #fff0f5, #ffe6f0);
-            box-shadow: 0 5px 15px rgba(253, 121, 168, 0.5);
-            transform: scale(1.15);
-        }
-        
-        .actions {
-            display: flex;
-            gap: 15px;
-            margin-top: 30px;
-            position: sticky;
-            bottom: 0;
-            background: white;
-            padding: 20px 0;
-            border-top: 2px solid #f0f0f0;
-        }
-        
-        .btn {
-            flex: 1;
-            padding: 18px;
-            border: none;
-            border-radius: 12px;
-            font-weight: 900;
-            font-size: 1.1rem;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: all 0.3s;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), #5848c2);
-            color: white;
-            box-shadow: 0 6px 0 #4834D4;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 9px 0 #4834D4;
-        }
-        
-        .btn-success {
-            background: linear-gradient(135deg, var(--success), #00a884);
-            color: white;
-            box-shadow: 0 6px 0 #00896c;
-        }
-        
-        .btn-success:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 9px 0 #00896c;
-        }
-        
-        .preview-panel {
-            width: 55%;
-            display: flex;
-            flex-direction: column;
-            background: #2d3436;
-        }
-        
-        .preview-header {
-            background: #2d3436;
-            color: white;
-            padding: 20px 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .preview-btn {
-            padding: 10px 20px;
-            border: 2px solid white;
-            background: transparent;
-            color: white;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 700;
-        }
-        
-        .preview-btn:hover {
-            background: white;
-            color: #2d3436;
-        }
-        
-        .preview-content {
-            flex: 1;
-            background: #f5f5f5;
-            position: relative;
-        }
-        
-        .preview-iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            background: white;
-        }
-        
-        .preview-placeholder {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            color: #636e72;
-            padding: 40px;
-            text-align: center;
-        }
-        
-        .preview-placeholder-icon {
-            font-size: 6rem;
-            margin-bottom: 20px;
-            opacity: 0.3;
-        }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.85);
-            z-index: 10000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        
-        .modal.active {
-            display: flex;
-        }
-        
-        .modal-content {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            max-width: 900px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-        }
-        
-        .modal-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 2rem;
-            cursor: pointer;
-            color: #636e72;
-            background: none;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-        }
-        
-        .modal-close:hover {
-            color: white;
-            background: #e74c3c;
-        }
-        
-        .modal h3 {
-            color: var(--primary);
-            font-size: 2rem;
-            margin-bottom: 20px;
-        }
-        
-        .code-box {
-            background: #2d3436;
-            color: #00b894;
-            padding: 20px;
-            border-radius: 10px;
-            font-family: monospace;
-            font-size: 0.85rem;
-            overflow: auto;
-            margin: 20px 0;
-            max-height: 400px;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-        
-        .download-btn {
-            padding: 15px 30px;
-            background: var(--success);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 1rem;
-            margin: 10px;
-        }
-        
-        .download-btn:hover {
-            background: #00a884;
-        }
-        
-        @media (max-width: 1024px) {
-            .container { flex-direction: column; }
-            .editor-panel, .preview-panel { width: 100%; }
-            .preview-panel { min-height: 600px; }
-        }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <div class="editor-panel">
-        <div class="header">
-            <h1>🦋 Весёлый художник</h1>
-            <div class="subtitle">РЕДАКТОР ИГРЫ</div>
-        </div>
-        
-        <div class="content">
-            <div class="section">
-                <div class="section-title">🌍 Язык</div>
-                <div class="form-group">
-                    <label>Язык игры</label>
-                    <select id="lang">
-                        <option value="ru">🇷🇺 Русский</option>
-                        <option value="de" selected>🇩🇪 Deutsch</option>
-                        <option value="en">🇬🇧 English</option>
-                        <option value="es">🇪🇸 Español</option>
-                        <option value="it">🇮🇹 Italiano</option>
-                        <option value="fr">🇫🇷 Français</option>
-                        <option value="zh">🇨🇳 中文</option>
-                        <option value="ja">🇯🇵 日本語</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="section">
-                <div class="section-title">🎨 Фон</div>
-                <div class="form-group">
-                    <select id="bg">
-                        <option value="garden">🌻 Огород</option>
-                        <option value="meadow">🌸 Луг</option>
-                        <option value="forest">🌲 Лес</option>
-                        <option value="space">🚀 Космос</option>
-                        <option value="ocean">🌊 Океан</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="section">
-                <div class="section-title">👤 Персонажи</div>
-                <div class="form-group">
-                    <label>Главный герой</label>
-                    <div class="chars-grid">
-                        <div class="char-item active" data-type="hero" data-value="🦋" onclick="select(this)">🦋</div>
-                        <div class="char-item" data-type="hero" data-value="👨‍🎨" onclick="select(this)">👨‍🎨</div>
-                        <div class="char-item" data-type="hero" data-value="👩‍🎨" onclick="select(this)">👩‍🎨</div>
-                        <div class="char-item" data-type="hero" data-value="🐝" onclick="select(this)">🐝</div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>При ошибке</label>
-                    <div class="chars-grid">
-                        <div class="char-item active" data-type="enemy" data-value="😠🐝" onclick="select(this)">😠🐝</div>
-                        <div class="char-item" data-type="enemy" data-value="⚡" onclick="select(this)">⚡</div>
-                        <div class="char-item" data-type="enemy" data-value="🌧️" onclick="select(this)">🌧️</div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Награда</label>
-                    <div class="chars-grid">
-                        <div class="char-item active" data-type="reward" data-value="🌹" onclick="select(this)">🌹</div>
-                        <div class="char-item" data-type="reward" data-value="🏆" onclick="select(this)">🏆</div>
-                        <div class="char-item" data-type="reward" data-value="⭐" onclick="select(this)">⭐</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="section">
-                <div class="section-title">📚 Слова</div>
-                <div class="form-group">
-                    <label>Der (синий)</label>
-                    <textarea id="der">Hund, Fisch, Vogel, Hamster</textarea>
-                </div>
-                <div class="form-group">
-                    <label>Die (красный)</label>
-                    <textarea id="die">Katze, Maus, Spinne, Gans</textarea>
-                </div>
-                <div class="form-group">
-                    <label>Das (зелёный)</label>
-                    <textarea id="das">Schwein, Reh, Pferd, Huhn</textarea>
-                </div>
-            </div>
-            
-            <div class="section">
-                <div class="section-title">⚙️ Настройки</div>
-                <div class="form-group">
-                    <label>Время (сек)</label>
-                    <input type="number" id="timer" value="20" min="5" max="120">
-                </div>
-                <div class="form-group">
-                    <label>Текст победы</label>
-                    <input type="text" id="win" value="Wir gratulieren!">
-                </div>
-            </div>
-            
-            <div class="actions">
-                <button class="btn btn-primary" onclick="preview()">👁️ Предпросмотр</button>
-                <button class="btn btn-success" onclick="getCode()">📋 Код</button>
-            </div>
-        </div>
-    </div>
-    
-    <div class="preview-panel">
-        <div class="preview-header">
-            <h2>🎮 Предпросмотр</h2>
-            <button class="preview-btn" onclick="preview()">🔄</button>
-        </div>
-        <div class="preview-content" id="prev">
-            <div class="preview-placeholder">
-                <div class="preview-placeholder-icon">🎨</div>
-                <h3>Нажмите "Предпросмотр"</h3>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal" id="modal">
-    <div class="modal-content">
-        <button class="modal-close" onclick="closeM()">×</button>
-        <h3>📋 Ваша игра готова!</h3>
-        <p><strong>Способ 1:</strong> Скачать HTML файл и загрузить в Genially как файл</p>
-        <button class="download-btn" onclick="download()">📥 Скачать game.html</button>
-        <p style="margin-top:20px;"><strong>Способ 2:</strong> Скопировать код для iframe</p>
-        <div class="code-box" id="code"></div>
-        <button class="download-btn" onclick="copy()">📋 Копировать код</button>
-        <p style="margin-top:15px; font-size:0.9rem; color:#636e72;">
-            💡 В Genially: Вставка → HTML → вставить код → Insert
-        </p>
-    </div>
-</div>
-
-<script>
-const cfg = {
-    lang: 'de',
-    bg: 'garden',
-    hero: '🦋',
-    enemy: '😠🐝',
-    reward: '🌹',
-    der: 'Hund, Fisch, Vogel, Hamster',
-    die: 'Katze, Maus, Spinne, Gans',
-    das: 'Schwein, Reh, Pferd, Huhn',
-    timer: 20,
-    win: 'Wir gratulieren!'
-};
-
-const txt = {
-    ru: {s:'Выберите слово:',t:'Время:',w:'Поздравляем!',a:'Ещё'},
-    de: {s:'Wähle ein Wort:',t:'Zeit:',w:'Glückwunsch!',a:'Nochmal'},
-    en: {s:'Choose word:',t:'Time:',w:'Congrats!',a:'Again'},
-    es: {s:'Elige palabra:',t:'Tiempo:',w:'¡Feliz!',a:'Otra'},
-    it: {s:'Scegli parola:',t:'Tempo:',w:'Bravo!',a:'Ancora'},
-    fr: {s:'Choisir mot:',t:'Temps:',w:'Bravo!',a:'Encore'},
-    zh: {s:'选词:',t:'时间:',w:'恭喜!',a:'再来'},
-    ja: {s:'選択:',t:'時間:',w:'おめでとう!',a:'もう一度'}
-};
-
-function select(el) {
-    const type = el.dataset.type;
-    document.querySelectorAll(`[data-type="${type}"]`).forEach(e => e.classList.remove('active'));
-    el.classList.add('active');
-    cfg[type] = el.dataset.value;
+    }, 1000);
 }
 
-function collect() {
-    cfg.lang = document.getElementById('lang').value;
-    cfg.bg = document.getElementById('bg').value;
-    cfg.der = document.getElementById('der').value;
-    cfg.die = document.getElementById('die').value;
-    cfg.das = document.getElementById('das').value;
-    cfg.timer = document.getElementById('timer').value;
-    cfg.win = document.getElementById('win').value;
+function initLives(){
+    const livesContainer = document.getElementById("lives");
+    livesContainer.innerHTML = "";
+    for(let i=0;i<lives;i++){
+        const span = document.createElement("span");
+        span.className = "life-drop";
+        span.innerText = "❤️";
+        livesContainer.appendChild(span);
+    }
 }
 
-function makeHTML() {
-    collect();
-    const t = txt[cfg.lang];
-    const bgs = {
-        garden:'linear-gradient(135deg,#a8edea 0%,#fed6e3 100%)',
-        meadow:'linear-gradient(135deg,#ffecd2 0%,#fcb69f 100%)',
-        forest:'linear-gradient(135deg,#d4fc79 0%,#96e6a1 100%)',
-        space:'linear-gradient(135deg,#1e3c72 0%,#2a5298 100%)',
-        ocean:'linear-gradient(135deg,#00d2ff 0%,#3a7bd5 100%)'
-    };
-    const w = {
-        der: cfg.der.split(',').map(x=>x.trim()).filter(x=>x),
-        die: cfg.die.split(',').map(x=>x.trim()).filter(x=>x),
-        das: cfg.das.split(',').map(x=>x.trim()).filter(x=>x)
-    };
-    
-    return `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial;background:${bgs[cfg.bg]};overflow:hidden}.s{width:100vw;height:100vh;display:flex;flex-direction:column}.top{height:80px;background:rgba(255,255,255,0.95);display:flex;justify-content:space-between;align-items:center;padding:0 30px;box-shadow:0 5px 20px rgba(0,0,0,0.2)}.prog{flex:1;max-width:400px;height:50px;background:#f0f0f0;border-radius:25px;border:3px solid #6C5CE7;overflow:hidden;position:relative}.bar{height:100%;background:linear-gradient(90deg,#6C5CE7,#FD79A8);width:0%;transition:width 0.5s}.drops{position:absolute;top:50%;left:10px;transform:translateY(-50%);display:flex;gap:5px;z-index:1}.drop{font-size:1.5rem;animation:di 0.5s}@keyframes di{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}.tim{font-size:2rem;font-weight:bold;color:#6C5CE7;min-width:100px;text-align:center}.tim.w{color:#e74c3c;animation:p 0.5s infinite}@keyframes p{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}.g{flex:1;display:flex;align-items:center;justify-content:center;position:relative;padding:20px}.bf{width:400px;height:400px;position:relative}.b{width:100%;height:100%;position:relative}.b.a{animation:f 4s ease-in-out infinite}@keyframes f{0%,100%{transform:translate(0,0)}25%{transform:translate(30px,-30px)}50%{transform:translate(0,-60px)}75%{transform:translate(-30px,-30px)}}.wg{position:absolute;width:150px;height:200px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;border:5px solid #2d3436;background:#e0e0e0;display:flex;flex-wrap:wrap}.wl{left:50px;top:100px;transform:rotate(-15deg)}.wr{right:50px;top:100px;transform:rotate(15deg)}.sg{flex:1 1 33%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:bold;color:#fff;text-align:center;padding:3px;transition:all 0.5s}.sg.c{box-shadow:inset 0 0 20px rgba(255,255,255,0.5),0 0 15px currentColor}.bd{position:absolute;width:50px;height:180px;background:linear-gradient(180deg,#2d3436,#636e72);border-radius:25px;left:50%;top:130px;transform:translateX(-50%)}.hd{position:absolute;width:60px;height:60px;background:#2d3436;border-radius:50%;left:50%;top:110px;transform:translateX(-50%)}.an{position:absolute;width:2px;height:30px;background:#2d3436;top:-25px}.al{left:15px;transform:rotate(-30deg)}.ar{right:15px;transform:rotate(30deg)}.an::after{content:'⭕';position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-size:1rem}.rs{position:absolute;bottom:-60px;left:50%;transform:translateX(-50%);width:200px;height:200px}.r{position:relative;width:120px;height:120px;margin:0 auto}.r.a{animation:gl 2s ease-in-out infinite}@keyframes gl{0%,100%{filter:drop-shadow(0 0 10px #ff7675)}50%{filter:drop-shadow(0 0 20px #e74c3c)}}.rc{position:absolute;width:30px;height:30px;background:#ffd93d;border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);z-index:5}.pt{position:absolute;width:60px;height:60px;background:#2d3436;border-radius:50%;transition:all 0.5s}.pt.c{background:#e74c3c;box-shadow:0 0 20px #e74c3c}.p1{top:-25px;left:30px}.p2{top:10px;left:70px}.p3{top:50px;left:70px}.p4{top:70px;left:30px}.p5{top:70px;left:-10px}.p6{top:50px;left:-25px}.p7{top:10px;left:-25px}.st{position:absolute;width:8px;height:100px;background:#2d3436;bottom:-100px;left:50%;transform:translateX(-50%);transition:all 0.5s}.st.gr{background:linear-gradient(180deg,#27ae60,#229954)}.ch{position:absolute;font-size:4rem;z-index:50}.pa{bottom:150px;left:100px;animation:wk 4s ease-in-out infinite}@keyframes wk{0%,100%{transform:translateX(0)}50%{transform:translateX(50px)}}.be{top:120px;right:100px;display:none;animation:ch 2s}.be.a{display:block}@keyframes ch{0%{transform:translate(0,0)}50%{transform:translate(-150px,50px)}100%{transform:translate(0,0)}}.wd{position:absolute;top:50%;right:30px;transform:translateY(-50%);background:rgba(255,255,255,0.95);border-radius:20px;padding:20px;max-width:250px;box-shadow:0 10px 30px rgba(0,0,0,0.3);max-height:500px;overflow-y:auto}.wd h3{margin-bottom:15px;color:#6C5CE7;font-size:1.1rem}.wo{padding:12px;margin:8px 0;background:#fff;border:2px solid #dee2e6;border-radius:10px;cursor:pointer;font-weight:bold;text-align:center;transition:all 0.3s}.wo:hover{transform:scale(1.05);border-color:#6C5CE7}.wo.ok{background:#d4edda;border-color:#28a745;animation:ok 0.5s}@keyframes ok{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}.wo.no{animation:no 0.5s}@keyframes no{0%,100%{transform:translateX(0)}25%{transform:translateX(-10px)}75%{transform:translateX(10px)}}.bot{height:120px;background:rgba(255,255,255,0.95);display:flex;align-items:center;justify-content:center;gap:50px;box-shadow:0 -5px 20px rgba(0,0,0,0.2)}.cn{width:100px;height:100px;position:relative;cursor:pointer;transition:all 0.3s}.cn:hover{transform:scale(1.1)}.cb{width:80px;height:60px;border-radius:15px;border:4px solid #2d3436;display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:bold;color:#fff}.cr{background:linear-gradient(135deg,#ff7675,#e74c3c)}.cbl{background:linear-gradient(135deg,#74b9ff,#3498db)}.cg{background:linear-gradient(135deg,#55efc4,#00b894)}.cs{width:30px;height:10px;background:#2d3436;border-radius:0 8px 8px 0;position:absolute;right:-5px;top:25px}.ch2{width:40px;height:50px;border:4px solid #2d3436;border-radius:50%;border-left:none;position:absolute;left:-15px;top:5px}.mod{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);align-items:center;justify-content:center;z-index:1000}.mod.a{display:flex}.mc{background:#fff;border-radius:20px;padding:40px;text-align:center;max-width:500px}.mi{font-size:6rem;margin-bottom:20px}.mt{font-size:2.5rem;color:#6C5CE7;margin-bottom:15px}.mx{font-size:1.3rem;color:#636e72;margin-bottom:25px}.mb{padding:15px 40px;font-size:1.2rem;font-weight:bold;background:linear-gradient(135deg,#6C5CE7,#5848c2);color:#fff;border:none;border-radius:10px;cursor:pointer}</style></head><body><div class="s"><div class="top"><div class="prog"><div class="bar" id="bar"></div><div class="drops" id="drops"></div></div><div class="tim" id="tim">${cfg.timer}</div></div><div class="g"><div class="bf"><div class="b" id="b"><div class="hd"><div class="an al"></div><div class="an ar"></div></div><div class="bd"></div><div class="wg wl" id="wl"></div><div class="wg wr" id="wr"></div></div><div class="rs"><div class="r" id="r"><div class="pt p1"></div><div class="pt p2"></div><div class="pt p3"></div><div class="pt p4"></div><div class="pt p5"></div><div class="pt p6"></div><div class="pt p7"></div><div class="rc"></div></div><div class="st" id="st"></div></div></div><div class="ch pa">${cfg.hero}</div><div class="ch be" id="be">${cfg.enemy}</div><div class="wd"><h3>${t.s}</h3><div id="list"></div></div></div><div class="bot"><div class="cn"><div class="cb cr">die</div><div class="cs"></div><div class="ch2"></div></div><div class="cn"><div class="cb cbl">der</div><div class="cs"></div><div class="ch2"></div></div><div class="cn"><div class="cb cg">das</div><div class="cs"></div><div class="ch2"></div></div></div></div><div class="mod" id="win"><div class="mc"><div class="mi">${cfg.reward}</div><div class="mt">${t.w}</div><div class="mx">${cfg.win}</div><button class="mb" onclick="location.reload()">${t.a}</button></div></div><script>const W=${JSON.stringify(w)};const C={die:'#ff7675',der:'#74b9ff',das:'#55efc4'};let a=null,n=0,tm=${cfg.timer},ti=null,p=0;function init(){for(let i=0;i<6;i++){document.getElementById('wl').innerHTML+='<div class="sg"></div>';document.getElementById('wr').innerHTML+='<div class="sg"></div>';}start();}function start(){const ar=['die','der','das'];a=ar[Math.floor(Math.random()*ar.length)];high(a);gen();timer();}function high(x){document.querySelectorAll('.cn').forEach(c=>c.style.boxShadow='');const i=x==='die'?0:x==='der'?1:2;document.querySelectorAll('.cn')[i].style.boxShadow='0 0 30px '+C[x];}function gen(){const l=document.getElementById('list');l.innerHTML='';const ok=[...W[a]].sort(()=>Math.random()-0.5).slice(0,2);const ot=Object.keys(W).filter(k=>k!==a);const no=W[ot[Math.floor(Math.random()*ot.length)]][0];const ws=[...ok,no].sort(()=>Math.random()-0.5);ws.forEach(w=>{const d=document.createElement('div');d.className='wo';d.textContent=w;d.onclick=()=>check(w,d);l.appendChild(d);});}function check(w,e){clearInterval(ti);const ok=W[a].includes(w);if(ok){e.classList.add('ok');const s=document.querySelectorAll('.sg');const em=Array.from(s).find(x=>!x.classList.contains('c'));if(em){em.textContent=w;em.style.backgroundColor=C[a];em.classList.add('c');}const pt=document.querySelectorAll('.pt');if(p<pt.length){pt[p].classList.add('c');p++;if(p>=pt.length){document.getElementById('st').classList.add('gr');document.getElementById('r').classList.add('a');}}const dr=document.getElementById('drops');const d=document.createElement('span');d.className='drop';d.textContent='💧';dr.appendChild(d);document.getElementById('bar').style.width=((++n)/12*100)+'%';setTimeout(()=>{if(n>=12){document.getElementById('b').classList.add('a');setTimeout(()=>document.getElementById('win').classList.add('a'),2000);}else{start();}},1500);}else{e.classList.add('no');const b=document.getElementById('be');b.classList.add('a');setTimeout(()=>{b.classList.remove('a');start();},2000);}}function timer(){tm=${cfg.timer};document.getElementById('tim').textContent=tm;document.getElementById('tim').classList.remove('w');ti=setInterval(()=>{tm--;document.getElementById('tim').textContent=tm;if(tm<=5)document.getElementById('tim').classList.add('w');if(tm<=0){clearInterval(ti);document.getElementById('be').classList.add('a');setTimeout(()=>{document.getElementById('be').classList.remove('a');start();},2000);}},1000);}init();</script></body></html>`;
+function loseLife(){
+    lives--;
+    initLives();
+    if(lives <= 0){
+        alert("Вы проиграли! Попробуйте снова.");
+        resetGame();
+    } else {
+        timeLeft = 20;
+        startTimer();
+    }
 }
 
-function preview() {
-    const html = makeHTML();
-    const area = document.getElementById('prev');
-    area.innerHTML = '<iframe class="preview-iframe" id="pf"></iframe>';
-    const iframe = document.getElementById('pf');
-    iframe.contentDocument.open();
-    iframe.contentDocument.write(html);
-    iframe.contentDocument.close();
+// Функция сброса игры
+function resetGame(){
+    paintedSegments = 0;
+    paintedPetals = 0;
+    dahliaIndex = 0;
+    houseIndex = 0;
+    segments.forEach(s => s.style.fill="#f0f0f0");
+    petals.forEach(p => p.classList.remove("glow"));
+    dPetals.forEach(p => p.setAttribute("fill","#eee"));
+    houseSegments.forEach(s => s.setAttribute("fill","#eee"));
+    lives = 3;
+    initLives();
+    timeLeft = 20;
+    startTimer();
+    document.getElementById("victoryMessage").style.display="none";
 }
 
-function getCode() {
-    const html = makeHTML();
-    const code = `<iframe width="800" height="600" style="border:none;" src="data:text/html;charset=utf-8,${encodeURIComponent(html)}"></iframe>`;
-    document.getElementById('code').textContent = code;
-    document.getElementById('modal').classList.add('active');
-}
-
-function download() {
-    const html = makeHTML();
-    const blob = new Blob([html], {type: 'text/html'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'game.html';
-    a.click();
-    URL.revokeObjectURL(url);
-}
-
-function copy() {
-    const code = document.getElementById('code').textContent;
-    navigator.clipboard.writeText(code).then(() => {
-        alert('✅ Код скопирован!');
+// Окрас бабочки
+segments.forEach(seg=>{
+    seg.addEventListener("click", ()=>{
+        if(seg.style.fill !== "pink"){
+            seg.style.fill="pink"; // Цвет можно менять
+            paintedSegments++;
+            seg.classList.add("butterfly-flap");
+            document.getElementById("flySound").play();
+            checkVictory();
+        }
     });
+});
+
+// Окрас розы
+petals.forEach(p=>{
+    p.addEventListener("click", ()=>{
+        if(!p.classList.contains("glow")){
+            p.classList.add("glow");
+            paintedPetals++;
+            checkVictory();
+        }
+    });
+});
+
+// Проверка победы
+function checkVictory(){
+    if(paintedSegments >= segments.length && paintedPetals >= petals.length){
+        showVictory();
+    }
 }
 
-function closeM() {
-    document.getElementById('modal').classList.remove('active');
+// Победа
+function showVictory(){
+    clearInterval(timerInterval);
+    document.getElementById("victoryMessage").innerText = dictionary.victory.ru;
+    document.getElementById("victoryMessage").style.display = "block";
 }
 
-document.getElementById('modal').onclick = function(e) {
-    if (e.target === this) closeM();
+// Инициализация игры
+window.onload = ()=>{
+    initLives();
+    startTimer();
 };
-</script>
-</body>
-</html>
