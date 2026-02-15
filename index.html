@@ -22,4 +22,27 @@
         .panel-h { font-weight: 900; color: var(--p); border-left: 6px solid var(--a); padding-left: 12px; margin-bottom: 20px; text-transform: uppercase; font-size: 1.1rem; }
 
         /* ЭЛЕМЕНТЫ */
-        input, select, textarea { width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #ddd; margin-bottom: 10px; font-family: inherit; box-
+        input, select, textarea { width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #ddd; margin-bottom: 10px; font-family: inherit; box-sizing: border-box; font-size: 0.95rem; outline: none; }
+        input:focus, textarea:focus { border-color: var(--p); }
+        label { font-size: 0.75rem; font-weight: 900; color: #636e72; margin-bottom: 5px; display: block; text-transform: uppercase; }
+
+        /* ЗАГРУЗКА ФАЙЛОВ */
+        .upload-box { background: white; border: 2px dashed #cbd5e0; border-radius: 15px; padding: 15px; text-align: center; margin-bottom: 15px; position: relative; }
+        .upload-box:hover { border-color: var(--p); background: #fcfcff; }
+        .preview-zone { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 10px; min-height: 60px; }
+        .img-thumb { width: 70px; height: 70px; border-radius: 10px; border: 2px solid #eee; object-fit: contain; background: white; cursor: pointer; }
+        .img-thumb.active { border-color: var(--a); transform: scale(1.1); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        
+        .btn-mini { background: var(--p); color: white; border: none; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-weight: bold; margin-bottom: 5px; }
+        .btn-clear { background: #ff7675; margin-left: 5px; }
+
+        /* ГЛАВНЫЕ КНОПКИ */
+        .btn { width: 100%; padding: 18px; border: none; border-radius: 18px; font-weight: 900; cursor: pointer; transition: 0.2s; color: white; margin-top: 10px; text-transform: uppercase; font-size: 1rem; }
+        .btn-save { background: var(--ok); box-shadow: 0 5px 0 #008a6e; }
+        .btn-create { background: var(--p); box-shadow: 0 5px 0 #4834D4; }
+        .btn:active { transform: translateY(3px); box-shadow: none; }
+
+        /* MODAL (Код игры) */
+        #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background: white; padding: 30px; border-radius: 30px; width: 600px; max-width: 90%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+        textarea.code-out { width: 100%;
