@@ -2,192 +2,257 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Редактор игры | Deutsch interaktiv</title>
+    <title>Grand Editor | Deutsch interaktiv 2026</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --p: #6C5CE7; --a: #FD79A8; --dark: #2D3436; }
-        body { font-family: 'Montserrat', sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
-        .editor-container { max-width: 1100px; margin: 0 auto; background: white; border-radius: 40px; border: 6px solid var(--p); overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.1); }
+        :root { --p: #6C5CE7; --a: #FD79A8; --dark: #2D3436; --blue: #74b9ff; --red: #ff7675; --green: #55efc4; }
+        body { font-family: 'Montserrat', sans-serif; background: #dfe6e9; margin: 0; padding: 20px; }
+        .wrapper { max-width: 1200px; margin: 0 auto; background: white; border-radius: 40px; border: 8px solid var(--p); box-shadow: 0 30px 60px rgba(0,0,0,0.15); }
         
-        /* ШАПКА */
-        .header { background: var(--p); padding: 30px; color: white; display: flex; align-items: center; justify-content: space-between; }
-        .logo-block { display: flex; align-items: center; gap: 20px; }
+        .header { background: var(--p); padding: 30px; color: white; display: flex; align-items: center; gap: 20px; }
+        .grid-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; padding: 40px; }
         
-        /* БЛОКИ */
-        .content { padding: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-        .media-card { background: #f8f9ff; border: 2px solid #e1e2ef; padding: 25px; border-radius: 25px; }
-        h3 { margin-top: 0; color: var(--p); font-size: 1rem; text-transform: uppercase; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        /* СТИЛЬ КАРТОЧЕК */
+        .card { background: #f8f9ff; border: 2px solid #e1e2ef; padding: 25px; border-radius: 25px; }
+        h3 { margin-top: 0; color: var(--p); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
         
-        label { display: block; font-size: 0.75rem; font-weight: 800; color: #666; margin: 15px 0 5px; }
-        input[type="text"], textarea { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #ddd; font-family: inherit; box-sizing: border-box; }
-        .file-row { display: flex; gap: 10px; align-items: center; }
-        input[type="file"] { font-size: 0.7rem; }
+        /* СОРТИРОВКА СЛОВ (ПО ТЗ) */
+        .sorting { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 15px; }
+        .sort-box textarea { width: 100%; height: 150px; border-radius: 12px; border: 2px solid #ddd; padding: 10px; font-family: inherit; font-size: 0.9rem; resize: none; }
+        .sort-box label { display: block; font-weight: 900; margin-bottom: 8px; font-size: 0.7rem; text-transform: uppercase; }
+        
+        /* ЗАГРУЗКА МЕДИА */
+        .media-row { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+        .media-row input[type="text"] { flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #ccc; }
+        
+        .build-btn { background: var(--a); color: white; border: none; padding: 25px 50px; border-radius: 20px; font-weight: 900; font-size: 1.4rem; cursor: pointer; transition: 0.3s; width: 100%; }
+        .build-btn:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(253, 121, 168, 0.4); }
 
-        /* КНОПКА ГЕНЕРАЦИИ */
-        .footer-action { background: var(--dark); padding: 40px; text-align: center; }
-        .btn-build { background: var(--a); color: white; border: none; padding: 25px 60px; border-radius: 20px; font-weight: 900; font-size: 1.2rem; cursor: pointer; transition: 0.3s; }
-        .btn-build:hover { transform: scale(1.05); }
-
-        /* ОКНО РЕЗУЛЬТАТА */
-        #result-box { display: none; margin-top: 20px; padding: 20px; background: #1e1e1e; border-radius: 15px; }
-        #code-out { color: #00ff00; font-family: monospace; font-size: 0.8rem; word-break: break-all; white-space: pre-wrap; height: 200px; overflow-y: auto; }
+        #code-output-area { display: none; margin-top: 30px; padding: 30px; background: var(--dark); border-radius: 20px; }
+        pre { background: #1e1e1e; color: #7cfc00; padding: 20px; border-radius: 10px; font-size: 0.8rem; overflow-x: auto; white-space: pre-wrap; word-break: break-all; max-height: 300px; }
     </style>
 </head>
 <body>
 
-<div class="editor-container">
+<div class="wrapper">
     <div class="header">
-        <div class="logo-block">
-            <img src="https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/logo.png" width="80">
-            <div>
-                <h1 style="margin:0;">РЕДАКТОР ИГРЫ</h1>
-                <p style="margin:0; opacity:0.8;">Deutsch interaktiv | Лёгкий уровень</p>
-            </div>
+        <img src="https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/logo.png" width="80">
+        <div>
+            <h1 style="margin:0; font-size:1.8rem;">РЕДАКТОР: ОЖИВЛЕНИЕ БАБОЧКИ</h1>
+            <small>Deutsch interaktiv | Система: Лейки + Роза + Прогресс-бар</small>
         </div>
     </div>
 
-    <div class="content">
-        <div class="media-card">
-            <h3>🖼 Графика и Шаблоны</h3>
-            
-            <label>Шаблон Бабочки (SVG или PNG)</label>
-            <div class="file-row">
-                <input type="text" id="img-butterfly" placeholder="Ссылка на бабочку">
-                <input type="file" onchange="toBase64(this, 'img-butterfly')">
-            </div>
-
-            <label>Злая пчела</label>
-            <div class="file-row">
-                <input type="text" id="img-bee" placeholder="Ссылка на пчелу">
-                <input type="file" onchange="toBase64(this, 'img-bee')">
-            </div>
-
-            <label>Весёлый художник</label>
-            <div class="file-row">
-                <input type="text" id="img-hero" placeholder="Ссылка на героя">
-                <input type="file" onchange="toBase64(this, 'img-hero')">
-            </div>
-
-            <label>Фоновая заставка</label>
-            <div class="file-row">
-                <input type="text" id="img-bg" placeholder="Ссылка на фон">
-                <input type="file" onchange="toBase64(this, 'img-bg')">
+    <div class="grid-panel">
+        <div class="card" style="grid-column: span 2;">
+            <h3>📊 Список животных (по родам)</h3>
+            <div class="sorting">
+                <div class="sort-box">
+                    <label style="color:var(--blue)">DER (Синяя лейка)</label>
+                    <textarea id="words-der">Hund, Fisch, Hamster, Delphin, Vogel, Löwe, Elefant, Affe, Igel, Hai</textarea>
+                </div>
+                <div class="sort-box">
+                    <label style="color:var(--red)">DIE (Красная лейка)</label>
+                    <textarea id="words-die">Katze, Maus, Kuh, Biene, Spinne, Ziege, Gans, Schlange, Fliege, Ameise</textarea>
+                </div>
+                <div class="sort-box">
+                    <label style="color:var(--green)">DAS (Зеленая лейка)</label>
+                    <textarea id="words-das">Pferd, Nashorn, Reh, Schwein, Huhn, Schaf, Krokodil, Kaninchen, Wildschwein, Känguru</textarea>
+                </div>
             </div>
         </div>
 
-        <div class="media-card">
-            <h3>🔊 Звуки и Контент</h3>
+        <div class="card">
+            <h3>🔔 Сигналы и Эффекты</h3>
+            <label>Звук "Внимание!" (URL)</label>
+            <input type="text" id="snd-alert" value="https://www.soundjay.com/buttons/beep-01a.mp3" style="width:100%; margin-bottom:15px;">
             
-            <label>Звук жужжания пчелы (MP3)</label>
-            <div class="file-row">
-                <input type="text" id="snd-bee" placeholder="Ссылка на звук">
-                <input type="file" onchange="toBase64(this, 'snd-bee')">
-            </div>
-
-            <label>Слова для игры (через запятую)</label>
-            <textarea id="words-list" rows="4">der Apfel, die Lampe, das Haus, der Hund</textarea>
+            <label>Звук капли воды (URL)</label>
+            <input type="text" id="snd-drop" value="https://www.soundjay.com/misc/sounds/water-droplet-1.mp3" style="width:100%; margin-bottom:15px;">
             
             <label>Текст финала</label>
-            <input type="text" id="text-win" value="GUT GEMACHT! Ты мастер!">
+            <input type="text" id="win-txt" value="Бабочка и Роза ожили! Поздравляем!" style="width:100%;">
+        </div>
 
-            <label>Язык интерфейса</label>
-            <select id="ui-lang">
-                <option value="ru">Русский</option>
-                <option value="de">Deutsch</option>
-            </select>
+        <div class="card">
+            <h3>🎨 Персонажи и Объекты</h3>
+            <div class="media-row"><span>🐝</span><input type="text" id="img-bee" value="https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/%D0%97%D0%BB%D0%B0%D1%8F%20%D0%BF%D1%87%D0%B5%D0%BB%D0%B0.png"></div>
+            <div class="media-row"><span>👨‍🎨</span><input type="text" id="img-artist" value="https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/%D0%92%D0%B5%D1%81%D1%91%D0%BB%D1%8B%D0%B9%20%D1%85%D1%83%D0%B4%D0%BE%D0%B6%D0%BD%D0%B8%D0%BA.png"></div>
+            <div class="media-row"><span>🦋</span><input type="text" id="img-butterfly" value="https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/Butterfly_Alpha.png"></div>
+            <div class="media-row"><span>💧</span><input type="text" id="img-drop" value="https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/%D0%9A%D0%B0%D0%BF%D0%B5%D0%BB%D1%8C%D0%BA%D0%B0.png"></div>
+        </div>
+
+        <div style="grid-column: span 2;">
+            <button class="build-btn" onclick="generateGeniallyCode()">СГЕНЕРИРОВАТЬ ИГРУ ДЛЯ GENIALLY</button>
         </div>
     </div>
 
-    <div class="footer-action">
-        <button class="btn-build" onclick="buildForGenially()">СГЕНЕРИРОВАТЬ КОД ИГРЫ ДЛЯ GENIALLY</button>
-        
-        <div id="result-box">
-            <p style="color:white; font-weight:900;">СКОПИРУЙТЕ ЭТОТ КОД И ВСТАВЬТЕ В GENIALLY:</p>
-            <div id="code-out"></div>
-            <button class="btn-build" style="background:var(--p); margin-top:20px; font-size:0.8rem; padding:15px;" onclick="copyCode()">КОПИРОВАТЬ КОД</button>
-        </div>
+    <div id="code-output-area">
+        <h2 style="color:white; margin-top:0;">Код готов!</h2>
+        <p style="color:#aaa;">Вставьте этот код в Genially (Вставка -> Другое):</p>
+        <pre id="final-code"></pre>
+        <button class="build-btn" style="background:var(--p); margin-top:20px; font-size:1rem;" onclick="copyCode()">КОПИРОВАТЬ В БУФЕР</button>
     </div>
 </div>
 
 <script>
-    // Функция перевода файла с компьютера в строку Base64
-    function toBase64(input, targetId) {
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = (e) => { document.getElementById(targetId).value = e.target.result; };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    function buildForGenially() {
-        // Данные из редактора
-        const cfg = {
-            butterfly: document.getElementById('img-butterfly').value || 'https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/Butterfly.png',
-            bee: document.getElementById('img-bee').value || 'https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/%D0%97%D0%BB%D0%B0%D1%8F%20%D0%BF%D1%87%D0%B5%D0%BB%D0%B0.png',
-            hero: document.getElementById('img-hero').value || 'https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/%D0%92%D0%B5%D1%81%D1%91%D0%BB%D1%8B%D0%B9%20%D1%85%D1%83%D0%B4%D0%BE%D0%B6%D0%BD%D0%B8%D0%BA.png',
-            bg: document.getElementById('img-bg').value || 'https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/Background_Garden.jpg',
-            beeSnd: document.getElementById('snd-bee').value || '',
-            words: document.getElementById('words-list').value,
-            winTxt: document.getElementById('text-win').value
+    function generateGeniallyCode() {
+        const config = {
+            der: document.getElementById('words-der').value,
+            die: document.getElementById('words-die').value,
+            das: document.getElementById('words-das').value,
+            bee: document.getElementById('img-bee').value,
+            hero: document.getElementById('img-artist').value,
+            butterfly: document.getElementById('img-butterfly').value,
+            drop: document.getElementById('img-drop').value,
+            sndAlert: document.getElementById('snd-alert').value,
+            sndDrop: document.getElementById('snd-drop').value,
+            winMsg: document.getElementById('win-txt').value
         };
 
-        // Текст САМОЙ ИГРЫ (без редактора)
-        const gameCode = `
+        const fullGameHtml = `
 <!DOCTYPE html>
 <html>
 <head>
     <style>
-        body { margin:0; overflow:hidden; background: url('${cfg.bg}') center/cover; height:100vh; font-family:sans-serif; text-align:center; }
-        #obj { position:absolute; top:45%; left:55%; transform:translate(-50%,-50%); width:400px; }
-        #artist { position:absolute; bottom:20px; left:20px; width:150px; transition:0.5s; }
-        #bee { position:absolute; top:20%; left:-150px; width:100px; }
-        #word-plate { background:white; padding:20px; border-radius:30px; border:5px solid #6C5CE7; display:inline-block; margin-top:50px; font-size:30px; font-weight:900; }
-        .btns { position:absolute; bottom:30px; right:30px; display:flex; gap:10px; }
-        .b { padding:15px 30px; border:none; border-radius:10px; color:white; font-weight:bold; cursor:pointer; font-size:1.2rem; }
+        body { margin:0; overflow:hidden; font-family:sans-serif; background:url('https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/Background_Garden.jpg') center/cover; height:100vh; }
+        .game-canvas { position:relative; width:100%; height:100%; }
+        
+        /* ЛЕЙКИ */
+        .watering-cans { position:absolute; left:50px; top:100px; display:flex; flex-direction:column; gap:40px; }
+        .can { width:100px; transition:0.5s; cursor:pointer; position:relative; }
+        .can.active { filter: drop-shadow(0 0 15px gold); transform: scale(1.1); }
+        .can.pour { transform: rotate(-45deg); }
+        .can::after { content: attr(data-art); position:absolute; top:-20px; left:50%; transform:translateX(-50%); font-weight:900; color:white; font-size:20px; text-shadow:2px 2px 4px #000; }
+
+        /* ПРОГРЕСС-БАР */
+        .progress-bar { position:absolute; top:30px; left:50%; transform:translateX(-50%); background:rgba(255,255,255,0.8); padding:10px 30px; border-radius:100px; display:flex; gap:10px; border:4px solid var(--p); }
+        .drop-icon { width:30px; opacity:0.1; transition:0.5s; }
+        .drop-icon.filled { opacity:1; transform: scale(1.2); }
+
+        /* ОБЪЕКТЫ */
+        #butterfly { position:absolute; top:40%; left:55%; width:450px; z-index:5; }
+        #rose { position:absolute; top:40%; left:55%; width:500px; z-index:2; filter: grayscale(1); }
+        #artist { position:absolute; bottom:20px; left:20px; width:180px; transition:0.5s; }
+        #bee { position:absolute; top:20%; left:-200px; width:120px; }
+        
+        /* СПИСОК СЛОВ */
+        .word-list { position:absolute; right:50px; top:50%; transform:translateY(-50%); background:white; padding:30px; border-radius:30px; box-shadow:0 10px 30px rgba(0,0,0,0.2); display:none; }
+        .word-item { padding:10px 20px; margin:5px; background:#f0f0f0; border-radius:10px; cursor:pointer; font-weight:bold; }
+        .word-item:hover { background:var(--p); color:white; }
+
+        @keyframes beeChase { 0% { left:-200px; } 100% { left:110%; } }
     </style>
 </head>
 <body>
-    <div id="word-plate">ЗАГРУЗКА...</div>
-    <img id="obj" src="${cfg.butterfly}">
-    <img id="artist" src="${cfg.hero}">
-    <img id="bee" src="${cfg.bee}">
-    <audio id="beeSnd" src="${cfg.beeSnd}"></audio>
-    <div class="btns">
-        <button class="b" style="background:#74b9ff" onclick="check('der')">DER</button>
-        <button class="b" style="background:#ff7675" onclick="check('die')">DIE</button>
-        <button class="b" style="background:#55efc4" onclick="check('das')">DAS</button>
-    </div>
-    <script>
-        const words = "${cfg.words}".split(',').map(s => s.trim());
-        let cur = 0;
-        document.getElementById('word-plate').innerText = words[cur];
+    <div class="game-canvas">
+        <div class="progress-bar" id="p-bar"></div>
+        
+        <div class="watering-cans">
+            <img src="https://cdn-icons-png.flaticon.com/512/4343/4343028.png" class="can" id="can-der" data-art="der" style="filter: hue-rotate(180deg);">
+            <img src="https://cdn-icons-png.flaticon.com/512/4343/4343028.png" class="can" id="can-die" data-art="die" style="filter: hue-rotate(300deg);">
+            <img src="https://cdn-icons-png.flaticon.com/512/4343/4343028.png" class="can" id="can-das" data-art="das" style="filter: hue-rotate(100deg);">
+        </div>
 
-        function check(art) {
-            if(words[cur].toLowerCase().startsWith(art)) {
-                cur++;
-                if(cur < words.length) document.getElementById('word-plate').innerText = words[cur];
-                else alert("${cfg.winTxt}");
+        <img id="rose" src="https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/Rose_Path.png">
+        <img id="butterfly" src="${config.butterfly}">
+        <img id="artist" src="${config.hero}">
+        <img id="bee" src="${config.bee}">
+
+        <div class="word-list" id="word-ui"></div>
+    </div>
+
+    <script>
+        const data = {
+            der: "${config.der}".split(",").map(s=>s.trim()),
+            die: "${config.die}".split(",").map(s=>s.trim()),
+            das: "${config.das}".split(",").map(s=>s.trim())
+        };
+        let currentArt = '';
+        let score = 0;
+
+        function init() {
+            // Создаем капли в прогресс-баре
+            const bar = document.getElementById('p-bar');
+            for(let i=0; i<15; i++) bar.innerHTML += '<img src="${config.drop}" class="drop-icon">';
+            nextTurn();
+        }
+
+        function nextTurn() {
+            const arts = ['der', 'die', 'das'];
+            currentArt = arts[Math.floor(Math.random()*3)];
+            
+            // Подсветка лейки
+            document.querySelectorAll('.can').forEach(c => c.classList.remove('active'));
+            document.getElementById('can-' + currentArt).classList.add('active');
+            
+            // Звук внимания
+            new Audio("${config.sndAlert}").play();
+            
+            // Показ списка
+            showWords();
+        }
+
+        function showWords() {
+            const ui = document.getElementById('word-ui');
+            ui.style.display = 'block';
+            ui.innerHTML = '';
+            
+            // Берем по 1 слову каждого рода для мини-списка (рандомно)
+            const roundWords = [
+                {t: data.der[Math.floor(Math.random()*data.der.length)], a: 'der'},
+                {t: data.die[Math.floor(Math.random()*data.die.length)], a: 'die'},
+                {t: data.das[Math.floor(Math.random()*data.das.length)], a: 'das'}
+            ].sort(() => Math.random() - 0.5);
+
+            roundWords.forEach(w => {
+                const div = document.createElement('div');
+                div.className = 'word-item';
+                div.innerText = w.t;
+                div.onclick = () => checkChoice(w.a, w.t);
+                ui.appendChild(div);
+            });
+        }
+
+        function checkChoice(art, text) {
+            if(art === currentArt) {
+                // УСПЕХ
+                score++;
+                new Audio("${config.sndDrop}").play();
+                document.getElementById('can-' + art).classList.add('pour');
+                document.querySelectorAll('.drop-icon')[score-1].classList.add('filled');
+                
+                // Здесь логика окрашивания сегмента бабочки и лепестка розы
+                // В финальной версии тут SVG-манипуляции
+                
+                setTimeout(() => {
+                    document.getElementById('can-' + art).classList.remove('pour');
+                    nextTurn();
+                }, 1500);
             } else {
-                document.getElementById('beeSnd').play();
-                document.getElementById('bee').animate([{left:'-150px'}, {left:'110%'}], 2000);
-                document.getElementById('artist').style.transform = 'translateX(100px)';
-                setTimeout(()=> document.getElementById('artist').style.transform = 'translateX(0)', 2000);
+                // ОШИБКА
+                const bee = document.getElementById('bee');
+                bee.style.animation = 'beeChase 2s linear';
+                document.getElementById('artist').style.transform = 'translateX(150px)';
+                setTimeout(() => {
+                    bee.style.animation = '';
+                    document.getElementById('artist').style.transform = 'translateX(0)';
+                }, 2000);
             }
         }
+        init();
     <\/script>
 </body>
 </html>`;
 
-        // Упаковка в Iframe для Genially
-        const finalIframe = `<iframe srcdoc='${gameCode.replace(/'/g, "&#39;")}' width="1000" height="600" frameborder="0" scrolling="no"></iframe>`;
-        
-        document.getElementById('code-out').innerText = finalIframe;
-        document.getElementById('result-box').style.display = 'block';
+        document.getElementById('final-code').innerText = config.winMsg ? `<iframe srcdoc='${fullGameHtml.replace(/'/g, "&#39;")}' width="1000" height="600" frameborder="0"></iframe>` : "";
+        document.getElementById('code-output-area').style.display = 'block';
     }
 
     function copyCode() {
-        const text = document.getElementById('code-out').innerText;
-        navigator.clipboard.writeText(text).then(() => alert('Код скопирован! Вставьте его в Genially.'));
+        const text = document.getElementById('final-code').innerText;
+        navigator.clipboard.writeText(text);
+        alert('Код скопирован! Теперь вставьте его в Genially.');
     }
 </script>
 
