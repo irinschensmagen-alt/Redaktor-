@@ -1,155 +1,77 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>Deutsch interaktiv | Premium Editor</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600;900&display=swap" rel="stylesheet">
-    <style>
-        :root { --accent: #6C5CE7; --pink: #FD79A8; --bg: #0F172A; --card: #1E293B; }
-        body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: white; margin: 0; padding: 20px; display: flex; justify-content: center; }
-        
-        .app-container { width: 100%; max-width: 1000px; background: var(--card); border-radius: 30px; overflow: hidden; box-shadow: 0 50px 100px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); }
-        
-        /* HEADER */
-        .app-header { background: linear-gradient(135deg, #6C5CE7, #a29bfe); padding: 30px; display: flex; justify-content: space-between; align-items: center; }
-        .logo-wrap { display: flex; align-items: center; gap: 15px; }
-        .logo-box { background: white; width: 60px; height: 60px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-        .header-text h1 { margin: 0; font-size: 24px; font-weight: 900; letter-spacing: -1px; }
-        
-        /* FORM */
-        .content { padding: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-        .section-title { grid-column: 1 / -1; font-size: 14px; text-transform: uppercase; letter-spacing: 2px; color: var(--pink); font-weight: 900; margin-bottom: -10px; border-left: 4px solid var(--pink); padding-left: 15px; }
-        
-        .input-group { background: rgba(255,255,255,0.03); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); }
-        label { display: block; font-size: 11px; font-weight: 600; opacity: 0.6; margin-bottom: 10px; }
-        
-        input[type="text"], textarea, select { width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 12px; color: white; font-family: inherit; font-size: 14px; box-sizing: border-box; }
-        input[type="file"] { font-size: 11px; color: #94a3b8; }
-        textarea { height: 100px; resize: none; border-bottom: 3px solid var(--accent); }
-
-        /* BUTTONS */
-        .btn-build { grid-column: 1 / -1; background: var(--pink); color: white; border: none; padding: 25px; border-radius: 20px; font-size: 20px; font-weight: 900; cursor: pointer; transition: 0.3s; margin-top: 20px; }
-        .btn-build:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(253, 121, 168, 0.4); }
-
-        /* MODAL */
-        #modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:999; align-items:center; justify-content:center; }
-        .modal-inner { background: #1E293B; padding: 40px; border-radius: 30px; width: 80%; max-width: 700px; border: 1px solid var(--accent); }
-        #res-box { background: #000; color: #10B981; padding: 20px; border-radius: 15px; font-family: monospace; font-size: 12px; height: 200px; overflow: auto; margin: 20px 0; word-break: break-all; text-align: left; border: 1px solid #334155; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Простой Редактор</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    #editor {
+      width: 100%;
+      height: 300px;
+      border: 1px solid #ccc;
+      padding: 10px;
+      font-size: 16px;
+      resize: none;
+    }
+    .controls {
+      margin-bottom: 10px;
+    }
+    .controls label {
+      margin-right: 10px;
+    }
+  </style>
 </head>
 <body>
 
-<div class="app-container">
-    <div class="app-header">
-        <div class="logo-wrap">
-            <div class="logo-box">🎨</div>
-            <div class="header-text">
-                <h1>DEUTSCH INTERAKTIV</h1>
-                <div style="font-size:10px; opacity:0.7">GENERATOR V4.0 PREMIUM</div>
-            </div>
-        </div>
-        <select id="ui_lang" style="width:140px; background: rgba(255,255,255,0.2);">
-            <option value="ru">Русский</option><option value="de">Deutsch</option><option value="en">English</option>
-            <option value="es">Español</option><option value="it">Italiano</option><option value="zh">中文</option>
-        </select>
-    </div>
+  <h2>Простой Редактор текста</h2>
 
-    <div class="content">
-        <div class="section-title">Медиа ресурсы (GitHub / Локальные)</div>
-        <div class="input-group">
-            <label>ФОН ИГРЫ (URL или Файл)</label>
-            <input type="text" id="g_bg" value="https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/Background_Garden.jpg">
-            <input type="file" id="f_bg" style="margin-top:10px">
-        </div>
-        <div class="input-group">
-            <label>МУЗЫКА И ЗВУКИ</label>
-            <input type="text" id="g_mus" placeholder="Прямая ссылка на MP3">
-            <input type="file" id="f_mus" style="margin-top:10px">
-        </div>
+  <div class="controls">
+    <label>
+      Цвет текста:
+      <input type="color" id="textColor" value="#000000">
+    </label>
+    <label>
+      Размер шрифта:
+      <input type="number" id="fontSize" value="16" min="8" max="72"> px
+    </label>
+    <label>
+      Шрифт:
+      <select id="fontFamily">
+        <option value="Arial">Arial</option>
+        <option value="Verdana">Verdana</option>
+        <option value="Times New Roman">Times New Roman</option>
+        <option value="Courier New">Courier New</option>
+      </select>
+    </label>
+  </div>
 
-        <div class="section-title">Контент и Артикли</div>
-        <div class="input-group"><label style="color:#60A5FA">DER (СУЩЕСТВИТЕЛЬНЫЕ)</label><textarea id="t_der">Hund, Tisch, Apfel, Bär, Löffel</textarea></div>
-        <div class="input-group"><label style="color:#F87171">DIE (СУЩЕСТВИТЕЛЬНЫЕ)</label><textarea id="t_die">Katze, Sonne, Lampe, Tasche, Gabel</textarea></div>
-        <div class="input-group"><label style="color:#34D399">DAS (СУЩЕСТВИТЕЛЬНЫЕ)</label><textarea id="t_das">Haus, Buch, Kind, Pferd, Auto</textarea></div>
-        
-        <div class="input-group">
-            <label>СЛОЖНОСТЬ</label>
-            <select id="diff"><option value="easy">🦋 ЛЕГКИЙ (БАБОЧКА)</option><option value="mid">🌹 СРЕДНИЙ (РОЗА)</option></select>
-        </div>
+  <textarea id="editor" placeholder="Начните писать здесь..."></textarea>
 
-        <button class="btn-build" onclick="generate()">СГЕНЕРИРОВАТЬ КОД ИГРЫ</button>
-    </div>
-</div>
+  <script>
+    const editor = document.getElementById('editor');
+    const textColor = document.getElementById('textColor');
+    const fontSize = document.getElementById('fontSize');
+    const fontFamily = document.getElementById('fontFamily');
 
-<div id="modal">
-    <div class="modal-inner">
-        <h2 style="margin:0; color:var(--pink)">ГОТОВО ДЛЯ GENIALLY!</h2>
-        <p style="opacity:0.6; font-size:12px">Нажмите кнопку ниже, затем вставьте в Genially (Insert -> Others)</p>
-        <div id="res-box"></div>
-        <button class="btn-build" onclick="copy()">СКОПИРОВАТЬ В БУФЕР</button>
-        <div onclick="document.getElementById('modal').style.display='none'" style="margin-top:15px; cursor:pointer; opacity:0.5; font-size:12px">Вернуться назад</div>
-    </div>
-</div>
+    // Меняем цвет текста
+    textColor.addEventListener('input', () => {
+      editor.style.color = textColor.value;
+    });
 
-<script>
-    function generate() {
-        const bg = document.getElementById('g_bg').value;
-        const der = document.getElementById('t_der').value;
-        const die = document.getElementById('t_die').value;
-        const das = document.getElementById('t_das').value;
-        
-        // Ссылка на лейки и розу из вашего ТЗ
-        const can = "https://cdn-icons-png.flaticon.com/512/4343/4343028.png";
-        const rose = "https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/Rose_Path.png";
-        const art = "https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/%D0%92%D0%B5%D1%81%D1%91%D0%BB%D1%8B%D0%B9%20%D1%85%D1%83%D0%B4%D0%BE%D0%B6%D0%BD%D0%B8%D0%BA.png";
+    // Меняем размер шрифта
+    fontSize.addEventListener('input', () => {
+      editor.style.fontSize = fontSize.value + 'px';
+    });
 
-        const gameHtml = `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
-            body { margin:0; overflow:hidden; font-family:sans-serif; background:url('\${bg}') center/cover; height:100vh; }
-            #w { position:absolute; top:40px; left:50%; transform:translateX(-50%); background:white; padding:15px 40px; border-radius:20px; font-size:35px; font-weight:900; border:4px solid #6C5CE7; box-shadow:0 10px 30px rgba(0,0,0,0.3); }
-            #rose { position:absolute; top:55%; left:50%; transform:translate(-50%,-50%); width:400px; filter:grayscale(1); transition:1s; }
-            .cans { position:absolute; right:30px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:15px; }
-            .can { width:90px; cursor:pointer; filter:drop-shadow(0 5px 10px rgba(0,0,0,0.4)); transition:0.2s; }
-            .can:active { transform:scale(0.8) rotate(-20deg); }
-        </style></head><body>
-            <div id="w">START</div>
-            <img id="rose" src="\${rose}">
-            <img src="\${art}" style="position:absolute; bottom:20px; left:20px; width:160px;">
-            <div class="cans">
-                <img class="can" src="\${can}" style="filter:hue-rotate(180deg)" onclick="check('der')">
-                <img class="can" src="\${can}" style="filter:hue-rotate(300deg)" onclick="check('die')">
-                <img class="can" src="\${can}" style="filter:hue-rotate(100deg)" onclick="check('das')">
-            </div>
-            <script>
-                const data = { 
-                    der: [\${der.split(',').map(w=>"'"+w.trim()+"'").join(',')}],
-                    die: [\${die.split(',').map(w=>"'"+w.trim()+"'").join(',')}],
-                    das: [\${das.split(',').map(w=>"'"+w.trim()+"'").join(',')]
-                };
-                let cur = ''; let score = 0;
-                function next() {
-                    const keys = Object.keys(data);
-                    cur = keys[Math.floor(Math.random()*keys.length)];
-                    document.getElementById('w').innerText = data[cur][Math.floor(Math.random()*data[cur].length)];
-                }
-                function check(v) {
-                    if(v === cur) {
-                        score++; document.getElementById('rose').style.filter="grayscale("+(1-score/10)+")";
-                        if(score>=10) { alert('Вы выиграли!'); location.reload(); } else next();
-                    } else { alert('Ошибка! Попробуйте другую лейку.'); }
-                }
-                next();
-            <\/script></body></html>`;
+    // Меняем шрифт
+    fontFamily.addEventListener('change', () => {
+      editor.style.fontFamily = fontFamily.value;
+    });
+  </script>
 
-        const iframe = "<iframe srcdoc='" + gameHtml.replace(/'/g, "&#39;") + "' width='100%' height='600' frameborder='0'></iframe>";
-        document.getElementById('res-box').innerText = iframe;
-        document.getElementById('modal').style.display = 'flex';
-    }
-
-    function copy() {
-        const text = document.getElementById('res-box').innerText;
-        navigator.clipboard.writeText(text);
-        alert("Код скопирован! Вставьте его в Genially через 'Insert' -> 'Others'");
-    }
-</script>
 </body>
 </html>
