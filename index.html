@@ -2,113 +2,104 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>ULTIMATE BUILDER | Deutsch interaktiv</title>
+    <title>Deutsch interaktiv | Ultimate Game Builder</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --p: #6C5CE7; --a: #FD79A8; --bg: #F0F2F5; }
         body { font-family: 'Montserrat', sans-serif; background: var(--bg); margin: 0; padding: 20px; }
-        .editor { max-width: 1100px; margin: 0 auto; background: white; border-radius: 40px; box-shadow: 0 40px 100px rgba(0,0,0,0.1); overflow: hidden; border: 1px solid #ddd; }
-        .header { background: var(--p); padding: 30px; color: white; display: flex; align-items: center; justify-content: space-between; }
-        .header h1 { margin: 0; font-size: 22px; text-transform: uppercase; }
-        .content { padding: 30px; }
-        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
-        .box { background: #F9F9FB; padding: 15px; border-radius: 20px; border: 1px solid #EEE; }
-        label { display: block; font-weight: 900; font-size: 10px; color: var(--p); margin-bottom: 8px; text-transform: uppercase; }
-        textarea, select, input { width: 100%; border: 2px solid #E0E0E0; border-radius: 12px; padding: 12px; font-family: inherit; box-sizing: border-box; }
-        textarea { height: 100px; resize: none; }
-        .btn-gen { background: var(--a); color: white; border: none; width: 100%; padding: 25px; border-radius: 25px; font-size: 20px; font-weight: 900; cursor: pointer; transition: 0.3s; }
-        .btn-gen:hover { transform: scale(1.02); filter: brightness(1.1); }
+        .editor { max-width: 1000px; margin: 0 auto; background: white; border-radius: 40px; box-shadow: 0 30px 60px rgba(0,0,0,0.1); overflow: hidden; }
+        .header { background: var(--p); padding: 25px; color: white; display: flex; align-items: center; justify-content: space-between; }
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; padding: 25px; }
+        .box { background: #F9F9FB; padding: 15px; border-radius: 15px; border: 1px solid #EEE; }
+        label { display: block; font-weight: 900; font-size: 10px; color: var(--p); margin-bottom: 5px; text-transform: uppercase; }
+        input, textarea, select { width: 100%; border: 2px solid #E0E0E0; border-radius: 10px; padding: 8px; font-family: inherit; font-size: 13px; }
+        textarea { height: 70px; resize: none; }
+        .btn-gen { background: var(--a); color: white; border: none; width: calc(100% - 50px); margin: 0 25px 25px; padding: 20px; border-radius: 20px; font-size: 18px; font-weight: 900; cursor: pointer; }
         #overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; align-items:center; justify-content:center; }
-        #res-code { background:#1e272e; color:#0be881; padding:20px; border-radius:15px; font-family:monospace; font-size:10px; max-height:200px; overflow-y:auto; word-break:break-all; margin:20px 0; }
+        .modal { background:white; padding:30px; border-radius:30px; width:80%; max-width:600px; text-align:center; }
+        #res-code { background:#1e272e; color:#0be881; padding:15px; border-radius:10px; font-family:monospace; font-size:10px; max-height:150px; overflow-y:auto; word-break:break-all; margin:15px 0; }
     </style>
 </head>
 <body>
 
 <div class="editor">
     <div class="header">
-        <div style="display:flex; align-items:center; gap:15px;"><div style="background:white; border-radius:50%; width:50px; height:50px; display:flex; align-items:center; justify-content:center; color:var(--p); font-size:24px;">🎨</div><h1>Deutsch interaktiv Builder</h1></div>
-        <select id="ui_l" style="width:150px;">
-            <option value="ru">Русский</option><option value="de">Deutsch</option><option value="en">English</option>
-            <option value="es">Español</option><option value="it">Italiano</option><option value="zh">中文</option>
-        </select>
-    </div>
-    <div class="content">
-        <div class="grid">
-            <div class="box"><label>Фон игры</label><input type="file" id="f_bg"></div>
-            <div class="box"><label>Музыка (MP3)</label><input type="file" id="f_mus"></div>
-            <div class="box"><label>Персонаж (Художник)</label><input type="file" id="f_art"></div>
+        <div style="display:flex; align-items:center; gap:10px;">
+            <div style="background:white; border-radius:50%; width:40px; height:40px; display:flex; align-items:center; justify-content:center; color:var(--p); font-size:20px;">🎨</div>
+            <h1 style="margin:0; font-size:18px;">Deutsch interaktiv Editor</h1>
         </div>
-        <div class="grid">
-            <div class="box"><label style="color:#3498db">Слова DER (Синий)</label><textarea id="t_der">Hund, Tisch, Apfel</textarea></div>
-            <div class="box"><label style="color:#e74c3c">Слова DIE (Красный)</label><textarea id="t_die">Katze, Lampe, Sonne</textarea></div>
-            <div class="box"><label style="color:#2ecc71">Слова DAS (Зеленый)</label><textarea id="t_das">Haus, Buch, Kind</textarea></div>
-        </div>
-        <button class="btn-gen" onclick="build()">СГЕНЕРИРОВАТЬ И ЗАПУСТИТЬ</button>
+        <select id="lang_ui" style="width:120px;"><option value="ru">🇷🇺 Русский</option><option value="de">🇩🇪 Deutsch</option></select>
     </div>
+
+    <div class="grid">
+        <div class="box"><label>Фон (GitHub URL)</label><input type="text" id="g_bg" placeholder="raw.githubusercontent..."></div>
+        <div class="box"><label>Художник (GitHub URL)</label><input type="text" id="g_art"></div>
+        <div class="box"><label>Сложность</label><select id="v_diff"><option value="easy">🦋 Бабочка</option><option value="mid">🌹 Роза</option></select></div>
+        
+        <div class="box"><label>Загрузить Свой Фон</label><input type="file" id="f_bg"></div>
+        <div class="box"><label>Загрузить Пчелу</label><input type="file" id="f_bee"></div>
+        <div class="box"><label>Своя Музыка</label><input type="file" id="f_mus"></div>
+
+        <div class="box"><label>DER</label><textarea id="t_der">Apfel, Hund, Tisch</textarea></div>
+        <div class="box"><label>DIE</label><textarea id="t_die">Lampe, Katze, Sonne</textarea></div>
+        <div class="box"><label>DAS</label><textarea id="t_das">Haus, Buch, Kind</textarea></div>
+    </div>
+
+    <button class="btn-gen" onclick="build()">СГЕНЕРИРОВАТЬ ИГРУ</button>
 </div>
 
-<div id="overlay"><div style="background:white; padding:40px; border-radius:40px; width:80%; max-width:800px; text-align:center;">
-    <h2>ИГРА ГОТОВА!</h2><div id="res-code"></div><button class="btn-gen" onclick="copy()">КОПИРОВАТЬ КОД</button>
-</div></div>
+<div id="overlay"><div class="modal"><h2>ГОТОВО!</h2><div id="res-code"></div><button class="btn-gen" onclick="copy()">СКОПИРОВАТЬ</button></div></div>
 
 <script>
-    const DEFAULTS = {
+    const GITHUB = {
         bg: "https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/Background_Garden.jpg",
         art: "https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/%D0%92%D0%B5%D1%81%D1%91%D0%BB%D1%8B%D0%B9%20%D1%85%D1%83%D0%B4%D0%BE%D0%B6%D0%BD%D0%B8%D0%BA.png",
         bee: "https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/%D0%97%D0%BB%D0%B0%D1%8F%20%D0%BF%D1%87%D0%B5%D0%BB%D0%B0.png",
-        can: "https://cdn-icons-png.flaticon.com/512/4343/4343028.png",
-        rose: "https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/Rose_Path.png"
+        rose: "https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/Rose_Path.png",
+        can: "https://cdn-icons-png.flaticon.com/512/4343/4343028.png"
     };
 
-    const toB64 = f => new Promise(r => { if(!f) r(""); const rd = new FileReader(); rd.onload = () => r(rd.result); rd.readAsDataURL(f); });
+    const toB64 = f => new Promise(r => { if(!f) r(null); const rd = new FileReader(); rd.onload=()=>r(rd.result); rd.readAsDataURL(f); });
 
     async function build() {
-        const bg = await toB64(document.getElementById('f_bg').files[0]) || DEFAULTS.bg;
-        const art = await toB64(document.getElementById('f_art').files[0]) || DEFAULTS.art;
-        const mus = await toB64(document.getElementById('f_mus').files[0]) || "";
-        const lang = document.getElementById('ui_l').value;
+        const bg = await toB64(document.getElementById('f_bg').files[0]) || document.getElementById('g_bg').value || GITHUB.bg;
+        const art = await toB64(document.getElementById('f_art').files[0]) || document.getElementById('g_art').value || GITHUB.art;
 
-        const engine = `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
-            body { margin:0; overflow:hidden; font-family:sans-serif; background:url('\${bg}') center/cover; height:100vh; }
-            .can { width:100px; cursor:pointer; transition:0.4s; position:absolute; left:40px; }
-            .can.pour { transform: rotate(-50deg); }
-            #art { position:absolute; bottom:20px; left:20px; width:180px; transition:0.5s; }
-            #w { position:absolute; top:80px; left:50%; transform:translateX(-50%); background:white; padding:20px 50px; border-radius:30px; font-size:40px; font-weight:900; box-shadow:0 10px 30px rgba(0,0,0,0.3); border:5px solid #6C5CE7; }
-            #rose { position:absolute; top:50%; left:52%; transform:translate(-50%,-50%); width:450px; filter:grayscale(1); transition:1s; }
+        const engine = `<!DOCTYPE html><html><head><style>
+            body { margin:0; overflow:hidden; background:url('\${bg}') center/cover; height:100vh; font-family:sans-serif; }
+            #w { position:absolute; top:50px; left:50%; transform:translateX(-50%); background:white; padding:15px 30px; border-radius:20px; font-size:30px; font-weight:900; border:4px solid #6C5CE7; }
+            #rose { position:absolute; top:55%; left:50%; transform:translate(-50%,-50%); width:380px; filter:grayscale(1); transition:1s; }
+            .cans { position:absolute; right:30px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:15px; }
+            .can { width:80px; cursor:pointer; filter:hue-rotate(180deg); }
         </style></head><body>
-            <audio id="m" loop src="\${mus}"></audio>
-            <img id="rose" src="\${DEFAULTS.rose}">
-            <img id="art" src="\${art}">
-            <div id="w">START</div>
-            <img class="can" id="der" src="\${DEFAULTS.can}" style="top:200px; filter:hue-rotate(180deg)" onclick="check('der')">
-            <img class="can" id="die" src="\${DEFAULTS.can}" style="top:320px; filter:hue-rotate(300deg)" onclick="check('die')">
-            <img class="can" id="das" src="\${DEFAULTS.can}" style="top:440px; filter:hue-rotate(100deg)" onclick="check('das')">
+            <img id="rose" src="\${GITHUB.rose}"><div id="w">START</div>
+            <div class="cans">
+                <img class="can" src="\${GITHUB.can}" onclick="check('der')">
+                <img class="can" src="\${GITHUB.can}" style="filter:hue-rotate(300deg)" onclick="check('die')">
+                <img class="can" src="\${GITHUB.can}" style="filter:hue-rotate(100deg)" onclick="check('das')">
+            </div>
             <script>
-                const data = { der:[\${document.getElementById('t_der').value.split(',').map(s=>"'"+s.trim()+"'").join(',')}], die:[\${document.getElementById('t_die').value.split(',').map(s=>"'"+s.trim()+"'").join(',')}], das:[\${document.getElementById('t_das').value.split(',').map(s=>"'"+s.trim()+"'").join(',')] };
-                let cur = ''; let score = 0;
-                function next() {
-                    const keys = Object.keys(data);
-                    cur = keys[Math.floor(Math.random()*keys.length)];
-                    document.getElementById('w').innerText = data[cur][Math.floor(Math.random()*data[cur].length)];
+                const d = { 
+                    der:[\${document.getElementById('t_der').value.split(',').map(s=>"'"+s.trim()+"'").join(',')}],
+                    die:[\${document.getElementById('t_die').value.split(',').map(s=>"'"+s.trim()+"'").join(',')}],
+                    das:[\${document.getElementById('t_das').value.split(',').map(s=>"'"+s.trim()+"'").join(',')]
+                };
+                let cur = ''; let s = 0;
+                function next() { 
+                    const k = Object.keys(d); cur = k[Math.floor(Math.random()*k.length)];
+                    document.getElementById('w').innerText = d[cur][Math.floor(Math.random()*d[cur].length)];
                 }
                 function check(v) {
-                    const el = document.getElementById(v);
-                    if(v === cur) {
-                        el.classList.add('pour'); score++;
-                        document.getElementById('rose').style.filter = "grayscale(" + (1 - score/10) + ")";
-                        setTimeout(()=>{ el.classList.remove('pour'); if(score>=10) alert('Win!'); else next(); }, 600);
-                    } else {
-                        document.getElementById('art').style.transform = "translateX(50px)";
-                        setTimeout(()=> document.getElementById('art').style.transform = "translateX(0)", 300);
-                    }
+                    if(v === cur) { s++; document.getElementById('rose').style.filter="grayscale("+(1-s/10)+")"; if(s>=10) alert('Win!'); else next(); }
+                    else alert('Error!');
                 }
-                window.onload = () => { document.getElementById('m').play().catch(()=>{}); next(); };
+                window.onload = next;
             <\/script></body></html>`;
 
-        document.getElementById('res-code').innerText = "<iframe srcdoc='" + engine.replace(/'/g, "&#39;") + "' width='100%' height='600' frameborder='0' scrolling='no'></iframe>";
+        document.getElementById('res-code').innerText = "<iframe srcdoc='" + engine.replace(/'/g, "&#39;") + "' width='100%' height='600' frameborder='0'></iframe>";
         document.getElementById('overlay').style.display = 'flex';
     }
-    function copy() { navigator.clipboard.writeText(document.getElementById('res-code').innerText); alert("Код скопирован!"); }
+    function copy() { navigator.clipboard.writeText(document.getElementById('res-code').innerText); alert("Код в буфере!"); }
 </script>
 </body>
 </html>
