@@ -1,90 +1,281 @@
-        if(timeLeft <= 0){
-            clearInterval(timerInterval);
-            loseLife();
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Deutsch interaktiv | Masterpiece Editor 5.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --p: #6C5CE7; --a: #FD79A8; --ok: #00B894; --g: #f0f2f5; }
+        body { font-family: 'Montserrat', sans-serif; background: var(--g); padding: 20px; color: #2d3436; margin: 0; }
+        .wrapper { max-width: 1500px; margin: 0 auto; background: white; border-radius: 40px; border: 5px solid var(--p); padding: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
+        
+        /* ШАПКА */
+        .header { display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid #eee; padding-bottom: 20px; margin-bottom: 25px; }
+        .logo-area { display: flex; align-items: center; gap: 20px; }
+        .logo-img { width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--a); object-fit: cover; }
+        .header-titles h2 { margin: 0; color: var(--p); font-size: 2.2rem; line-height: 1; }
+        .header-titles span { color: var(--a); font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* СЕТКА */
+        .grid { display: grid; grid-template-columns: 1.1fr 1.2fr 350px; gap: 25px; }
+        .panel { background: #F8F9FF; border-radius: 25px; padding: 25px; border: 1px solid #E1E2EF; display: flex; flex-direction: column; }
+        .panel-h { font-weight: 900; color: var(--p); border-left: 6px solid var(--a); padding-left: 12px; margin-bottom: 20px; text-transform: uppercase; font-size: 1.1rem; }
+
+        /* ЭЛЕМЕНТЫ УПРАВЛЕНИЯ */
+        input, select, textarea { width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #ddd; margin-bottom: 10px; font-family: inherit; box-sizing: border-box; font-size: 0.95rem; outline: none; transition: 0.3s; }
+        input:focus, select:focus, textarea:focus { border-color: var(--p); box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1); }
+        label { font-size: 0.75rem; font-weight: 900; color: #636e72; margin-bottom: 5px; display: block; text-transform: uppercase; }
+
+        /* ЗОНА ЗАГРУЗКИ */
+        .upload-block { background: white; border: 2px dashed #cbd5e0; border-radius: 15px; padding: 15px; margin-bottom: 20px; text-align: center; }
+        .upload-block:hover { border-color: var(--p); background: #fdfdff; }
+        .preview-container { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; min-height: 90px; }
+        
+        .img-card { 
+            width: 80px; height: 80px; border-radius: 12px; border: 3px solid #eee; 
+            object-fit: contain; background: #fff; cursor: pointer; transition: 0.2s; flex-shrink: 0; 
         }
-    }, 1000);
-}
+        .img-card.active { border-color: var(--a); transform: scale(1.05); box-shadow: 0 5px 15px rgba(253,121,168,0.3); }
 
-function initLives(){
-    const livesContainer = document.getElementById("lives");
-    livesContainer.innerHTML = "";
-    for(let i=0;i<lives;i++){
-        const span = document.createElement("span");
-        span.className = "life-drop";
-        span.innerText = "❤️";
-        livesContainer.appendChild(span);
-    }
-}
+        .btn-mini { background: #a29bfe; color: white; border: none; padding: 5px 10px; border-radius: 8px; cursor: pointer; font-size: 0.7rem; margin-bottom: 5px; }
+        
+        /* ЦВЕТА И ЭФФЕКТЫ */
+        .hue-slider { -webkit-appearance: none; width: 100%; height: 10px; border-radius: 5px; background: linear-gradient(to right, #ff7675, #74b9ff, #55efc4, #ffeaa7); margin: 10px 0; }
+        .hue-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; background: white; border: 3px solid var(--p); border-radius: 50%; cursor: pointer; }
 
-function loseLife(){
-    lives--;
-    initLives();
-    if(lives <= 0){
-        alert("Вы проиграли! Попробуйте снова.");
-        resetGame();
-    } else {
-        timeLeft = 20;
-        startTimer();
-    }
-}
+        /* КНОПКИ ДЕЙСТВИЯ */
+        .btn { width: 100%; padding: 18px; border: none; border-radius: 18px; font-weight: 900; cursor: pointer; transition: 0.2s; color: white; margin-top: 10px; text-transform: uppercase; }
+        .btn-save { background: var(--ok); box-shadow: 0 5px 0 #008a6e; }
+        .btn-main { background: var(--p); box-shadow: 0 5px 0 #4834D4; }
+        .btn:active { transform: translateY(3px); box-shadow: none; }
+        
+        /* Специфические метки для леек */
+        .color-tag { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 5px; }
+    </style>
+</head>
+<body>
 
-// Функция сброса игры
-function resetGame(){
-    paintedSegments = 0;
-    paintedPetals = 0;
-    dahliaIndex = 0;
-    houseIndex = 0;
-    segments.forEach(s => s.style.fill="#f0f0f0");
-    petals.forEach(p => p.classList.remove("glow"));
-    dPetals.forEach(p => p.setAttribute("fill","#eee"));
-    houseSegments.forEach(s => s.setAttribute("fill","#eee"));
-    lives = 3;
-    initLives();
-    timeLeft = 20;
-    startTimer();
-    document.getElementById("victoryMessage").style.display="none";
-}
+<div class="wrapper">
+    <div class="header">
+        <div class="logo-area">
+            <img src="https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/logo.png" class="logo-img" alt="Logo">
+            <div class="header-titles">
+                <h2>Deutsch interaktiv</h2>
+                <span id="ui-sub">MASTERPIECE EDITOR</span>
+            </div>
+        </div>
+        <div style="width: 280px;">
+            <label id="lbl-lang">ЯЗЫК / LANGUAGE</label>
+            <select id="uiLang" onchange="applyTranslation()">
+                <option value="ru">Русский (RU)</option>
+                <option value="de">Deutsch (DE)</option>
+                <option value="en">English (EN)</option>
+                <option value="es">Español (ES)</option>
+                <option value="it">Italiano (IT)</option>
+                <option value="fr">Français (FR)</option>
+                <option value="zh">中文 (ZH)</option>
+                <option value="ja">日本語 (JA)</option>
+            </select>
+        </div>
+    </div>
 
-// Окрас бабочки
-segments.forEach(seg=>{
-    seg.addEventListener("click", ()=>{
-        if(seg.style.fill !== "pink"){
-            seg.style.fill="pink"; // Цвет можно менять
-            paintedSegments++;
-            seg.classList.add("butterfly-flap");
-            document.getElementById("flySound").play();
-            checkVictory();
+    <div class="grid">
+        <div class="panel">
+            <div class="panel-h" id="h1">КАТЕГОРИИ</div>
+            <div id="cats-box">
+                </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-h" id="h2">МИР И ГЕРОИ</div>
+            
+            <label id="lbl-theme">ЛОКАЦИЯ ФОНА</label>
+            <select id="theme-sel">
+                <option>Студия художника 🎨</option>
+                <option>В огороде 🌻</option>
+                <option>Замок 🏰</option>
+            </select>
+
+            <label style="margin-top:20px;" id="lbl-hero-t">ГЛАВНЫЙ ГЕРОЙ (ХУДОЖНИК)</label>
+            <div class="upload-block">
+                <button class="btn-mini" onclick="document.getElementById('upl-hero').click()">📁 ЗАГРУЗИТЬ ФАЙЛ</button>
+                <input type="file" id="upl-hero" hidden accept="image/*" onchange="loadFile(this, 'cont-hero')">
+                <input type="text" placeholder="Или ссылка..." onchange="loadUrl(this, 'cont-hero')">
+                <div class="preview-container" id="cont-hero">
+                    <img src="https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/%D0%92%D0%B5%D1%81%D1%91%D0%BB%D1%8B%D0%B9%20%D1%85%D1%83%D0%B4%D0%BE%D0%B6%D0%BD%D0%B8%D0%BA.png" class="img-card active" onclick="sel(this)">
+                </div>
+            </div>
+
+            <label id="lbl-items-t">ПРЕДМЕТЫ (ЛЕЙКИ / КРАСКИ)</label>
+            <div class="upload-block">
+                <button class="btn-mini" onclick="document.getElementById('upl-items').click()">📁 ЗАГРУЗИТЬ ФАЙЛ</button>
+                <input type="file" id="upl-items" hidden multiple accept="image/*" onchange="loadFile(this, 'cont-items')">
+                <input type="text" placeholder="Или ссылка..." onchange="loadUrl(this, 'cont-items')">
+                <div class="preview-container" id="cont-items">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3233/3233496.png" title="Красная (Die)" class="img-card active" onclick="sel(this)" style="border-color:#ff7675">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3233/3233512.png" title="Синяя (Der)" class="img-card" onclick="sel(this)" style="border-color:#74b9ff">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3233/3233499.png" title="Зеленая (Das)" class="img-card" onclick="sel(this)" style="border-color:#55efc4">
+                </div>
+            </div>
+            
+            <label id="lbl-butt-t">БАБОЧКА (РАСКРАСКА)</label>
+            <div class="upload-block" style="padding:10px;">
+                <input type="text" placeholder="Ссылка на бабочку..." onchange="loadUrl(this, 'cont-butt')">
+                <div class="preview-container" id="cont-butt">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2925/2925867.png" class="img-card active" onclick="sel(this)">
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-h" id="h3">ИНТЕРФЕЙС</div>
+            
+            <label id="lbl-diff">УРОВЕНЬ СЛОЖНОСТИ</label>
+            <select id="diff-sel">
+                <option>🦋 Бабочка (Легкий)</option>
+                <option>🏠 Дом (Средний)</option>
+                <option>🌳 Огород (Сложный)</option>
+            </select>
+
+            <label id="lb1">Кнопка "Начать"</label><input type="text" id="i1">
+            <label id="lb2">Кнопка "Завершить"</label><input type="text" id="i2">
+            <label id="lb3">Кнопка "Повторить"</label><input type="text" id="i3">
+            <label id="lb4">Кнопка "Заново"</label><input type="text" id="i4">
+            <label id="lw">Текст победы</label><input type="text" id="i5">
+            
+            <button class="btn btn-save" id="btn-s">💾 СОХРАНИТЬ ПРЕСЕТ</button>
+            <button class="btn btn-main" id="btn-g">🚀 СОЗДАТЬ ИГРУ</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 1. БАЗА ПЕРЕВОДОВ (СИНХРОНИЗАЦИЯ)
+    const dict = {
+        ru: {
+            h1:"КАТЕГОРИИ", h2:"МИР И ГЕРОИ", h3:"ИНТЕРФЕЙС", sub:"РЕДАКТОР ВЕСЁЛЫЙ ХУДОЖНИК",
+            theme:"ЛОКАЦИЯ ФОНА", hero:"ГЛАВНЫЙ ГЕРОЙ", items:"ПРЕДМЕТЫ (ЛЕЙКИ/КРАСКИ)", butt:"БАБОЧКА", diff:"СЛОЖНОСТЬ",
+            b1:'КНОПКА "НАЧАТЬ"', b2:'КНОПКА "ЗАВЕРШИТЬ"', b3:'КНОПКА "ПОВТОРИТЬ"', b4:'КНОПКА "ЗАНОВО"', win:"ТЕКСТ ПОБЕДЫ",
+            v1:"НАЧАТЬ", v2:"ЗАВЕРШИТЬ", v3:"ПОВТОРИТЬ ЗАДАНИЕ", v4:"НАЧАТЬ ЗАНОВО", v5:"ТЫ ГЕНИЙ!",
+            s:"💾 СОХРАНИТЬ", g:"🚀 СОЗДАТЬ ИГРУ", cat:"Категория"
+        },
+        de: {
+            h1:"KATEGORIEN", h2:"WELT & HELDEN", h3:"INTERFACE", sub:"EDITOR DER LUSTIGE KÜNSTLER",
+            theme:"HINTERGRUND", hero:"HAUPTHELD", items:"ITEMS (GIESSKANNEN)", butt:"SCHMETTERLING", diff:"SCHWIERIGKEIT",
+            b1:'BUTTON "STARTEN"', b2:'BUTTON "BEENDEN"', b3:'BUTTON "WIEDERHOLEN"', b4:'BUTTON "NEUSTART"', win:"SIEGES-TEXT",
+            v1:"SPIELEN", v2:"BEENDEN", v3:"AUFGABE WIEDERHOLEN", v4:"NEU STARTEN", v5:"AUSGEZEICHNET!",
+            s:"💾 SPEICHERN", g:"🚀 ERSTELLEN", cat:"Kategorie"
+        },
+        en: {
+            h1:"CATEGORIES", h2:"WORLD & HEROES", h3:"INTERFACE", sub:"MERRY ARTIST EDITOR",
+            theme:"BACKGROUND", hero:"MAIN HERO", items:"ITEMS (CANS/PAINTS)", butt:"BUTTERFLY", diff:"DIFFICULTY",
+            b1:'BUTTON "START"', b2:'BUTTON "FINISH"', b3:'BUTTON "REPEAT"', b4:'BUTTON "RESTART"', win:"VICTORY TEXT",
+            v1:"START", v2:"FINISH", v3:"REPEAT TASK", v4:"START OVER", v5:"YOU ARE A GENIUS!",
+            s:"💾 SAVE", g:"🚀 CREATE", cat:"Category"
+        },
+        // Добавлены остальные языки (шаблон)
+        es: { h1:"CATEGORÍAS", h2:"MUNDO", h3:"INTERFAZ", sub:"EDITOR", theme:"FONDO", hero:"HÉROE", items:"OBJETOS", butt:"MARIPOSA", diff:"DIFICULTAD", b1:"INICIAR", b2:"FINALIZAR", b3:"REPETIR", b4:"REINICIAR", win:"VICTORIA", v1:"INICIAR", v2:"FINALIZAR", v3:"REPETIR", v4:"REINICIAR", v5:"¡GENIO!", s:"💾 GUARDAR", g:"🚀 CREAR", cat:"Categoría" },
+        it: { h1:"CATEGORIE", h2:"MONDO", h3:"INTERFACCIA", sub:"EDITOR", theme:"SFONDO", hero:"EROE", items:"OGGETTI", butt:"FARFALLA", diff:"DIFFICOLTÀ", b1:"INIZIA", b2:"FINISCI", b3:"RIPETI", b4:"RIAVVIA", win:"VITTORIA", v1:"INIZIA", v2:"FINISCI", v3:"RIPETI", v4:"RIAVVIA", v5:"GENIO!", s:"💾 SALVA", g:"🚀 CREA", cat:"Categoria" },
+        fr: { h1:"CATÉGORIES", h2:"MONDE", h3:"INTERFACE", sub:"ÉDITEUR", theme:"FOND", hero:"HÉROS", items:"OBJETS", butt:"PAPILLON", diff:"DIFFICULTÉ", b1:"DÉMARRER", b2:"TERMINER", b3:"RÉPÉTER", b4:"REFAIRE", win:"VICTOIRE", v1:"COMMENCER", v2:"TERMINER", v3:"RÉPÉTER", v4:"REFAIRE", v5:"GÉNIE !", s:"💾 SAUVER", g:"🚀 CRÉER", cat:"Catégorie" },
+        zh: { h1:"类别", h2:"世界", h3:"界面", sub:"编辑器", theme:"背景", hero:"英雄", items:"物品", butt:"蝴蝶", diff:"难度", b1:"开始", b2:"结束", b3:"重试", b4:"重启", win:"胜利", v1:"开始", v2:"完成", v3:"重复", v4:"重启", v5:"天才！", s:"💾 保存", g:"🚀 创建", cat:"类别" },
+        ja: { h1:"カテゴリ", h2:"世界", h3:"インターフェース", sub:"エディタ", theme:"背景", hero:"ヒーロー", items:"アイテム", butt:"蝶", diff:"難易度", b1:"開始", b2:"終了", b3:"リピート", b4:"再起動", win:"勝利", v1:"スタート", v2:"終了", v3:"もう一度", v4:"最初から", v5:"天才！", s:"💾 保存", g:"🚀 作成", cat:"カテゴリ" }
+    };
+
+    function applyTranslation() {
+        const lang = document.getElementById('uiLang').value;
+        const d = dict[lang] || dict.ru;
+
+        // Заголовки
+        document.getElementById('h1').innerText = d.h1;
+        document.getElementById('h2').innerText = d.h2;
+        document.getElementById('h3').innerText = d.h3;
+        document.getElementById('ui-sub').innerText = d.sub;
+
+        // Лейблы
+        document.getElementById('lbl-theme').innerText = d.theme;
+        document.getElementById('lbl-hero-t').innerText = d.hero;
+        document.getElementById('lbl-items-t').innerText = d.items;
+        document.getElementById('lbl-butt-t').innerText = d.butt;
+        document.getElementById('lbl-diff').innerText = d.diff;
+        
+        document.getElementById('lb1').innerText = d.b1;
+        document.getElementById('lb2').innerText = d.b2;
+        document.getElementById('lb3').innerText = d.b3;
+        document.getElementById('lb4').innerText = d.b4;
+        document.getElementById('lw').innerText = d.win;
+
+        // Значения в полях (Инпуты)
+        document.getElementById('i1').value = d.v1;
+        document.getElementById('i2').value = d.v2;
+        document.getElementById('i3').value = d.v3;
+        document.getElementById('i4').value = d.v4;
+        document.getElementById('i5').value = d.v5;
+
+        // Кнопки
+        document.getElementById('btn-s').innerText = d.s;
+        document.getElementById('btn-g').innerText = d.g;
+
+        // Категории
+        for(let i=1; i<=4; i++) {
+            const el = document.getElementById(`cl-${i}`);
+            if(el) el.innerText = `${d.cat} ${i}`;
         }
-    });
-});
-
-// Окрас розы
-petals.forEach(p=>{
-    p.addEventListener("click", ()=>{
-        if(!p.classList.contains("glow")){
-            p.classList.add("glow");
-            paintedPetals++;
-            checkVictory();
-        }
-    });
-});
-
-// Проверка победы
-function checkVictory(){
-    if(paintedSegments >= segments.length && paintedPetals >= petals.length){
-        showVictory();
     }
-}
 
-// Победа
-function showVictory(){
-    clearInterval(timerInterval);
-    document.getElementById("victoryMessage").innerText = dictionary.victory.ru;
-    document.getElementById("victoryMessage").style.display = "block";
-}
+    // 2. ЗАГРУЗКА КАРТИНОК
+    function loadFile(input, contId) {
+        const container = document.getElementById(contId);
+        [...input.files].forEach(file => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                createImg(e.target.result, container);
+            }
+            reader.readAsDataURL(file);
+        });
+    }
 
-// Инициализация игры
-window.onload = ()=>{
-    initLives();
-    startTimer();
-};
+    function loadUrl(input, contId) {
+        if(input.value.trim() !== "") {
+            createImg(input.value, document.getElementById(contId));
+            input.value = "";
+        }
+    }
+
+    function createImg(src, container) {
+        const img = document.createElement('img');
+        img.src = src;
+        img.className = 'img-card';
+        img.onclick = function() { sel(this); };
+        container.appendChild(img);
+    }
+
+    window.sel = function(el) {
+        el.parentElement.querySelectorAll('.img-card').forEach(i => i.classList.remove('active'));
+        el.classList.add('active');
+    }
+
+    // 3. ИНИЦИАЛИЗАЦИЯ
+    function init() {
+        // Создание категорий
+        const box = document.getElementById('cats-box');
+        const labels = ['Der', 'Die', 'Das', 'Plural'];
+        // Цвета: красный, синий, зеленый, желтый (примерно)
+        const colors = ['#ff7675', '#74b9ff', '#55efc4', '#ffeaa7']; 
+        
+        for(let i=0; i<4; i++) {
+            box.innerHTML += `
+            <div style="background:white; padding:15px; border-radius:15px; margin-bottom:12px; border:1px solid #eee;">
+                <label id="cl-${i+1}">КАТЕГОРИЯ ${i+1}</label>
+                <input type="text" value="${labels[i]}">
+                <input type="range" class="hue-slider" style="background:${colors[i]}">
+                <textarea rows="1" placeholder="Слова через запятую..."></textarea>
+            </div>`;
+        }
+        applyTranslation();
+    }
+
+    // Запуск при загрузке
+    document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
