@@ -1,72 +1,214 @@
-<style>
-    /* Анимация Злой Пчелы */
-    .angry-bee {
-        position: fixed;
-        width: 80px;
-        z-index: 9999;
-        display: none;
-        pointer-events: none;
-        filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3));
-    }
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Deutsch interaktiv | Grand Master Editor 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --p: #6C5CE7; --a: #FD79A8; --ok: #00B894; --err: #FF7675; --dark: #2D3436; }
+        body, html { margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; height: 100vh; background: #f0f2f5; overflow: hidden; }
 
-    @keyframes flyAcross {
-        0% { left: -100px; top: 50%; transform: scaleX(1); }
-        50% { left: 50%; top: 30%; transform: scaleX(1) rotate(10deg); }
-        100% { left: 110%; top: 60%; transform: scaleX(1); }
-    }
+        /* ИНТЕРФЕЙС РЕДАКТОРА */
+        .layout { display: flex; height: 100vh; }
+        #editor-panel { 
+            width: 480px; background: white; border-right: 6px solid var(--p); 
+            display: flex; flex-direction: column; z-index: 100; box-shadow: 20px 0 60px rgba(0,0,0,0.1);
+        }
+        .scroll-area { padding: 30px; overflow-y: auto; flex: 1; }
 
-    .bee-flying {
-        display: block !important;
-        animation: flyAcross 1.5s linear forwards;
-    }
-</style>
+        /* ИГРОВОЕ ОКНО */
+        #game-view { 
+            flex: 1; position: relative; background-size: cover; background-position: center;
+            background-image: url('https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/Background_Garden.jpg');
+            display: flex; align-items: center; justify-content: center; overflow: hidden;
+        }
 
-<img id="bee" src="https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/%D0%97%D0%BB%D0%B0%D1%8F%20%D0%BF%D1%87%D0%B5%D0%BB%D0%B0.png" class="angry-bee">
+        /* ПЕРСОНАЖИ И ОБЪЕКТЫ */
+        #artist { position: absolute; bottom: 40px; left: 40px; width: 180px; z-index: 5; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        #bee { position: absolute; top: 20%; left: -150px; width: 100px; z-index: 20; pointer-events: none; }
+        #word-card { 
+            position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%);
+            background: white; padding: 20px 60px; border-radius: 40px; border: 6px solid var(--p);
+            font-size: 2.5rem; font-weight: 900; box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+        }
+
+        /* ПРОГРЕСС-БАР (ПО ТЗ) */
+        #progress-bar { 
+            position: absolute; top: 30px; left: 50%; transform: translateX(-50%); 
+            background: rgba(255,255,255,0.9); padding: 12px 30px; border-radius: 50px;
+            display: flex; gap: 10px; border: 4px solid var(--p);
+        }
+        .drop { width: 30px; height: 40px; background-size: contain; background-repeat: no-repeat; opacity: 0.15; transition: 0.4s; }
+        .drop.active { opacity: 1; transform: scale(1.2); }
+
+        /* СТИЛИ КАРТОЧЕК КАТЕГОРИЙ */
+        .cat-card { background: #f8f9ff; border-radius: 25px; padding: 20px; margin-bottom: 20px; border: 2px solid #eee; }
+        .visual-selector { display: flex; gap: 8px; margin-top: 10px; }
+        .v-item { cursor: pointer; font-size: 1.2rem; filter: grayscale(1); transition: 0.2s; }
+        .v-item.active { filter: grayscale(0); transform: scale(1.3); }
+        
+        /* КНОПКИ */
+        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+        .btn { padding: 16px; border: none; border-radius: 15px; font-weight: 900; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
+        .btn-p { background: var(--p); color: white; }
+        .btn-a { background: var(--a); color: white; }
+        .btn-dark { background: var(--dark); color: white; grid-column: span 2; }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
+
+        /* АНИМАЦИИ ОШИБКИ */
+        @keyframes shake { 0%, 100% { transform: translate(-50%, 0); } 20% { transform: translate(-52%, 0); } 40% { transform: translate(-48%, 0); } }
+        .shake-err { animation: shake 0.1s 4; color: var(--err); border-color: var(--err) !important; }
+
+        /* SVG СЕГМЕНТЫ */
+        .seg { stroke: #333; stroke-width: 2px; transition: 0.6s fill; }
+    </style>
+</head>
+<body>
+
+<div class="layout" id="main-editor-ui">
+    <div id="editor-panel">
+        <div class="scroll-area">
+            <div style="display:flex; align-items:center; gap:15px; margin-bottom:30px;">
+                <img src="https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/logo.png" style="width:60px;">
+                <h1 style="font-size: 1.3rem; margin:0; color:var(--p); font-weight:900;">DEUTSCH INTERAKTIV</h1>
+            </div>
+
+            <div class="cat-card">
+                <label style="font-size:0.7rem; font-weight:900; color:#888;">УРОВЕНЬ СЛОЖНОСТИ</label>
+                <select id="set-lvl" onchange="initStage()">
+                    <option value="easy">🦋 Лёгкий (Бабочка)</option>
+                    <option value="medium">🌸 Средний (Георгина)</option>
+                    <option value="hard">🏠 Сложный (Дом)</option>
+                </select>
+            </div>
+
+            <div id="cat-root">
+                </div>
+
+            <div class="cat-card">
+                <label style="font-size:0.7rem; font-weight:900; color:#888;">МЕДИА (ФОН И ГЕРОЙ)</label>
+                <input type="file" multiple onchange="loadFiles(this)">
+                <div id="gallery" style="display:flex; gap:10px; margin-top:10px; overflow-x:auto;"></div>
+            </div>
+
+            <div class="btn-grid">
+                <button class="btn btn-p" onclick="exportHTML()">📦 Экспорт HTML</button>
+                <button class="btn btn-a" onclick="getIframe()">🔗 iFrame</button>
+                <button class="btn btn-dark" onclick="toggleView()">🎮 Тестовый запуск</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="game-view">
+        <div id="progress-bar"></div>
+        
+        <div id="object-container" style="width:500px; height:500px; display:flex; align-items:center; justify-content:center;">
+            </div>
+
+        <img id="artist" src="https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/%D0%92%D0%B5%D1%81%D1%91%D0%BB%D1%8B%D0%B9%20%D1%85%D1%83%D0%B4%D0%BE%D0%B6%D0%BD%D0%B8%D0%BA.png">
+        <img id="bee" src="https://raw.githubusercontent.com/irinschensmagen-alt/Redaktor-/main/%D0%97%D0%BB%D0%B0%D1%8F%20%D0%BF%D1%87%D0%B5%D0%BB%D0%B0.png">
+        
+        <div id="word-card">DER APFEL</div>
+
+        <div style="position:absolute; bottom:20px; right:20px; display:flex; gap:10px;">
+            <button class="btn btn-p" style="background:#74b9ff" onclick="answer(0)">DER</button>
+            <button class="btn btn-p" style="background:#ff7675" onclick="answer(1)">DIE</button>
+            <button class="btn btn-p" style="background:#55efc4" onclick="answer(2)">DAS</button>
+        </div>
+    </div>
+</div>
 
 <script>
-// ОБНОВЛЕННАЯ ФУНКЦИЯ ЭКСПОРТА
-function exportGame() {
-    const bee = document.getElementById('bee');
-    
-    // 1. Запускаем пчелу!
-    bee.classList.add('bee-flying');
-    
-    // Ждем, пока пчела пролетит (1.5 сек), прежде чем скачивать
-    setTimeout(() => {
-        // 2. Создаем копию для экспорта
-        const clone = document.documentElement.cloneNode(true);
-        
-        // 3. УДАЛЯЕМ редактор и пчелу из файла ученика
-        const grid = clone.querySelector('#editorGrid');
-        const controls = clone.querySelector('.header-controls');
-        const beeInClone = clone.querySelector('#bee');
-        
-        if(grid) grid.remove();
-        if(controls) controls.remove();
-        if(beeInClone) beeInClone.remove(); // Ученик не должен видеть пчелу при старте
-        
-        // 4. Очищаем стили анимации в клоне, чтобы файл был чистым
-        const wrapper = clone.querySelector('#mainWrapper');
-        if(wrapper) wrapper.style.border = "none"; 
-
-        // 5. Генерация файла
-        const blob = new Blob([clone.outerHTML], {type: "text/html"});
-        const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = "Funny_Painter_READY.html";
-        a.click();
-        
-        // Убираем пчелу в редакторе после полета
-        bee.classList.remove('bee-flying');
-    }, 1500);
-}
-
-// ВАЖНО: Не забывайте про автосохранение, оно работает в фоне
-function autoSaveEditor() {
-    const data = {
-        lvl: document.getElementById('gameLvl').value,
-        words: Array.from(document.querySelectorAll('textarea')).map(t => t.value)
+    const state = {
+        lvl: 'easy',
+        step: 0,
+        max: 10,
+        cats: [
+            {n: 'Der', c: '#74b9ff', words: '', fx: 'none'},
+            {n: 'Die', c: '#ff7675', words: '', fx: 'none'},
+            {n: 'Das', c: '#55efc4', words: '', fx: 'none'}
+        ],
+        icons: {
+            water: 'https://cdn-icons-png.flaticon.com/512/3105/3105807.png',
+            paint: [
+                'https://cdn-icons-png.flaticon.com/512/2919/2919648.png', // Blue
+                'https://cdn-icons-png.flaticon.com/512/2919/2919734.png', // Red
+                'https://cdn-icons-png.flaticon.com/512/2919/2919724.png'  // Green
+            ]
+        }
     };
-    localStorage.setItem('funny_painter_save', JSON.stringify(data));
-}
-</script>
+
+    function initEditor() {
+        const root = document.getElementById('cat-root');
+        state.cats.forEach((cat, i) => {
+            root.innerHTML += `
+                <div class="cat-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <input type="text" value="${cat.n}" style="width:60px; font-weight:900; border:none; border-bottom:2px solid ${cat.c}">
+                        <input type="color" value="${cat.c}" onchange="state.cats[${i}].c = this.value">
+                    </div>
+                    <div class="visual-selector">
+                        <div class="v-item active" title="Нет эффекта">🚫</div>
+                        <div class="v-item" title="Сияние">✨</div>
+                        <div class="v-item" title="Огонь">🔥</div>
+                    </div>
+                    <textarea placeholder="Слова..." style="width:100%; margin-top:10px; border-radius:10px; border:1px solid #ddd; padding:5px;"></textarea>
+                </div>
+            `;
+        });
+        initStage();
+    }
+
+    function initStage() {
+        state.lvl = document.getElementById('set-lvl').value;
+        const objWrap = document.getElementById('object-container');
+        const prog = document.getElementById('progress-bar');
+        state.step = 0;
+
+        let svg = '';
+        if(state.lvl === 'easy') {
+            svg = `<svg viewBox="0 0 100 100" width="100%">${Array(10).fill().map((_,i)=>`<path class="seg" d="M50 50 L${10+i*8} 20 Q50 0 ${90-i*8} 20 Z" fill="#eee"/>`).join('')}</svg>`;
+            state.max = 10;
+        } else if(state.lvl === 'medium') {
+            svg = `<svg viewBox="0 0 100 100" width="100%">${Array(12).fill().map((_,i)=>`<ellipse class="seg" cx="50" cy="30" rx="10" ry="25" fill="#eee" transform="rotate(${i*30} 50 50)"/>`).join('')}</svg>`;
+            state.max = 12;
+        } else {
+            svg = `<svg viewBox="0 0 100 100" width="100%"><rect class="seg" x="20" y="40" width="60" height="50" fill="#eee"/><polygon class="seg" points="20,40 80,40 50,10" fill="#eee"/></svg>`;
+            state.max = 2;
+        }
+        objWrap.innerHTML = svg;
+
+        prog.innerHTML = '';
+        for(let i=0; i<state.max; i++) {
+            const d = document.createElement('div');
+            d.className = 'drop';
+            d.style.backgroundImage = `url(${state.lvl === 'hard' ? state.icons.paint[0] : state.icons.water})`;
+            prog.appendChild(d);
+        }
+    }
+
+    function answer(catIdx) {
+        const segs = document.querySelectorAll('.seg');
+        const drops = document.querySelectorAll('.drop');
+
+        if(state.step < state.max) {
+            segs[state.step].style.fill = state.cats[catIdx].c;
+            drops[state.step].classList.add('active');
+            if(state.lvl === 'hard') drops[state.step].style.backgroundImage = `url(${state.icons.paint[catIdx]})`;
+            state.step++;
+        } else {
+            error();
+        }
+    }
+
+    function error() {
+        const bee = document.getElementById('bee');
+        const card = document.getElementById('word-card');
+        const artist = document.getElementById('artist');
+
+        card.classList.add('shake-err');
+        artist.style.transform = 'translateX(150px)';
+        bee.animate([{left: '-150px'}, {left: '120%'}], {duration: 1500});
+        
+        setTimeout(() => {
+            card.classList.remove('shake-err');
